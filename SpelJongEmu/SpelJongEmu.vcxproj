@@ -125,7 +125,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AluFunctions.cpp" />
+    <ClCompile Include="src\Argument.cpp" />
+    <ClCompile Include="src\InterruptManager.cpp" />
     <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\AddressSpace.hpp" />
+    <ClInclude Include="src\AluFunctions.hpp" />
+    <ClInclude Include="src\Argument.hpp" />
+    <ClInclude Include="src\BitUtil.hpp" />
+    <ClInclude Include="src\InterruptManager.hpp" />
+    <ClInclude Include="src\Op.hpp" />
+    <ClInclude Include="src\Registers.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
