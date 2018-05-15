@@ -20,7 +20,7 @@ public:
 
     bool isSet(ID id) const { return (m_flags & id) != 0; }
 
-    bool set(ID id, bool high) { if (high) { m_flags |= id; } else { m_flags &= ~id; } }
+    void set(ID id, bool high) { if (high) { m_flags |= id; } else { m_flags &= ~id; } }
 
 private:
     std::uint8_t m_flags = 0;
