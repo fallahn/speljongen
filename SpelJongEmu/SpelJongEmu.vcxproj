@@ -129,6 +129,8 @@
     <ClCompile Include="src\Argument.cpp" />
     <ClCompile Include="src\InterruptManager.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\OpCode.cpp" />
+    <ClCompile Include="src\OpCodeBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AddressSpace.hpp" />
@@ -137,6 +139,8 @@
     <ClInclude Include="src\BitUtil.hpp" />
     <ClInclude Include="src\InterruptManager.hpp" />
     <ClInclude Include="src\Op.hpp" />
+    <ClInclude Include="src\OpCode.hpp" />
+    <ClInclude Include="src\OpCodeBuilder.hpp" />
     <ClInclude Include="src\Registers.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

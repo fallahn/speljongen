@@ -16,8 +16,8 @@ struct Op final
     bool writesMemory = false;
     std::size_t operandLength = 0;
 
-    std::function<std::int32_t(Registers&, AddressSpace&, const std::array<std::uint8_t, 2>&, std::int32_t)> execute =
-        [](Registers& registers, AddressSpace& addressSpace, const std::array<std::uint8_t, 2>& args, std::int32_t context)
+    std::function<std::uint8_t(Registers&, AddressSpace&, const std::array<std::uint8_t, 2>&, std::uint8_t)> execute =
+        [](Registers& registers, AddressSpace& addressSpace, const std::array<std::uint8_t, 2>& args, std::uint8_t context)
     {
         return context;
     };

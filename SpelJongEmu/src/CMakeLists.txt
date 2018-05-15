@@ -5,4 +5,6 @@ set(PROJECT_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/Argument.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/InterruptManager.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/OpCode.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/OpCodeBuilder.cpp
   PARENT_SCOPE)
