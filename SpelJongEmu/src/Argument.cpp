@@ -1,13 +1,5 @@
 #include "Argument.hpp"
 
-Argument::Argument()
-    : m_operandLength   (0),
-    m_memory            (false),
-    m_dataType          (DataType::D8)
-{
-
-}
-
 Argument::Argument(const std::string& label, std::size_t opLen, bool memory, DataType dt)
     : m_label       (label),
     m_operandLength (opLen),
