@@ -25,14 +25,14 @@ namespace
             {
                 return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
                 {
-                    return AluFunctions::inc(registers.getFlags(), static_cast<std::uint8_t>(value));
+                    return AluFunction::inc(registers.getFlags(), static_cast<std::uint8_t>(value));
                 };
             }
             else if (type == DataType::D16)
             {
                 return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
                 {
-                    return AluFunctions::inc16(registers.getFlags(), value);
+                    return AluFunction::inc16(registers.getFlags(), value);
                 };
             }
         }
@@ -42,14 +42,14 @@ namespace
             {
                 return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
                 {
-                    return AluFunctions::dec(registers.getFlags(), static_cast<std::uint8_t>(value));
+                    return AluFunction::dec(registers.getFlags(), static_cast<std::uint8_t>(value));
                 };
             }
             else if (type == DataType::D16)
             {
                 return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
                 {
-                    return AluFunctions::dec16(registers.getFlags(), value);
+                    return AluFunction::dec16(registers.getFlags(), value);
                 };
             }
         }
@@ -57,84 +57,84 @@ namespace
         {
             return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
             {
-                return AluFunctions::daa(registers.getFlags(), static_cast<std::uint8_t>(value));
+                return AluFunction::daa(registers.getFlags(), static_cast<std::uint8_t>(value));
             };
         }
         else if (operation == "CPL")
         {
             return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
             {
-                return AluFunctions::cpl(registers.getFlags(), static_cast<std::uint8_t>(value));
+                return AluFunction::cpl(registers.getFlags(), static_cast<std::uint8_t>(value));
             };
         }
         else if (operation == "SCF")
         {
             return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
             {
-                return AluFunctions::scf(registers.getFlags(), static_cast<std::uint8_t>(value));
+                return AluFunction::scf(registers.getFlags(), static_cast<std::uint8_t>(value));
             };
         }
         else if (operation == "CCF")
         {
             return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
             {
-                return AluFunctions::ccf(registers.getFlags(), static_cast<std::uint8_t>(value));
+                return AluFunction::ccf(registers.getFlags(), static_cast<std::uint8_t>(value));
             };
         }
         else if (operation == "RLC")
         {
             return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
             {
-                return AluFunctions::rlc(registers.getFlags(), static_cast<std::uint8_t>(value));
+                return AluFunction::rlc(registers.getFlags(), static_cast<std::uint8_t>(value));
             };
         }
         else if (operation == "RRC")
         {
             return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
             {
-                return AluFunctions::rrc(registers.getFlags(), static_cast<std::uint8_t>(value));
+                return AluFunction::rrc(registers.getFlags(), static_cast<std::uint8_t>(value));
             };
         }
         else if (operation == "RL")
         {
             return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
             {
-                return AluFunctions::rl(registers.getFlags(), static_cast<std::uint8_t>(value));
+                return AluFunction::rl(registers.getFlags(), static_cast<std::uint8_t>(value));
             };
         }
         else if (operation == "RR")
         {
             return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
             {
-                return AluFunctions::rr(registers.getFlags(), static_cast<std::uint8_t>(value));
+                return AluFunction::rr(registers.getFlags(), static_cast<std::uint8_t>(value));
             };
         }
         else if (operation == "SLA")
         {
             return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
             {
-                return AluFunctions::sla(registers.getFlags(), static_cast<std::uint8_t>(value));
+                return AluFunction::sla(registers.getFlags(), static_cast<std::uint8_t>(value));
             };
         }
         else if (operation == "SRA")
         {
             return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
             {
-                return AluFunctions::sra(registers.getFlags(), static_cast<std::uint8_t>(value));
+                return AluFunction::sra(registers.getFlags(), static_cast<std::uint8_t>(value));
             };
         }
         else if (operation == "SWAP")
         {
             return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
             {
-                return AluFunctions::swap(registers.getFlags(), static_cast<std::uint8_t>(value));
+                return AluFunction::swap(registers.getFlags(), static_cast<std::uint8_t>(value));
             };
         }
         else if (operation == "SRL")
         {
             return [](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t value)
             {
-                return AluFunctions::srl(registers.getFlags(), static_cast<std::uint8_t>(value));
+                return AluFunction::srl(registers.getFlags(), static_cast<std::uint8_t>(value));
             };
         }
         return nullptr;
@@ -149,7 +149,7 @@ namespace
                 return [arg](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t val1)
                 {
                     std::uint16_t val2 = arg->read(registers, addressSpace, args);
-                    return AluFunctions::add(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
+                    return AluFunction::add(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
                 };
             }
             else if (type == DataType::D16)
@@ -159,7 +159,7 @@ namespace
                     return [arg](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t val1)
                     {
                         std::uint16_t val2 = arg->read(registers, addressSpace, args);
-                        return AluFunctions::add(registers.getFlags(), val1, static_cast<std::int8_t>(val2));
+                        return AluFunction::add(registers.getFlags(), val1, static_cast<std::int8_t>(val2));
                     };
                 }
                 else if (arg->getDataType() == DataType::D16)
@@ -167,7 +167,7 @@ namespace
                     return [arg](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t val1)
                     {
                         std::uint16_t val2 = arg->read(registers, addressSpace, args);
-                        return AluFunctions::add(registers.getFlags(), val1, val2);
+                        return AluFunction::add(registers.getFlags(), val1, val2);
                     };
                 }
             }
@@ -177,7 +177,7 @@ namespace
             return [arg](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t val1)
             {
                 std::uint16_t val2 = arg->read(registers, addressSpace, args);
-                return AluFunctions::add_sp(registers.getFlags(), val1, static_cast<std::int8_t>(val2));
+                return AluFunction::add_sp(registers.getFlags(), val1, static_cast<std::int8_t>(val2));
             };
         }
         else if (operation == "ADC")
@@ -185,7 +185,7 @@ namespace
             return [arg](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t val1)
             {
                 std::uint16_t val2 = arg->read(registers, addressSpace, args);
-                return AluFunctions::adc(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
+                return AluFunction::adc(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
             };
         }
         else if (operation == "SUB")
@@ -193,7 +193,7 @@ namespace
             return [arg](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t val1)
             {
                 std::uint16_t val2 = arg->read(registers, addressSpace, args);
-                return AluFunctions::sub(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
+                return AluFunction::sub(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
             };
         }
         else if (operation == "SBC")
@@ -201,7 +201,7 @@ namespace
             return [arg](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t val1)
             {
                 std::uint16_t val2 = arg->read(registers, addressSpace, args);
-                return AluFunctions::sbc(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
+                return AluFunction::sbc(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
             };
         }
         else if (operation == "AND")
@@ -209,7 +209,7 @@ namespace
             return [arg](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t val1)
             {
                 std::uint16_t val2 = arg->read(registers, addressSpace, args);
-                return AluFunctions::AND(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
+                return AluFunction::AND(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
             };
         }
         else if (operation == "OR")
@@ -217,7 +217,7 @@ namespace
             return [arg](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t val1)
             {
                 std::uint16_t val2 = arg->read(registers, addressSpace, args);
-                return AluFunctions::OR(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
+                return AluFunction::OR(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
             };
         }
         else if (operation == "XOR")
@@ -225,7 +225,7 @@ namespace
             return [arg](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t val1)
             {
                 std::uint16_t val2 = arg->read(registers, addressSpace, args);
-                return AluFunctions::XOR(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
+                return AluFunction::XOR(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
             };
         }
         else if (operation == "CP")
@@ -233,7 +233,7 @@ namespace
             return [arg](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t val1)
             {
                 std::uint16_t val2 = arg->read(registers, addressSpace, args);
-                return AluFunctions::cp(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
+                return AluFunction::cp(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
             };
         }
         else if (operation == "BIT")
@@ -241,7 +241,7 @@ namespace
             return [arg](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t val1)
             {
                 std::uint16_t val2 = arg->read(registers, addressSpace, args);
-                return AluFunctions::bit(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
+                return AluFunction::bit(registers.getFlags(), static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
             };
         }
         else if (operation == "SET")
@@ -249,7 +249,7 @@ namespace
             return [arg](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t val1)
             {
                 std::uint16_t val2 = arg->read(registers, addressSpace, args);
-                return AluFunctions::set(static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
+                return AluFunction::set(static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
             };
         }
         else if (operation == "RES")
@@ -257,9 +257,10 @@ namespace
             return [arg](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t val1)
             {
                 std::uint16_t val2 = arg->read(registers, addressSpace, args);
-                return AluFunctions::res(static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
+                return AluFunction::res(static_cast<std::uint8_t>(val1), static_cast<std::uint8_t>(val2));
             };
         }
+        return nullptr;
     }
 
     OpExecution findAluD8(const std::string& operation, DataType type, std::uint8_t value)
@@ -268,79 +269,80 @@ namespace
         {
             return [value](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t val1)
             {
-                return AluFunctions::add(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
+                return AluFunction::add(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
             };
         }
         else if (operation == "ADC")
         {
             return [value](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t val1)
             {
-                return AluFunctions::adc(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
+                return AluFunction::adc(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
             };
         }
         else if (operation == "SUB")
         {
             return [value](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t val1)
             {
-                return AluFunctions::sub(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
+                return AluFunction::sub(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
             };
         }
         else if (operation == "SBC")
         {
             return [value](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t val1)
             {
-                return AluFunctions::sbc(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
+                return AluFunction::sbc(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
             };
         }
         else if (operation == "AND")
         {
             return [value](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t val1)
             {
-                return AluFunctions::AND(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
+                return AluFunction::AND(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
             };
         }
         else if (operation == "OR")
         {
             return [value](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t val1)
             {
-                return AluFunctions::OR(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
+                return AluFunction::OR(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
             };
         }
         else if (operation == "XOR")
         {
             return [value](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t val1)
             {
-                return AluFunctions::XOR(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
+                return AluFunction::XOR(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
             };
         }
         else if (operation == "CP")
         {
             return [value](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t val1)
             {
-                return AluFunctions::cp(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
+                return AluFunction::cp(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
             };
         }
         else if (operation == "BIT")
         {
             return [value](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t val1)
             {
-                return AluFunctions::bit(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
+                return AluFunction::bit(registers.getFlags(), static_cast<std::uint8_t>(val1), value);
             };
         }
         else if (operation == "SET")
         {
             return [value](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t val1)
             {
-                return AluFunctions::set(static_cast<std::uint8_t>(val1), value);
+                return AluFunction::set(static_cast<std::uint8_t>(val1), value);
             };
         }
         else if (operation == "RES")
         {
             return [value](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t val1)
             {
-                return AluFunctions::res(static_cast<std::uint8_t>(val1), value);
+                return AluFunction::res(static_cast<std::uint8_t>(val1), value);
             };
         }
+        return nullptr;
     }
 }
 
@@ -468,7 +470,7 @@ OpCodeBuilder& OpCodeBuilder::push()
     op.writesMemory = true;
     op.execute = [](Registers& registers, AddressSpace& addressSpace, const OpArgs&, std::uint16_t context)
     {
-        registers.setSP(AluFunctions::dec16(registers.getFlags(), registers.getSP()));
+        registers.setSP(AluFunction::dec16(registers.getFlags(), registers.getSP()));
         addressSpace.setByte(registers.getSP(), static_cast<std::uint8_t>((context & 0xff00) >> 8));
         return context;
     };
@@ -478,7 +480,7 @@ OpCodeBuilder& OpCodeBuilder::push()
     op2.writesMemory = true;
     op2.execute = [](Registers& registers, AddressSpace& addressSpace, const OpArgs&, std::uint16_t context)
     {
-        registers.setSP(AluFunctions::dec16(registers.getFlags(), registers.getSP()));
+        registers.setSP(AluFunction::dec16(registers.getFlags(), registers.getSP()));
         addressSpace.setByte(registers.getSP(), static_cast<std::uint8_t>(context & 0x00ff));
         return context;
     };
@@ -495,7 +497,7 @@ OpCodeBuilder& OpCodeBuilder::pop()
     op.execute = [](Registers& registers, AddressSpace& addressSpace, const OpArgs&, std::uint16_t context)
     {
         std::uint8_t lsb = addressSpace.getByte(registers.getSP());
-        registers.setSP(AluFunctions::inc16(registers.getFlags(), registers.getSP()));
+        registers.setSP(AluFunction::inc16(registers.getFlags(), registers.getSP()));
         return lsb;
     };
 
@@ -505,7 +507,7 @@ OpCodeBuilder& OpCodeBuilder::pop()
     op2.execute = [](Registers& registers, AddressSpace& addressSpace, const OpArgs&, std::uint16_t context)
     {
         std::uint8_t msb = addressSpace.getByte(registers.getSP());
-        registers.setSP(AluFunctions::inc16(registers.getFlags(), registers.getSP()));
+        registers.setSP(AluFunction::inc16(registers.getFlags(), registers.getSP()));
         return context | (msb << 8);
     };
 
