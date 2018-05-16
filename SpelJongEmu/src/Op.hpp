@@ -10,14 +10,17 @@ class AddressSpace;
 class Registers;
 class InterruptManager;
 
+using OpArgs = std::array<std::uint8_t, 2>;
+using OpExecution = std::function<std::uint16_t(Registers&, AddressSpace&, const OpArgs&, std::uint16_t)>;
+
 struct Op final
 {
     bool readsMemory = false;
     bool writesMemory = false;
     std::size_t operandLength = 0;
 
-    std::function<std::uint8_t(Registers&, AddressSpace&, const std::array<std::uint8_t, 2>&, std::uint8_t)> execute =
-        [](Registers& registers, AddressSpace& addressSpace, const std::array<std::uint8_t, 2>& args, std::uint8_t context)
+    OpExecution execute =
+        [](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t context)
     {
         return context;
     };

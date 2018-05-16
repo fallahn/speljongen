@@ -6,9 +6,9 @@ class Flags;
 namespace AluFunctions
 {
     static inline std::uint8_t inc(Flags&, std::uint8_t);
-    static inline std::uint16_t inc(Flags&, std::uint16_t);
+    static inline std::uint16_t inc16(Flags&, std::uint16_t);
     static inline std::uint8_t dec(Flags&, std::uint8_t);
-    static inline std::uint16_t dec(Flags&, std::uint16_t);
+    static inline std::uint16_t dec16(Flags&, std::uint16_t);
     static inline std::uint16_t add(Flags&, std::uint16_t, std::uint16_t);
     static inline std::uint16_t add(Flags&, std::uint16_t, std::int8_t);
     static inline std::uint16_t add_sp(Flags&, std::uint16_t, std::int8_t);

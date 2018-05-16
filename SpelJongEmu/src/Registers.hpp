@@ -16,7 +16,7 @@ public:
     };
 
     std::uint8_t getFlags() const { return m_flags; }
-    std::uint8_t setFlags(std::uint8_t value) { m_flags = (value & 0xf0); }
+    void setFlags(std::uint8_t value) { m_flags = (value & 0xf0); }
 
     bool isSet(ID id) const { return (m_flags & id) != 0; }
 
@@ -47,8 +47,9 @@ public:
     std::uint16_t getSP() const { return sp; }
     std::uint16_t getPC() const { return pc; }
 
-    Flags getFlags() const { return m_flags; }
-
+    Flags& getFlags() { return m_flags; }
+    const Flags& getFlags() const { return m_flags; }
+    
     void setA(std::uint8_t value) { a = value; }
     void setB(std::uint8_t value) { b = value; }
     void setC(std::uint8_t value) { c = value; }

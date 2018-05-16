@@ -14,7 +14,7 @@ std::uint8_t inc(Flags& flags, std::uint8_t arg)
     return result;
 }
 
-std::uint16_t inc(Flags& flags, std::uint16_t arg)
+std::uint16_t inc16(Flags& flags, std::uint16_t arg)
 {
     return arg + 1;
 }
@@ -28,7 +28,7 @@ std::uint8_t dec(Flags& flags, std::uint8_t arg)
     return result;
 }
 
-std::uint16_t dec(Flags& flags, std::uint16_t arg)
+std::uint16_t dec16(Flags& flags, std::uint16_t arg)
 {
     return arg - 1;
 }

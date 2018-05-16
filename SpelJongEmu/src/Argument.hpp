@@ -11,12 +11,18 @@
 
 enum class DataType
 {
-    D8, D16, R8
+    D8, D16, R8, None
 };
 
 class Argument
 {
 public:
+    enum ID
+    {
+        A, B, C, D, E, H, L, AF, BC, DE, HL, SP, PC, D8, D16, R8, A16,
+        _BC, _DE, _HL, _A8, _A16, _C, Count
+    };
+
     Argument(const std::string& label, std::size_t operandLength, bool memory, DataType type);
 
     std::size_t getOperandLength() const;
@@ -26,6 +32,7 @@ public:
 
     virtual std::uint16_t read(const Registers&, const AddressSpace&, const std::array<std::uint8_t, 2>&) = 0;
     virtual void write(Registers&, AddressSpace&, const std::array<std::uint8_t, 2>&, std::uint16_t value) = 0;
+    virtual std::int32_t id() const = 0;
 private:
     std::string m_label;
     std::size_t m_operandLength;
@@ -45,6 +52,7 @@ public:
     {
         registers.setA(static_cast<std::uint8_t>(value));
     }
+    std::int32_t id() const { return Argument::A; }
 };
 
 class ArgumentB final : public Argument
@@ -59,6 +67,7 @@ public:
     {
         registers.setB(static_cast<std::uint8_t>(value));
     }
+    std::int32_t id() const { return Argument::B; }
 };
 
 class ArgumentC final : public Argument
@@ -73,6 +82,7 @@ public:
     {
         registers.setC(static_cast<std::uint8_t>(value));
     }
+    std::int32_t id() const { return Argument::C; }
 };
 
 class ArgumentD final : public Argument
@@ -87,6 +97,7 @@ public:
     {
         registers.setD(static_cast<std::uint8_t>(value));
     }
+    std::int32_t id() const { return Argument::D; }
 };
 
 class ArgumentE final : public Argument
@@ -101,6 +112,7 @@ public:
     {
         registers.setE(static_cast<std::uint8_t>(value));
     }
+    std::int32_t id() const { return Argument::E; }
 };
 
 class ArgumentH final : public Argument
@@ -115,6 +127,7 @@ public:
     {
         registers.setH(static_cast<std::uint8_t>(value));
     }
+    std::int32_t id() const { return Argument::H; }
 };
 
 class ArgumentL final : public Argument
@@ -129,6 +142,7 @@ public:
     {
         registers.setH(static_cast<std::uint8_t>(value));
     }
+    std::int32_t id() const { return Argument::L; }
 };
 
 class ArgumentAF final : public Argument
@@ -143,6 +157,7 @@ public:
     {
         registers.setAF(value);
     }
+    std::int32_t id() const { return Argument::AF; }
 };
 
 class ArgumentBC final : public Argument
@@ -157,6 +172,7 @@ public:
     {
         registers.setBC(value);
     }
+    std::int32_t id() const { return Argument::BC; }
 };
 
 class ArgumentDE final : public Argument
@@ -171,6 +187,7 @@ public:
     {
         registers.setDE(value);
     }
+    std::int32_t id() const { return Argument::DE; }
 };
 
 class ArgumentHL final : public Argument
@@ -185,6 +202,7 @@ public:
     {
         registers.setHL(value);
     }
+    std::int32_t id() const { return Argument::HL; }
 };
 
 class ArgumentSP final : public Argument
@@ -199,6 +217,7 @@ public:
     {
         registers.setSP(value);
     }
+    std::int32_t id() const { return Argument::SP; }
 };
 
 class ArgumentPC final : public Argument
@@ -213,6 +232,7 @@ public:
     {
         registers.setPC(value);
     }
+    std::int32_t id() const { return Argument::PC; }
 };
 
 class ArgumentD8 final : public Argument
@@ -227,6 +247,7 @@ public:
     {
         assert(false);
     }
+    std::int32_t id() const { return Argument::D8; }
 };
 
 class ArgumentD16 final : public Argument
@@ -241,6 +262,7 @@ public:
     {
         assert(false);
     }
+    std::int32_t id() const { return Argument::D16; }
 };
 
 class ArgumentR8 final : public Argument
@@ -255,6 +277,7 @@ public:
     {
         assert(false);
     }
+    std::int32_t id() const { return Argument::R8; }
 };
 
 class ArgumentA16 final : public Argument
@@ -269,6 +292,7 @@ public:
     {
         assert(false);
     }
+    std::int32_t id() const { return Argument::A16; }
 };
 
 class Argument_BC final : public Argument
@@ -283,6 +307,7 @@ public:
     {
         addressSpace.setByte(registers.getBC(), static_cast<std::uint8_t>(value));
     }
+    std::int32_t id() const { return Argument::_BC; }
 };
 
 class Argument_DE final : public Argument
@@ -297,6 +322,7 @@ public:
     {
         addressSpace.setByte(registers.getDE(), static_cast<std::uint8_t>(value));
     }
+    std::int32_t id() const { return Argument::_DE; }
 };
 
 class Argument_HL final : public Argument
@@ -311,6 +337,7 @@ public:
     {
         addressSpace.setByte(registers.getHL(), static_cast<std::uint8_t>(value));
     }
+    std::int32_t id() const { return Argument::_HL; }
 };
 
 class Argument_A8 final : public Argument
@@ -325,6 +352,7 @@ public:
     {
         addressSpace.setByte((0xff00 | args[0]), static_cast<std::uint8_t>(value));
     }
+    std::int32_t id() const { return Argument::_A8; }
 };
 
 class Argument_A16 final : public Argument
@@ -339,6 +367,7 @@ public:
     {
         addressSpace.setByte(BitUtil::toWord(args), static_cast<std::uint8_t>(value));
     }
+    std::int32_t id() const { return Argument::_A16; }
 };
 
 class Argument_C final : public Argument
@@ -353,4 +382,5 @@ public:
     {
         addressSpace.setByte((0xff00 | registers.getC()), static_cast<std::uint8_t>(value));
     }
+    std::int32_t id() const { return Argument::_C; }
 };
