@@ -1,6 +1,13 @@
 #include "OpCode.hpp"
 #include "OpCodeBuilder.hpp"
 
+OpCode::OpCode()
+    : m_opcode  (0),
+    m_length    (0)
+{
+
+}
+
 OpCode::OpCode(const OpCodeBuilder& builder)
     : m_opcode  (builder.getOpCode()),
     m_label     (builder.getLabel()),

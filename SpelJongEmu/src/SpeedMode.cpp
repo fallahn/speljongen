@@ -1,0 +1,40 @@
+#include "SpeedMode.hpp"
+
+SpeedMode::SpeedMode()
+    : m_currentSpeed    (true),
+    m_prepareSpeedSwitch(false)
+{
+
+}
+
+//public
+bool SpeedMode::accepts(std::uint16_t address) const
+{
+    return address == 0xff4d;
+}
+
+void SpeedMode::setByte(std::uint16_t address, std::uint8_t value)
+{
+    m_prepareSpeedSwitch = ((value & 0x01) != 0);
+}
+
+std::uint8_t SpeedMode::getByte(std::uint16_t address) const
+{
+    return (m_currentSpeed ? (1 << 7) : 0) | (m_prepareSpeedSwitch ? (1 << 0) : 0) | 0b01111110;
+}
+
+bool SpeedMode::onStop()
+{
+    if (m_prepareSpeedSwitch)
+    {
+        m_currentSpeed = !m_currentSpeed;
+        m_prepareSpeedSwitch = false;
+        return true;
+    }
+    return false;
+}
+
+std::uint32_t SpeedMode::getSpeedMode() const
+{
+    return m_currentSpeed ? 2 : 1;
+}
