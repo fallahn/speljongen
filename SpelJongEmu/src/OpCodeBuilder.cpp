@@ -355,14 +355,13 @@ OpCodeBuilder::OpCodeBuilder(std::uint8_t opcode, const std::string& label)
 }
 
 //public
-OpCodeBuilder& OpCodeBuilder::copyByte(const std::string& target, const std::string& source)
+void OpCodeBuilder::copyByte(const std::string& target, const std::string& source)
 {
     load(source);
     store(target);
-    return *this;
 }
 
-OpCodeBuilder& OpCodeBuilder::load(const std::string& source)
+void OpCodeBuilder::load(const std::string& source)
 {
     auto* arg = findArg(source);
     m_lastType = arg->getDataType();
@@ -376,11 +375,9 @@ OpCodeBuilder& OpCodeBuilder::load(const std::string& source)
     {
         return arg->read(registers, addressSpace, args);
     };
-
-    return *this;
 }
 
-OpCodeBuilder& OpCodeBuilder::loadWord(std::uint16_t val)
+void OpCodeBuilder::loadWord(std::uint16_t val)
 {
     m_lastType = DataType::D16;
 
@@ -390,11 +387,9 @@ OpCodeBuilder& OpCodeBuilder::loadWord(std::uint16_t val)
     {
         return val;
     };
-
-    return *this;
 }
 
-OpCodeBuilder& OpCodeBuilder::store(const std::string& target)
+void OpCodeBuilder::store(const std::string& target)
 {
     auto* arg = findArg(target);
     if (m_lastType == DataType::D16 && arg->id() == Argument::_A16)
@@ -431,10 +426,9 @@ OpCodeBuilder& OpCodeBuilder::store(const std::string& target)
             return context;
         };
     }
-    return *this;
 }
 
-OpCodeBuilder& OpCodeBuilder::proceedIf(const std::string& condition)
+void OpCodeBuilder::proceedIf(const std::string& condition)
 {
     std::int32_t conditionVal = -1;
     if (condition == "NZ") conditionVal = 0;
@@ -459,11 +453,9 @@ OpCodeBuilder& OpCodeBuilder::proceedIf(const std::string& condition)
         }
         return false;
     };
-
-    return *this;
 }
 
-OpCodeBuilder& OpCodeBuilder::push()
+void OpCodeBuilder::push()
 {
     m_ops.emplace_back();
     auto& op = m_ops.back();
@@ -484,11 +476,9 @@ OpCodeBuilder& OpCodeBuilder::push()
         addressSpace.setByte(registers.getSP(), static_cast<std::uint8_t>(context & 0x00ff));
         return context;
     };
-
-    return *this;
 }
 
-OpCodeBuilder& OpCodeBuilder::pop()
+void OpCodeBuilder::pop()
 {
     m_lastType = DataType::D16;
     m_ops.emplace_back();
@@ -510,11 +500,9 @@ OpCodeBuilder& OpCodeBuilder::pop()
         registers.setSP(AluFunction::inc16(registers.getFlags(), registers.getSP()));
         return context | (msb << 8);
     };
-
-    return *this;
 }
 
-OpCodeBuilder& OpCodeBuilder::alu(const std::string& operation, const std::string& arg2)
+void OpCodeBuilder::alu(const std::string& operation, const std::string& arg2)
 {
     auto* arg = findArg(arg2);
     m_ops.emplace_back();
@@ -527,11 +515,9 @@ OpCodeBuilder& OpCodeBuilder::alu(const std::string& operation, const std::strin
     {
         extraCycle();
     }
-
-    return *this;
 }
 
-OpCodeBuilder& OpCodeBuilder::alu(const std::string& operation, std::uint8_t value)
+void OpCodeBuilder::alu(const std::string& operation, std::uint8_t value)
 {
     m_ops.emplace_back();
     auto& op = m_ops.back();
@@ -541,11 +527,9 @@ OpCodeBuilder& OpCodeBuilder::alu(const std::string& operation, std::uint8_t val
     {
         extraCycle();
     }
-
-    return *this;
 }
 
-OpCodeBuilder& OpCodeBuilder::alu(const std::string& operation)
+void OpCodeBuilder::alu(const std::string& operation)
 {
     m_ops.emplace_back();
     auto& op = m_ops.back();
@@ -555,10 +539,9 @@ OpCodeBuilder& OpCodeBuilder::alu(const std::string& operation)
     {
         extraCycle();
     }
-    return *this;
 }
 
-OpCodeBuilder& OpCodeBuilder::aluHL(const std::string& operation)
+void OpCodeBuilder::aluHL(const std::string& operation)
 {
     load("HL");
 
@@ -567,10 +550,9 @@ OpCodeBuilder& OpCodeBuilder::aluHL(const std::string& operation)
     op.execute = findAlu(operation, DataType::D16);
 
     store("HL");
-    return *this;
 }
 
-OpCodeBuilder& OpCodeBuilder::bitHL(std::uint8_t bit)
+void OpCodeBuilder::bitHL(std::uint8_t bit)
 {
     m_ops.emplace_back();
     auto& op = m_ops.back();
@@ -589,11 +571,9 @@ OpCodeBuilder& OpCodeBuilder::bitHL(std::uint8_t bit)
 
         return context;
     };
-
-    return *this;
 }
 
-OpCodeBuilder& OpCodeBuilder::clearZ()
+void OpCodeBuilder::clearZ()
 {
     m_ops.emplace_back();
     auto& op = m_ops.back();
@@ -602,11 +582,9 @@ OpCodeBuilder& OpCodeBuilder::clearZ()
         registers.getFlags().set(Flags::Z, false);
         return context;
     };
-
-    return *this;
 }
 
-OpCodeBuilder& OpCodeBuilder::switchInterrupts(bool enable, bool withDelay)
+void OpCodeBuilder::switchInterrupts(bool enable, bool withDelay)
 {
     m_ops.emplace_back();
     auto& op = m_ops.back();
@@ -624,20 +602,16 @@ OpCodeBuilder& OpCodeBuilder::switchInterrupts(bool enable, bool withDelay)
             interruptManager.disableInterrupts(withDelay);
         };
     }
-
-    return *this;
 }
 
-OpCodeBuilder& OpCodeBuilder::extraCycle()
+void OpCodeBuilder::extraCycle()
 {
     m_ops.emplace_back();
     m_ops.back().readsMemory = true;
-    return *this;
 }
 
-OpCodeBuilder& OpCodeBuilder::forceFinish()
+void OpCodeBuilder::forceFinish()
 {
     m_ops.emplace_back();
     m_ops.back().forceFinishCycle = true;
-    return *this;
 }

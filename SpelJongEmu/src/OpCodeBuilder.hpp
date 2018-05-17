@@ -44,22 +44,22 @@ class OpCodeBuilder final
 public:
     OpCodeBuilder(std::uint8_t opcode, const std::string& label);
 
-    OpCodeBuilder& copyByte(const std::string& target, const std::string& source);
-    OpCodeBuilder& load(const std::string& source);
-    OpCodeBuilder& loadWord(std::uint16_t);
-    OpCodeBuilder& store(const std::string& target);
-    OpCodeBuilder& proceedIf(const std::string& condition);
-    OpCodeBuilder& push();
-    OpCodeBuilder& pop();
-    OpCodeBuilder& alu(const std::string& operation, const std::string& arg2);
-    OpCodeBuilder& alu(const std::string& operation, std::uint8_t);
-    OpCodeBuilder& alu(const std::string& operation);
-    OpCodeBuilder& aluHL(const std::string& operation);
-    OpCodeBuilder& bitHL(std::uint8_t);
-    OpCodeBuilder& clearZ();
-    OpCodeBuilder& switchInterrupts(bool enable, bool withDelay);
-    OpCodeBuilder& extraCycle();
-    OpCodeBuilder& forceFinish();
+    void copyByte(const std::string& target, const std::string& source);
+    void load(const std::string& source);
+    void loadWord(std::uint16_t);
+    void store(const std::string& target);
+    void proceedIf(const std::string& condition);
+    void push();
+    void pop();
+    void alu(const std::string& operation, const std::string& arg2);
+    void alu(const std::string& operation, std::uint8_t);
+    void alu(const std::string& operation);
+    void aluHL(const std::string& operation);
+    void bitHL(std::uint8_t);
+    void clearZ();
+    void switchInterrupts(bool enable, bool withDelay);
+    void extraCycle();
+    void forceFinish();
 
     std::uint8_t getOpCode() const { return m_opcode; }
     const std::string& getLabel() const { return m_label; }

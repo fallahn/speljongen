@@ -1,9 +1,12 @@
 #include <SFML/Graphics.hpp>
 
+#include "OpCodesImpl.hpp"
+#include <iostream>
+
 int main()
-{
+{   
     sf::RenderWindow window;
-    window.create({ 800, 600 }, "SpelJong");
+    window.create({ 800, 600 }, "Speljongen");
     window.setVerticalSyncEnabled(true);
 
     while (window.isOpen())

@@ -1,5 +1,10 @@
 #pragma once
 
+/*
+Represents a 'micro-op' which are compiled at runtime to form
+opcodes. See OpCodeBuilder and OpCodeImpl
+*/
+
 #include <cstdint>
 #include <string>
 #include <array>

@@ -23,6 +23,7 @@
     <ProjectGuid>{319AA04C-371B-4F9A-BC53-B0B6FF07D18B}</ProjectGuid>
     <RootNamespace>SpelJongEmu</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <ProjectName>Speljongen</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

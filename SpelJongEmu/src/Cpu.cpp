@@ -19,7 +19,7 @@ Cpu::Cpu(AddressSpace& addressSpace, InterruptManager& interruptManager, SpeedMo
     m_requestedInterrupt    (Interrupt::Type::Count),
     m_clockCycle            (0)
 {
-
+    //TODO compile opcodes here
 }
 
 //public
@@ -78,7 +78,7 @@ void Cpu::tick()
             accessedMemory = true;
             if (m_opcodeOne == 0xcb) //TODO look these up out of interest
             {
-                m_state == State::EXT_OPCODE;
+                m_state = State::EXT_OPCODE;
             }
             else if (m_opcodeOne == 0x10)
             {
