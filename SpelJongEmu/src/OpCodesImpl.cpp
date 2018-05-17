@@ -2,7 +2,10 @@
 
 #include <sstream>
 #include <iomanip>
+#include <iostream>
 
+//enable outputting info about opcodes
+#define DUMP_OPS
 
 namespace
 {
@@ -205,7 +208,7 @@ void OpCodes::init()
     }
     regCmd(opcodes, 0x76, "HALT");
 
-    list = IndexedList(0x80, 0x80, { "ADD", "ADC", "SUB", "SBC", "AND", "XOR", "OR", "CP" });
+    list = IndexedList(0x80, 0x08, { "ADD", "ADC", "SUB", "SBC", "AND", "XOR", "OR", "CP" });
     for (const auto& pair : list)
     {
         auto subList = IndexedList(pair.first, 0x01, { "B", "C", "D", "E", "H", "L", "(HL)", "A" });
@@ -410,27 +413,43 @@ void OpCodes::init()
     }
 
     //finally build the actual ops :3
+    std::cout << "Opcodes:\n";
     for (auto& builder : opcodes)
     {
         if (builder)
         {
             Commands.emplace_back(*builder);
+#ifdef DUMP_OPS
+            std::cout << Commands.size() << ", " << std::hex << (int)Commands.back().getOpcode() << std::dec 
+                << " - " << Commands.back().getLabel() << ", length: " << Commands.back().getOperandLength() << "\n";
+#endif
         }
         else
         {
             Commands.emplace_back();
+#ifdef DUMP_OPS
+            std::cout << Commands.size() << "  NULL\n";
+#endif
         }
     }
 
+    std::cout << "\n\nExtended opcodes:\n";
     for (auto& builder : extOpcodes)
     {
         if (builder)
         {
             ExtCommands.emplace_back(*builder);
+#ifdef DUMP_OPS
+            std::cout << ExtCommands.size() << ", " << std::hex << (int)ExtCommands.back().getOpcode() << std::dec 
+                << " - " << ExtCommands.back().getLabel() << ", length: " << ExtCommands.back().getOperandLength() << "\n";
+#endif
         }
         else
         {
             ExtCommands.emplace_back();
+#ifdef DUMP_OPS
+            std::cout << ExtCommands.size() << "  NULL\n";
+#endif
         }
     }
 }

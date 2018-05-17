@@ -1,10 +1,11 @@
 #include <SFML/Graphics.hpp>
 
 #include "OpCodesImpl.hpp"
-#include <iostream>
 
 int main()
 {   
+    OpCodes::init();
+
     sf::RenderWindow window;
     window.create({ 800, 600 }, "Speljongen");
     window.setVerticalSyncEnabled(true);

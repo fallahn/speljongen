@@ -25,7 +25,7 @@ struct Op final
         return context;
     };
 
-    std::function<void(InterruptManager& interruptManager)> switchInterrupts;
-    std::function<bool(Registers& registers)>proceed;
+    std::function<void(InterruptManager& interruptManager)> switchInterrupts = [](InterruptManager&) {};
+    std::function<bool(Registers& registers)>proceed = [](Registers&) { return true; };
     bool forceFinishCycle = false;
 };

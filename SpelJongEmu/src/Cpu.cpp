@@ -19,7 +19,8 @@ Cpu::Cpu(AddressSpace& addressSpace, InterruptManager& interruptManager, SpeedMo
     m_requestedInterrupt    (Interrupt::Type::Count),
     m_clockCycle            (0)
 {
-    //TODO compile opcodes here
+    //compile opcodes
+    OpCodes::init();
 }
 
 //public
@@ -65,41 +66,124 @@ void Cpu::tick()
     bool accessedMemory = false;
     while (1)
     {
-        std::uint16_t pc = m_registers.getPC();
+        //don't use a copy else it may become out of date
+        //call getPC() directly
+        //std::uint16_t pc = m_registers.getPC();
         switch (m_state)
         {
         default: 
         //case State::HALTED:
         //case State::STOPPED:
             return;
-        case State::OPCODE:
+        case State::OPCODE: //check current opcode, jump to extend opcodes or switch to collecting operands
             clearState();
-            m_opcodeOne = m_addressSpace.getByte(pc);
+            m_opcodeOne = m_addressSpace.getByte(m_registers.getPC());
             accessedMemory = true;
-            if (m_opcodeOne == 0xcb) //TODO look these up out of interest
+            if (m_opcodeOne == 0xcb) //jumps to extended ops
             {
                 m_state = State::EXT_OPCODE;
             }
             else if (m_opcodeOne == 0x10)
             {
                 assert(!OpCodes::Commands.empty()); //Haven't called init yet!!
+                m_currentOpcode = OpCodes::Commands[m_opcodeOne];
                 m_state = State::EXT_OPCODE;
             }
             else
             {
                 assert(!OpCodes::Commands.empty()); //Haven't called init yet!!
+                m_currentOpcode = OpCodes::Commands[m_opcodeOne];
+                assert(m_currentOpcode); //invalid opcode!
                 m_state = State::OPERAND;
             }
             //TODO pause here if debug mode enabled
             m_registers.incrementPC();
             break;
-        case State::EXT_OPCODE:
-
+        case State::EXT_OPCODE: //check valid extended opcode and start collecting operands
+            if (accessedMemory) return;
+            accessedMemory = true;
+            m_opcodeTwo = m_addressSpace.getByte(m_registers.getPC());
+            if (!m_currentOpcode)
+            {
+                m_currentOpcode = OpCodes::ExtCommands[m_opcodeTwo];
+                assert(m_currentOpcode); //uh oh.
+            }
+            m_state = State::OPERAND;
+            m_registers.incrementPC();
             break;
-        case State::OPERAND:
+        case State::OPERAND: //collect any operands for current opcode
+            while (m_operandIndex < m_currentOpcode.getOperandLength())
+            {
+                if (accessedMemory) return;
 
+                accessedMemory = true;
+                m_opArgs[m_operandIndex++] = m_addressSpace.getByte(m_registers.getPC());
+                m_registers.incrementPC();
+            }
+            m_ops = m_currentOpcode.getOps();
+            m_state = State::RUNNING;
             break;
-        case State::RUNNING:
+        case State::RUNNING: //execute opcode with any operands as parameters
+            if (m_opcodeOne == 0x10)
+            {
+                if (m_speedMode.onStop())
+                {
+                    m_state = State::OPCODE;
+                }
+                else
+                {
+                    m_state = State::STOPPED;
+                    //TODO disable display
+                }
+                return;
+            }
+            else if (m_opcodeOne == 0x76) //HALT
+            {
+                //TODO switch on some debug output and continue running
+                //else
+                m_state = State::HALTED;
+                return;
+            }
+
+            if (m_opIndex < m_ops.size())
+            {
+                const auto& op = m_ops[m_opIndex];
+                bool opAccessesMemory = op.readsMemory || op.writesMemory;
+                if (accessedMemory && opAccessesMemory)
+                {
+                    return;
+                }
+                m_opIndex++;
+
+                //TODO sprite debug output
+
+                m_opContext = op.execute(m_registers, m_addressSpace, m_opArgs, m_opContext);
+                op.switchInterrupts(m_interruptManager);
+
+                if (!op.proceed(m_registers))
+                {
+                    m_opIndex = m_ops.size();
+                    break;
+                }
+
+                if (op.forceFinishCycle)
+                {
+                    return;
+                }
+
+                if (opAccessesMemory)
+                {
+                    accessedMemory = true;
+                }
+            }
+
+            if (m_opIndex >= m_ops.size())
+            {
+                m_state = State::OPCODE;
+                m_operandIndex = 0;
+                m_interruptManager.onInstructionFinished();
+                return;
+            }
 
             break;
         }
