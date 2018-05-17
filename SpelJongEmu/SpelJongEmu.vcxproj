@@ -143,6 +143,7 @@
     <ClInclude Include="src\BitUtil.hpp" />
     <ClInclude Include="src\Cpu.hpp" />
     <ClInclude Include="src\InterruptManager.hpp" />
+    <ClInclude Include="src\Mmu.hpp" />
     <ClInclude Include="src\Op.hpp" />
     <ClInclude Include="src\OpCode.hpp" />
     <ClInclude Include="src\OpCodeBuilder.hpp" />
