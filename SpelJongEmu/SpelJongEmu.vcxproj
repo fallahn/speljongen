@@ -131,6 +131,7 @@
     <ClCompile Include="src\Cpu.cpp" />
     <ClCompile Include="src\InterruptManager.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Mmu.cpp" />
     <ClCompile Include="src\OpCode.cpp" />
     <ClCompile Include="src\OpCodeBuilder.cpp" />
     <ClCompile Include="src\OpCodesImpl.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="src\AluFunctions.hpp" />
     <ClInclude Include="src\Argument.hpp" />
     <ClInclude Include="src\BitUtil.hpp" />
+    <ClInclude Include="src\BootRom.hpp" />
     <ClInclude Include="src\Cpu.hpp" />
     <ClInclude Include="src\Dma.hpp" />
     <ClInclude Include="src\InterruptManager.hpp" />

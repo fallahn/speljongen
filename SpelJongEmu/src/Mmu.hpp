@@ -10,7 +10,7 @@
 class Mmu final : public AddressSpace
 {
 public:
-    Mmu() : m_storage(0xffff) {}
+    Mmu();
 
     template <typename T, typename... Args>
     T& addAddressSpace(Args&&... args)
@@ -21,15 +21,10 @@ public:
         return *m_spaces.back();
     }
 
-    bool accepts(std::uint16_t) const override { return true; }
-    void setByte(std::uint16_t address, std::uint8_t value) override
-    {
-        m_storage[address] = value;
-    }
-    std::uint8_t getByte(std::uint16_t address) const override
-    {
-        return m_storage[address];
-    }
+    bool accepts(std::uint16_t) const override;
+    void setByte(std::uint16_t address, std::uint8_t value) override;
+    std::uint8_t getByte(std::uint16_t address) const override;
+
 
 private:
     std::vector<std::unique_ptr<AddressSpace>> m_spaces;
