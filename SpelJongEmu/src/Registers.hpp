@@ -98,7 +98,7 @@ private:
     std::uint8_t h = 0;
     std::uint8_t l = 0;
 
-    std::uint16_t pc = 0x100;
+    std::uint16_t pc = 0x0;
     std::uint16_t sp = 0xfffe;
 
     Flags m_flags;

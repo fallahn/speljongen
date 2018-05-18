@@ -26,7 +26,7 @@ public:
 
     void setByte(std::uint16_t address, std::uint8_t value) override
     {
-        assert(accepts(address);)
+        assert(accepts(address));
         m_from = value * 0x100;
         m_restarted = isOamBlocked();
         m_ticks = 0;

@@ -1,7 +1,15 @@
 #include <SFML/Graphics.hpp>
 
+#include "Speljongen.hpp"
+
+#ifdef __LINUX__
+#include <X11.h>
+#endif
+
 int main()
 {   
+    Speljongen gameboy;
+
     sf::RenderWindow window;
     window.create({ 800, 600 }, "Speljongen");
     window.setVerticalSyncEnabled(true);
@@ -22,7 +30,10 @@ int main()
             }
         }
 
+        gameboy.tick();
+
         window.clear(sf::Color::Blue);
+        window.draw(gameboy);
         window.display();
     }
 

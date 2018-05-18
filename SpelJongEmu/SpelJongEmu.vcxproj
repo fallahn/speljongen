@@ -136,6 +136,7 @@
     <ClCompile Include="src\OpCodeBuilder.cpp" />
     <ClCompile Include="src\OpCodesImpl.cpp" />
     <ClCompile Include="src\SpeedMode.cpp" />
+    <ClCompile Include="src\Speljongen.cpp" />
     <ClCompile Include="src\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +157,7 @@
     <ClInclude Include="src\Registers.hpp" />
     <ClInclude Include="src\ShadowAddressSpace.hpp" />
     <ClInclude Include="src\SpeedMode.hpp" />
+    <ClInclude Include="src\Speljongen.hpp" />
     <ClInclude Include="src\Timer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

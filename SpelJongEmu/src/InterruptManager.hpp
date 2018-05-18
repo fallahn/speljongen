@@ -32,6 +32,8 @@ public:
 
     explicit InterruptManager(bool isColour);
 
+    AddressSpace::Type type() const override { return AddressSpace::Interrupt; }
+
     void enableInterrupts(bool useDelay);
 
     void disableInterrupts(bool useDelay);

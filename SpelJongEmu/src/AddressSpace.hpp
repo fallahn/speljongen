@@ -14,7 +14,8 @@ public:
         Rom,
         Timer,
         Dma,
-        ShadowSpace
+        ShadowSpace,
+        Interrupt
     };
 
     virtual ~AddressSpace() = default;

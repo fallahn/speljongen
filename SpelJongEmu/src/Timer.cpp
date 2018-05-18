@@ -96,6 +96,7 @@ std::uint8_t Timer::getByte(std::uint16_t address) const
     case 0xff07:
         return static_cast<std::uint8_t>(m_tac);
     }
+    return 0;
 }
 
 //private
