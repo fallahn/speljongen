@@ -135,6 +135,7 @@
     <ClCompile Include="src\OpCodeBuilder.cpp" />
     <ClCompile Include="src\OpCodesImpl.cpp" />
     <ClCompile Include="src\SpeedMode.cpp" />
+    <ClCompile Include="src\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AddressSpace.hpp" />
@@ -142,14 +143,18 @@
     <ClInclude Include="src\Argument.hpp" />
     <ClInclude Include="src\BitUtil.hpp" />
     <ClInclude Include="src\Cpu.hpp" />
+    <ClInclude Include="src\Dma.hpp" />
     <ClInclude Include="src\InterruptManager.hpp" />
     <ClInclude Include="src\Mmu.hpp" />
     <ClInclude Include="src\Op.hpp" />
     <ClInclude Include="src\OpCode.hpp" />
     <ClInclude Include="src\OpCodeBuilder.hpp" />
     <ClInclude Include="src\OpCodesImpl.hpp" />
+    <ClInclude Include="src\Ram.hpp" />
     <ClInclude Include="src\Registers.hpp" />
+    <ClInclude Include="src\ShadowAddressSpace.hpp" />
     <ClInclude Include="src\SpeedMode.hpp" />
+    <ClInclude Include="src\Timer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
