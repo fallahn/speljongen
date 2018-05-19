@@ -333,7 +333,7 @@ public:
 class Argument_HL final : public Argument
 {
 public:
-    Argument_HL() : Argument("(HL)", 0, true, DataType::R8) {}
+    Argument_HL() : Argument("(HL)", 0, true, DataType::D8) {}
     std::uint16_t read(const Registers& registers, const AddressSpace& addressSpace, const std::array<std::uint8_t, 2>&) override
     {
         return addressSpace.getByte(registers.getHL());

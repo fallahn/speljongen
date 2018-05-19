@@ -3,6 +3,7 @@
 #include "InterruptManager.hpp"
 
 #include <algorithm>
+#include <iostream>
 
 namespace
 {
@@ -158,8 +159,8 @@ namespace
                 {
                     return [arg](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t val1)
                     {
-                        std::uint16_t val2 = arg->read(registers, addressSpace, args);
-                        return AluFunction::add(registers.getFlags(), val1, static_cast<std::int8_t>(val2));
+                        std::int8_t val2 = static_cast<std::int8_t>(arg->read(registers, addressSpace, args));
+                        return AluFunction::add(registers.getFlags(), val1, val2);
                     };
                 }
                 else if (arg->getDataType() == DataType::D16)
@@ -425,6 +426,15 @@ void OpCodeBuilder::store(const std::string& target)
             arg->write(registers, addressSpace, args, context);
             return context;
         };
+    }
+    else
+    {
+        //invalid target
+        std::string type;
+        if (m_lastType == DataType::D8) type = "D8";
+        else if (m_lastType == DataType::D16) type = "D16";
+        else if (m_lastType == DataType::R8) type = "R8";
+        std::cout << "Can't write " << type << " to " << target << "!!\n";
     }
 }
 

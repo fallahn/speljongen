@@ -38,5 +38,6 @@ private:
     mutable sf::Text m_text;
     sf::Font m_font;
     void initRenderer();
+    void updateDebug();
     void draw(sf::RenderTarget&, sf::RenderStates) const override;
 };

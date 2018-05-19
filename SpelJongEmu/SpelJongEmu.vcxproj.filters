@@ -13,6 +13,24 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\cpu">
+      <UniqueIdentifier>{0c699696-4c6c-4919-b7bc-4448d0915a59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\gpu">
+      <UniqueIdentifier>{e4b7c74c-ff02-4370-bd8c-7d14794d055c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\mmu">
+      <UniqueIdentifier>{18a1fc6e-10fb-4310-ae27-2cdd0a235388}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cpu">
+      <UniqueIdentifier>{a9b8991d-ccab-44fd-b764-26e7a7d595be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gpu">
+      <UniqueIdentifier>{a33b6135-7a5b-4c57-a2d3-295fcc001996}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\mmu">
+      <UniqueIdentifier>{c2cfd4cc-68d3-41e4-91bc-b286eeebd94f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -21,94 +39,94 @@
     <ClCompile Include="src\InterruptManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Argument.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AluFunctions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\OpCode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\OpCodeBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SpeedMode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Cpu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\OpCodesImpl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Timer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Mmu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Speljongen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\AluFunctions.cpp">
+      <Filter>Source Files\cpu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Argument.cpp">
+      <Filter>Source Files\cpu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Cpu.cpp">
+      <Filter>Source Files\cpu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpCode.cpp">
+      <Filter>Source Files\cpu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpCodeBuilder.cpp">
+      <Filter>Source Files\cpu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpCodesImpl.cpp">
+      <Filter>Source Files\cpu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mmu.cpp">
+      <Filter>Source Files\mmu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Timer.cpp">
+      <Filter>Source Files\mmu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\AddressSpace.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\InterruptManager.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\BitUtil.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Registers.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Op.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Argument.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AluFunctions.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\OpCodeBuilder.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\OpCode.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\SpeedMode.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Cpu.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\OpCodesImpl.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Mmu.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ram.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Dma.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ShadowAddressSpace.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Timer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\BootRom.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Speljongen.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AddressSpace.hpp">
+      <Filter>Header Files\mmu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BootRom.hpp">
+      <Filter>Header Files\mmu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dma.hpp">
+      <Filter>Header Files\mmu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mmu.hpp">
+      <Filter>Header Files\mmu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ram.hpp">
+      <Filter>Header Files\mmu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShadowAddressSpace.hpp">
+      <Filter>Header Files\mmu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Timer.hpp">
+      <Filter>Header Files\mmu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AluFunctions.hpp">
+      <Filter>Header Files\cpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Argument.hpp">
+      <Filter>Header Files\cpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BitUtil.hpp">
+      <Filter>Header Files\cpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cpu.hpp">
+      <Filter>Header Files\cpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Op.hpp">
+      <Filter>Header Files\cpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpCode.hpp">
+      <Filter>Header Files\cpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpCodeBuilder.hpp">
+      <Filter>Header Files\cpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpCodesImpl.hpp">
+      <Filter>Header Files\cpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Registers.hpp">
+      <Filter>Header Files\cpu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

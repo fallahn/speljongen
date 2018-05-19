@@ -17,7 +17,6 @@ Mmu::Mmu()
     :m_storage(0xffff)
 {
     //TODO check if GBC
-    //PC starts at 0x100, beginning of ROM space
     //logo code at 0x104 so we see something when no game inserted - this is normally
     //part of the ROM data.
     std::memcpy(m_storage.data(), BootRom::CLASSIC.data(), BootRom::CLASSIC.size());

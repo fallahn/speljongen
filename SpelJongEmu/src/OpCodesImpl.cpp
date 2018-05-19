@@ -5,7 +5,7 @@
 #include <iostream>
 
 //enable outputting info about opcodes
-#define DUMP_OPS
+//#define DUMP_OPS
 
 namespace
 {
@@ -413,7 +413,9 @@ void OpCodes::init()
     }
 
     //finally build the actual ops :3
+#ifdef DUMP_OPS
     std::cout << "Opcodes:\n";
+#endif
     for (auto& builder : opcodes)
     {
         if (builder)
@@ -432,8 +434,9 @@ void OpCodes::init()
 #endif
         }
     }
-
+#ifdef DUMP_OPS
     std::cout << "\n\nExtended opcodes:\n";
+#endif
     for (auto& builder : extOpcodes)
     {
         if (builder)

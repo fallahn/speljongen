@@ -9,6 +9,7 @@
 int main()
 {   
     Speljongen gameboy;
+    bool run = false;
 
     sf::RenderWindow window;
     window.create({ 800, 600 }, "Speljongen");
@@ -23,14 +24,28 @@ int main()
             {
                 window.close();
             }
-            else if (evt.type == sf::Event::KeyReleased
-                && evt.key.code == sf::Keyboard::Escape)
-            {
-                window.close();
+            else if (evt.type == sf::Event::KeyReleased)
+            { 
+                switch (evt.key.code)
+                {
+                case sf::Keyboard::Escape:
+                    window.close();
+                    break;
+                case sf::Keyboard::LControl:
+                    run = !run;
+                    break;
+                case sf::Keyboard::Space:
+                    if (!run)
+                    {
+                        gameboy.tick();
+                    }
+                    break;
+                default: break;
+                }
             }
         }
 
-        gameboy.tick();
+        if(run) gameboy.tick();
 
         window.clear(sf::Color::Blue);
         window.draw(gameboy);

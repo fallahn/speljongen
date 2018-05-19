@@ -4,6 +4,9 @@
 #include "Timer.hpp"
 #include "ShadowAddressSpace.hpp"
 
+#include <sstream>
+#include <iomanip>
+
 #include <SFML/Graphics/RenderTarget.hpp>
 
 Speljongen::Speljongen()
@@ -56,8 +59,7 @@ void Speljongen::tick()
     m_dma->tick();
     m_cpu.tick();
 
-    const auto& reg = m_cpu.getRegisters();
-    m_text.setString(std::to_string(reg.getPC()));
+    updateDebug();
 }
 
 //private
@@ -80,7 +82,24 @@ void Speljongen::initRenderer()
 {
     m_font.loadFromFile("assets/VeraMono.ttf");
     m_text.setFont(m_font);
-    //m_text.setString("buns");
+    m_text.setCharacterSize(12);
+}
+
+void Speljongen::updateDebug()
+{
+    const auto& reg = m_cpu.getRegisters();
+    std::stringstream ss;
+    ss << "LCtrl toggle run/step\nSpace step\n";
+    ss << std::hex;
+    ss << "PC: 0x" << std::setfill('0') << std::setw(4) << reg.getPC();
+    ss << " : 0x" << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(reg.getPC());
+    ss << "\nCurrent op : " << (int)m_cpu.getCurrentOpcode().getOpcode() << ", " << m_cpu.getCurrentOpcode().getLabel();
+    ss << "\nSP: 0x" << std::setfill('0') << std::setw(4) << reg.getSP();
+    ss << "\nHL: 0x" << std::setfill('0') << std::setw(4) << reg.getHL();
+    ss << "\nA: 0x" << std::setfill('0') << std::setw(2) << (int)reg.getA();
+    ss << "\nZ: " << reg.getFlags().isSet(Flags::Z) << " C: " << reg.getFlags().isSet(Flags::C);
+
+    m_text.setString(ss.str());
 }
 
 void Speljongen::draw(sf::RenderTarget& rt, sf::RenderStates) const
