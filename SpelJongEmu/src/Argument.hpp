@@ -57,7 +57,7 @@ public:
     {
         registers.setA(static_cast<std::uint8_t>(value));
     }
-    std::int32_t id() const { return Argument::A; }
+    std::int32_t id() const override { return Argument::A; }
 };
 
 class ArgumentB final : public Argument
@@ -72,7 +72,7 @@ public:
     {
         registers.setB(static_cast<std::uint8_t>(value));
     }
-    std::int32_t id() const { return Argument::B; }
+    std::int32_t id() const override { return Argument::B; }
 };
 
 class ArgumentC final : public Argument
@@ -87,7 +87,7 @@ public:
     {
         registers.setC(static_cast<std::uint8_t>(value));
     }
-    std::int32_t id() const { return Argument::C; }
+    std::int32_t id() const override { return Argument::C; }
 };
 
 class ArgumentD final : public Argument
@@ -102,7 +102,7 @@ public:
     {
         registers.setD(static_cast<std::uint8_t>(value));
     }
-    std::int32_t id() const { return Argument::D; }
+    std::int32_t id() const override { return Argument::D; }
 };
 
 class ArgumentE final : public Argument
@@ -117,7 +117,7 @@ public:
     {
         registers.setE(static_cast<std::uint8_t>(value));
     }
-    std::int32_t id() const { return Argument::E; }
+    std::int32_t id() const override { return Argument::E; }
 };
 
 class ArgumentH final : public Argument
@@ -132,7 +132,7 @@ public:
     {
         registers.setH(static_cast<std::uint8_t>(value));
     }
-    std::int32_t id() const { return Argument::H; }
+    std::int32_t id() const override { return Argument::H; }
 };
 
 class ArgumentL final : public Argument
@@ -147,7 +147,7 @@ public:
     {
         registers.setH(static_cast<std::uint8_t>(value));
     }
-    std::int32_t id() const { return Argument::L; }
+    std::int32_t id() const override { return Argument::L; }
 };
 
 class ArgumentAF final : public Argument
@@ -162,7 +162,7 @@ public:
     {
         registers.setAF(value);
     }
-    std::int32_t id() const { return Argument::AF; }
+    std::int32_t id() const override { return Argument::AF; }
 };
 
 class ArgumentBC final : public Argument
@@ -177,7 +177,7 @@ public:
     {
         registers.setBC(value);
     }
-    std::int32_t id() const { return Argument::BC; }
+    std::int32_t id() const override { return Argument::BC; }
 };
 
 class ArgumentDE final : public Argument
@@ -192,7 +192,7 @@ public:
     {
         registers.setDE(value);
     }
-    std::int32_t id() const { return Argument::DE; }
+    std::int32_t id() const override { return Argument::DE; }
 };
 
 class ArgumentHL final : public Argument
@@ -207,7 +207,7 @@ public:
     {
         registers.setHL(value);
     }
-    std::int32_t id() const { return Argument::HL; }
+    std::int32_t id() const override { return Argument::HL; }
 };
 
 class ArgumentSP final : public Argument
@@ -222,7 +222,7 @@ public:
     {
         registers.setSP(value);
     }
-    std::int32_t id() const { return Argument::SP; }
+    std::int32_t id() const override { return Argument::SP; }
 };
 
 class ArgumentPC final : public Argument
@@ -237,7 +237,7 @@ public:
     {
         registers.setPC(value);
     }
-    std::int32_t id() const { return Argument::PC; }
+    std::int32_t id() const override { return Argument::PC; }
 };
 
 class ArgumentD8 final : public Argument
@@ -252,7 +252,7 @@ public:
     {
         assert(false);
     }
-    std::int32_t id() const { return Argument::D8; }
+    std::int32_t id() const override { return Argument::D8; }
 };
 
 class ArgumentD16 final : public Argument
@@ -267,7 +267,7 @@ public:
     {
         assert(false);
     }
-    std::int32_t id() const { return Argument::D16; }
+    std::int32_t id() const override { return Argument::D16; }
 };
 
 class ArgumentR8 final : public Argument
@@ -282,7 +282,7 @@ public:
     {
         assert(false);
     }
-    std::int32_t id() const { return Argument::R8; }
+    std::int32_t id() const override { return Argument::R8; }
 };
 
 class ArgumentA16 final : public Argument
@@ -297,7 +297,7 @@ public:
     {
         assert(false);
     }
-    std::int32_t id() const { return Argument::A16; }
+    std::int32_t id() const override { return Argument::A16; }
 };
 
 class Argument_BC final : public Argument
@@ -312,7 +312,7 @@ public:
     {
         addressSpace.setByte(registers.getBC(), static_cast<std::uint8_t>(value));
     }
-    std::int32_t id() const { return Argument::_BC; }
+    std::int32_t id() const override { return Argument::_BC; }
 };
 
 class Argument_DE final : public Argument
@@ -327,7 +327,7 @@ public:
     {
         addressSpace.setByte(registers.getDE(), static_cast<std::uint8_t>(value));
     }
-    std::int32_t id() const { return Argument::_DE; }
+    std::int32_t id() const override { return Argument::_DE; }
 };
 
 class Argument_HL final : public Argument
@@ -342,7 +342,7 @@ public:
     {
         addressSpace.setByte(registers.getHL(), static_cast<std::uint8_t>(value));
     }
-    std::int32_t id() const { return Argument::_HL; }
+    std::int32_t id() const override { return Argument::_HL; }
 };
 
 class Argument_A8 final : public Argument
@@ -357,7 +357,7 @@ public:
     {
         addressSpace.setByte((0xff00 | args[0]), static_cast<std::uint8_t>(value));
     }
-    std::int32_t id() const { return Argument::_A8; }
+    std::int32_t id() const override { return Argument::_A8; }
 };
 
 class Argument_A16 final : public Argument
@@ -372,7 +372,7 @@ public:
     {
         addressSpace.setByte(BitUtil::toWord(args), static_cast<std::uint8_t>(value));
     }
-    std::int32_t id() const { return Argument::_A16; }
+    std::int32_t id() const override { return Argument::_A16; }
 };
 
 class Argument_C final : public Argument
@@ -387,5 +387,5 @@ public:
     {
         addressSpace.setByte((0xff00 | registers.getC()), static_cast<std::uint8_t>(value));
     }
-    std::int32_t id() const { return Argument::_C; }
+    std::int32_t id() const override { return Argument::_C; }
 };

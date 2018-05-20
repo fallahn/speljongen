@@ -16,7 +16,7 @@ public:
     template <typename T, typename... Args>
     T& addAddressSpace(Args&&... args)
     {
-        //static_assert(std::is_base_of<T, AddressSpace>::value, "Not an address space type");
+        static_assert(std::is_base_of<AddressSpace, T>::value, "Not an address space type");
         m_spaces.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
         m_spaces.back()->setStorage(m_storage);
         return *dynamic_cast<T*>(m_spaces.back().get());

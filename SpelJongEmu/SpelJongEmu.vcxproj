@@ -147,8 +147,12 @@
     <ClInclude Include="src\BootRom.hpp" />
     <ClInclude Include="src\Cpu.hpp" />
     <ClInclude Include="src\Dma.hpp" />
+    <ClInclude Include="src\GpuPhase.hpp" />
+    <ClInclude Include="src\GpuRegister.hpp" />
     <ClInclude Include="src\InterruptManager.hpp" />
+    <ClInclude Include="src\MemoryRegisters.hpp" />
     <ClInclude Include="src\Mmu.hpp" />
+    <ClInclude Include="src\OamSearchPhase.hpp" />
     <ClInclude Include="src\Op.hpp" />
     <ClInclude Include="src\OpCode.hpp" />
     <ClInclude Include="src\OpCodeBuilder.hpp" />

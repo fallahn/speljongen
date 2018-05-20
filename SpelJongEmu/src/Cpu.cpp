@@ -29,10 +29,7 @@ void Cpu::tick()
     m_clockCycle = (m_clockCycle + 1) % (4 / m_speedMode.getSpeedMode());
     if (m_clockCycle != 0) return;
 
-    //TODO can we improve this a bit using bit flags on the state?
-    if (m_state == State::OPCODE ||
-        m_state == State::HALTED ||
-        m_state == State::STOPPED)
+    if(m_state & OPCODE_HALTED_STOPPED)
     {
         if (m_interruptManager.isIME() && m_interruptManager.isInterruptRequested())
         {
@@ -41,11 +38,7 @@ void Cpu::tick()
         }
     }
 
-    if (m_state == State::IRQ_READ_IF ||
-        m_state == State::IRQ_READ_IE ||
-        m_state == State::IRQ_PUSH_1 ||
-        m_state == State::IRQ_PUSH_2 ||
-        m_state == State::IRQ_JUMP)
+    if(m_state & HAS_INTERRUPT_REQUEST)
     {
         handleInterrupt();
         return;
@@ -56,7 +49,7 @@ void Cpu::tick()
         m_state = State::OPCODE;
     }
 
-    if (m_state == State::HALTED || m_state == State::STOPPED)
+    if(m_state & HALTED_STOPPED)
     {
         return;
     }

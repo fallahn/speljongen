@@ -83,6 +83,7 @@ void Speljongen::initRenderer()
     m_font.loadFromFile("assets/VeraMono.ttf");
     m_text.setFont(m_font);
     m_text.setCharacterSize(12);
+    m_text.setString("LCtrl toggle run/step\nSpace step\n");
 }
 
 void Speljongen::updateDebug()

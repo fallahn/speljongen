@@ -15,6 +15,8 @@ int main()
     window.create({ 800, 600 }, "Speljongen");
     window.setVerticalSyncEnabled(true);
 
+    sf::Clock clock;
+
     while (window.isOpen())
     {
         sf::Event evt;
@@ -32,6 +34,7 @@ int main()
                     window.close();
                     break;
                 case sf::Keyboard::LControl:
+                    window.setVerticalSyncEnabled(run);
                     run = !run;
                     break;
                 case sf::Keyboard::Space:
@@ -50,6 +53,8 @@ int main()
         window.clear(sf::Color::Blue);
         window.draw(gameboy);
         window.display();
+
+        window.setTitle("Speljongen " + std::to_string(1.f / clock.restart().asSeconds()));
     }
 
     return 0;

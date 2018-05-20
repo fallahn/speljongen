@@ -12,11 +12,22 @@ class SpeedMode;
 class Cpu final
 {
 public:
-    enum class State
+    enum State
     {
-        OPCODE, EXT_OPCODE, OPERAND, RUNNING,
-        IRQ_READ_IF, IRQ_READ_IE, IRQ_PUSH_1, IRQ_PUSH_2,
-        IRQ_JUMP, STOPPED, HALTED
+        OPCODE = 1,
+        EXT_OPCODE = 2,
+        OPERAND = 4,
+        RUNNING = 8,
+        IRQ_READ_IF = 16,
+        IRQ_READ_IE = 32,
+        IRQ_PUSH_1 = 64,
+        IRQ_PUSH_2 = 128,
+        IRQ_JUMP = 256, 
+        STOPPED = 512,
+        HALTED = 1024,
+        OPCODE_HALTED_STOPPED = OPCODE | HALTED | STOPPED,
+        HALTED_STOPPED = HALTED | STOPPED,
+        HAS_INTERRUPT_REQUEST = IRQ_READ_IF | IRQ_READ_IE | IRQ_PUSH_1 | IRQ_PUSH_2 | IRQ_JUMP
     };
 
     Cpu(AddressSpace&, InterruptManager&, SpeedMode&);
