@@ -7,7 +7,7 @@
 class GpuRegister final : public Register
 {
 public:
-    GpuRegister(std::uint16_t address, Register::Type type)
+    GpuRegister(std::uint16_t address = 0, Register::Type type = RW)
         : m_address(address), m_type(type) {}
 
     std::uint16_t getAddress() const override { return m_address; }

@@ -13,6 +13,7 @@ public:
         R = 1, W = 2, RW = 3
     };
     virtual Type getType() const = 0;
+    std::uint8_t value = 0;
 };
 
 #include <map>
@@ -30,19 +31,19 @@ public:
         {
             assert(m_registers.find(r.getAddress() == m_registers.end()));
             m_registers.insert(std::make_pair(r.getAddress(), r));
-            m_values.insert(std::make_pair(r.getAddress(), 0));
+            //m_values.insert(std::make_pair(r.getAddress(), 0));
         }
     }
     std::uint8_t get(const T& r) const
     {
-        auto ret = m_values.find(r.getAddress());
-        assert(ret != m_values.end());
-        return ret->second;
+        auto ret = m_registers.find(r.getAddress());
+        assert(ret != m_registers.end());
+        return ret->second.value;
     }
     void put(const T& r, std::uint8_t value)
     {
-        assert(m_values.find(r.getAddress()) != m_values.end());
-        return m_values[r.getAddress()];
+        assert(m_registers.find(r.getAddress()) != m_registers.end());
+        return m_registers[r.getAddress()].value;
     }
 
     MemoryRegisters<T> freeze() const
@@ -51,8 +52,8 @@ public:
     }
     std::uint8_t preIncrement(const T& r)
     {
-        assert(m_values.find(r.getAddress()) != m_values.end());
-        uint8_t value = ++m_values[r.getAddress()];
+        assert(m_registers.find(r.getAddress()) != m_registers.end());
+        uint8_t value = ++m_registers[r.getAddress()].value;
         return value;
     }
 
@@ -65,7 +66,7 @@ public:
         assert(accepts(address));
         if (m_registers[address].getType() & Register::W)
         {
-            m_values[address] = value;
+            m_registers[address].value = value;
         }
     }
     std::uint8_t getByte(std::uint16_t address) const override
@@ -73,7 +74,7 @@ public:
         assert(accepts(address));
         if (m_registers[address].getType() & Register::R)
         {
-            return m_values[address];
+            return m_registers[address].value;
         }
         return 0xff;
     }
@@ -81,6 +82,6 @@ private:
     //TODO we want to see where this is used and preferably
     //map to the shared memory space in the MMU
     std::map<std::uint16_t, T> m_registers;
-    std::map<std::uint16_t, std::uint8_t> m_values;
+    //std::map<std::uint16_t, std::uint8_t> m_values;
 
 };

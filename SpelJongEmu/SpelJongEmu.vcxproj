@@ -129,9 +129,11 @@
     <ClCompile Include="src\AluFunctions.cpp" />
     <ClCompile Include="src\Argument.cpp" />
     <ClCompile Include="src\Cpu.cpp" />
+    <ClCompile Include="src\GpuRegisters.cpp" />
     <ClCompile Include="src\InterruptManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Mmu.cpp" />
+    <ClCompile Include="src\OamSearchPhase.cpp" />
     <ClCompile Include="src\OpCode.cpp" />
     <ClCompile Include="src\OpCodeBuilder.cpp" />
     <ClCompile Include="src\OpCodesImpl.cpp" />
@@ -150,6 +152,7 @@
     <ClInclude Include="src\GpuPhase.hpp" />
     <ClInclude Include="src\GpuRegister.hpp" />
     <ClInclude Include="src\InterruptManager.hpp" />
+    <ClInclude Include="src\Lcdc.hpp" />
     <ClInclude Include="src\MemoryRegisters.hpp" />
     <ClInclude Include="src\Mmu.hpp" />
     <ClInclude Include="src\OamSearchPhase.hpp" />
