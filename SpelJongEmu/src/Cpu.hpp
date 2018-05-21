@@ -2,7 +2,7 @@
 
 #include "OpCode.hpp"
 #include "InterruptManager.hpp"
-#include "Registers.hpp"
+#include "CpuRegisters.hpp"
 
 #include <vector>
 

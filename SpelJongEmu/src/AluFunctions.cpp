@@ -1,5 +1,5 @@
 #include "AluFunctions.hpp"
-#include "Registers.hpp"
+#include "CpuRegisters.hpp"
 
 #include <cassert>
 

@@ -10,7 +10,7 @@ opcodes. See OpCodeBuilder and OpCodeImpl
 #include <array>
 #include <cassert>
 
-#include "Registers.hpp"
+#include "CpuRegisters.hpp"
 #include "AddressSpace.hpp"
 #include "BitUtil.hpp"
 

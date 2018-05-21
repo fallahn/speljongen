@@ -1,20 +1,7 @@
 #pragma once
 
 #include "AddressSpace.hpp"
-
-class Register
-{
-public:
-    virtual ~Register() = default;
-    virtual std::uint16_t getAddress() const = 0;
-    //actually flags ie 0b01 = read, 0b10 = write etc
-    enum Type
-    {
-        R = 1, W = 2, RW = 3
-    };
-    virtual Type getType() const = 0;
-    std::uint8_t value = 0;
-};
+#include "GpuRegister.hpp"
 
 #include <map>
 #include <vector>
@@ -72,9 +59,10 @@ public:
     std::uint8_t getByte(std::uint16_t address) const override
     {
         assert(accepts(address));
-        if (m_registers[address].getType() & Register::R)
+        auto result = m_registers.find(address);
+        if (result->second.getType() & Register::R)
         {
-            return m_registers[address].value;
+            return result->second.value;
         }
         return 0xff;
     }

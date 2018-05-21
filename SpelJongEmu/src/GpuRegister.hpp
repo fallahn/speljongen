@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MemoryRegisters.hpp"
+#include "Register.hpp"
 
 #include <vector>
 

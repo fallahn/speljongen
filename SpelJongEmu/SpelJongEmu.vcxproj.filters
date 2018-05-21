@@ -75,6 +75,12 @@
     <ClCompile Include="src\OamSearchPhase.cpp">
       <Filter>Source Files\gpu</Filter>
     </ClCompile>
+    <ClCompile Include="src\Display.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ClassicPixelFifo.cpp">
+      <Filter>Source Files\gpu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\InterruptManager.hpp">
@@ -131,9 +137,6 @@
     <ClInclude Include="src\OpCodesImpl.hpp">
       <Filter>Header Files\cpu</Filter>
     </ClInclude>
-    <ClInclude Include="src\Registers.hpp">
-      <Filter>Header Files\cpu</Filter>
-    </ClInclude>
     <ClInclude Include="src\GpuPhase.hpp">
       <Filter>Header Files\gpu</Filter>
     </ClInclude>
@@ -148,6 +151,27 @@
     </ClInclude>
     <ClInclude Include="src\Lcdc.hpp">
       <Filter>Header Files\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Register.hpp">
+      <Filter>Header Files\mmu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CpuRegisters.hpp">
+      <Filter>Header Files\cpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Display.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ClassicPixelFifo.hpp">
+      <Filter>Header Files\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PixelFifo.hpp">
+      <Filter>Header Files\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TileAttributes.hpp">
+      <Filter>Header Files\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IndexedQueue.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

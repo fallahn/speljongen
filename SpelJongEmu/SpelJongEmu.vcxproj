@@ -128,7 +128,9 @@
   <ItemGroup>
     <ClCompile Include="src\AluFunctions.cpp" />
     <ClCompile Include="src\Argument.cpp" />
+    <ClCompile Include="src\ClassicPixelFifo.cpp" />
     <ClCompile Include="src\Cpu.cpp" />
+    <ClCompile Include="src\Display.cpp" />
     <ClCompile Include="src\GpuRegisters.cpp" />
     <ClCompile Include="src\InterruptManager.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -147,10 +149,13 @@
     <ClInclude Include="src\Argument.hpp" />
     <ClInclude Include="src\BitUtil.hpp" />
     <ClInclude Include="src\BootRom.hpp" />
+    <ClInclude Include="src\ClassicPixelFifo.hpp" />
     <ClInclude Include="src\Cpu.hpp" />
+    <ClInclude Include="src\Display.hpp" />
     <ClInclude Include="src\Dma.hpp" />
     <ClInclude Include="src\GpuPhase.hpp" />
     <ClInclude Include="src\GpuRegister.hpp" />
+    <ClInclude Include="src\IndexedQueue.hpp" />
     <ClInclude Include="src\InterruptManager.hpp" />
     <ClInclude Include="src\Lcdc.hpp" />
     <ClInclude Include="src\MemoryRegisters.hpp" />
@@ -160,11 +165,14 @@
     <ClInclude Include="src\OpCode.hpp" />
     <ClInclude Include="src\OpCodeBuilder.hpp" />
     <ClInclude Include="src\OpCodesImpl.hpp" />
+    <ClInclude Include="src\PixelFifo.hpp" />
     <ClInclude Include="src\Ram.hpp" />
-    <ClInclude Include="src\Registers.hpp" />
+    <ClInclude Include="src\Register.hpp" />
+    <ClInclude Include="src\CpuRegisters.hpp" />
     <ClInclude Include="src\ShadowAddressSpace.hpp" />
     <ClInclude Include="src\SpeedMode.hpp" />
     <ClInclude Include="src\Speljongen.hpp" />
+    <ClInclude Include="src\TileAttributes.hpp" />
     <ClInclude Include="src\Timer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
