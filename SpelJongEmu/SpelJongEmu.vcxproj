@@ -129,6 +129,7 @@
     <ClCompile Include="src\AluFunctions.cpp" />
     <ClCompile Include="src\Argument.cpp" />
     <ClCompile Include="src\ClassicPixelFifo.cpp" />
+    <ClCompile Include="src\ColourPalette.cpp" />
     <ClCompile Include="src\Cpu.cpp" />
     <ClCompile Include="src\Display.cpp" />
     <ClCompile Include="src\GpuRegisters.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="src\BitUtil.hpp" />
     <ClInclude Include="src\BootRom.hpp" />
     <ClInclude Include="src\ClassicPixelFifo.hpp" />
+    <ClInclude Include="src\ColourPalette.hpp" />
     <ClInclude Include="src\Cpu.hpp" />
     <ClInclude Include="src\Display.hpp" />
     <ClInclude Include="src\Dma.hpp" />

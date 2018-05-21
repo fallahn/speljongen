@@ -4,6 +4,7 @@ set(PROJECT_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/AluFunctions.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Argument.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ClassicPixelFifo.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/ColourPalette.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Cpu.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Display.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/GpuRegisters.cpp
