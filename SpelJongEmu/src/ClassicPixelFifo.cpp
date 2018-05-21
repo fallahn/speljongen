@@ -63,7 +63,7 @@ void ClassicPixelFifo::setOverlay(const std::vector<std::uint8_t>& pixelLine, st
             continue;
         }
 
-        if ((priority && m_pixels[i] == 0) || !priority && p != 0)
+        if ((priority && m_pixels[i] == 0) || (!priority && p != 0))
         {
             m_pixels[i] = p;
             m_palettes[i] = overlayPalette;
