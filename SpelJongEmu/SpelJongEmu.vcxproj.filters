@@ -84,6 +84,9 @@
     <ClCompile Include="src\ColourPalette.cpp">
       <Filter>Source Files\gpu</Filter>
     </ClCompile>
+    <ClCompile Include="src\Fetcher.cpp">
+      <Filter>Source Files\gpu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\InterruptManager.hpp">
@@ -177,6 +180,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ColourPalette.hpp">
+      <Filter>Header Files\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Fetcher.hpp">
+      <Filter>Header Files\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SpritePosition.hpp">
       <Filter>Header Files\gpu</Filter>
     </ClInclude>
   </ItemGroup>

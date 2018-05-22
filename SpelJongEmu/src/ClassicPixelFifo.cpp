@@ -39,7 +39,7 @@ std::uint8_t ClassicPixelFifo::dequeuePixel()
     return getColour(palette, pixel);
 }
 
-void ClassicPixelFifo::enqueue8Pixels(const std::vector<std::uint8_t>& pixelLine, const TileAttributes&)
+void ClassicPixelFifo::enqueue8Pixels(const std::array<std::uint8_t, 8u>& pixelLine, const TileAttributes&)
 {
     for (auto p : pixelLine)
     {
@@ -49,7 +49,7 @@ void ClassicPixelFifo::enqueue8Pixels(const std::vector<std::uint8_t>& pixelLine
     }
 }
 
-void ClassicPixelFifo::setOverlay(const std::vector<std::uint8_t>& pixelLine, std::uint16_t offset, const TileAttributes& attribs, std::uint16_t oamIndex)
+void ClassicPixelFifo::setOverlay(const std::array<std::uint8_t, 8u>& pixelLine, std::uint16_t offset, const TileAttributes& attribs, std::uint16_t oamIndex)
 {
     bool priority = attribs.isPriority();
     std::uint8_t overlayPalette = m_memoryRegisters.get(attribs.getClassicPalette());

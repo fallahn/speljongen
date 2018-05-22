@@ -1,7 +1,7 @@
 #### Speljongen - Gameboy emulator
 
 Originally a port of [Coffee GB](https://github.com/trekawek/coffee-gb/tree/master) from java to C++ for poops and giggles,
-while the CPU emulation remains mostly unchanged the memory emulation has been implemented slightly differently. The interface,
+while the CPU/GPU emulation remains mostly unchanged the memory emulation has been implemented slightly differently. The interface,
 rendering and OS input handling has been all replaced with [SFML](https://sfml-dev.org) and implemented from scratch.
 
 

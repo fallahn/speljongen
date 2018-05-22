@@ -132,6 +132,7 @@
     <ClCompile Include="src\ColourPalette.cpp" />
     <ClCompile Include="src\Cpu.cpp" />
     <ClCompile Include="src\Display.cpp" />
+    <ClCompile Include="src\Fetcher.cpp" />
     <ClCompile Include="src\GpuRegisters.cpp" />
     <ClCompile Include="src\InterruptManager.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="src\Cpu.hpp" />
     <ClInclude Include="src\Display.hpp" />
     <ClInclude Include="src\Dma.hpp" />
+    <ClInclude Include="src\Fetcher.hpp" />
     <ClInclude Include="src\GpuPhase.hpp" />
     <ClInclude Include="src\GpuRegister.hpp" />
     <ClInclude Include="src\IndexedQueue.hpp" />
@@ -174,6 +176,7 @@
     <ClInclude Include="src\ShadowAddressSpace.hpp" />
     <ClInclude Include="src\SpeedMode.hpp" />
     <ClInclude Include="src\Speljongen.hpp" />
+    <ClInclude Include="src\SpritePosition.hpp" />
     <ClInclude Include="src\TileAttributes.hpp" />
     <ClInclude Include="src\Timer.hpp" />
   </ItemGroup>

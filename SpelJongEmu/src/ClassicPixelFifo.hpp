@@ -25,9 +25,9 @@ public:
 
     std::uint8_t dequeuePixel();
 
-    void enqueue8Pixels(const std::vector<std::uint8_t>&, const TileAttributes&) override;
+    void enqueue8Pixels(const std::array<std::uint8_t, 8u>&, const TileAttributes&) override;
 
-    void setOverlay(const std::vector<std::uint8_t>&, std::uint16_t, const TileAttributes&, std::uint16_t) override;
+    void setOverlay(const std::array<std::uint8_t, 8u>&, std::uint16_t, const TileAttributes&, std::uint16_t) override;
 
     const PixelQueue& getPixels() const;
 
