@@ -90,6 +90,9 @@
     <ClCompile Include="src\PixelTransferPhase.cpp">
       <Filter>Source Files\gpu</Filter>
     </ClCompile>
+    <ClCompile Include="src\Gpu.cpp">
+      <Filter>Source Files\gpu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\InterruptManager.hpp">
@@ -192,6 +195,9 @@
       <Filter>Header Files\gpu</Filter>
     </ClInclude>
     <ClInclude Include="src\PixelTransferPhase.hpp">
+      <Filter>Header Files\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Gpu.hpp">
       <Filter>Header Files\gpu</Filter>
     </ClInclude>
   </ItemGroup>

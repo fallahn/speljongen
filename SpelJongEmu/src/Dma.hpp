@@ -15,7 +15,7 @@ public:
 
     }
 
-    AddressSpace::Type type() const override { return AddressSpace::Dma; }
+    AddressSpace::Type type() const override { return AddressSpace::Type::Dma; }
 
     bool accepts(std::uint16_t address) const override
     {

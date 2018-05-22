@@ -7,7 +7,7 @@
 class AddressSpace
 {
 public:
-    enum Type
+    enum class Type
     {
         VOID = -1,
         Ram,
@@ -20,7 +20,7 @@ public:
 
     virtual ~AddressSpace() = default;
 
-    virtual Type type() const { return VOID; }
+    virtual Type type() const { return Type::VOID; }
 
     virtual bool accepts(std::uint16_t address) const = 0;
 

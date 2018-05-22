@@ -133,6 +133,7 @@
     <ClCompile Include="src\Cpu.cpp" />
     <ClCompile Include="src\Display.cpp" />
     <ClCompile Include="src\Fetcher.cpp" />
+    <ClCompile Include="src\Gpu.cpp" />
     <ClCompile Include="src\GpuRegisters.cpp" />
     <ClCompile Include="src\InterruptManager.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="src\Display.hpp" />
     <ClInclude Include="src\Dma.hpp" />
     <ClInclude Include="src\Fetcher.hpp" />
+    <ClInclude Include="src\Gpu.hpp" />
     <ClInclude Include="src\GpuPhase.hpp" />
     <ClInclude Include="src\GpuRegister.hpp" />
     <ClInclude Include="src\IndexedQueue.hpp" />

@@ -13,14 +13,20 @@
 class Ram final : public AddressSpace
 {
 public:
-    Ram(std::uint16_t start, std::uint16_t length)
-        : m_start (start),
-        m_end   (start + length)
+    Ram(std::uint16_t start, std::uint16_t length, bool sharedStorage = true)
+        : m_start   (start),
+        m_end       (start + length)
     {
         assert(m_end > m_start); //values have wrpapped around by becoming negative or something :S
+        if (sharedStorage)
+        {
+            //set storage to local
+            m_ownStorage.resize(m_end); //it's a bit of a waste, but meh
+            setStorage(m_ownStorage);
+        }
     }
 
-    Type type() const override { return AddressSpace::Ram; }
+    Type type() const override { return AddressSpace::Type::Ram; }
 
     bool accepts(std::uint16_t address) const override
     {
@@ -42,4 +48,5 @@ public:
 private:
     std::uint16_t m_start = 0;
     std::uint16_t m_end = 0;
+    std::vector<std::uint8_t> m_ownStorage;
 };

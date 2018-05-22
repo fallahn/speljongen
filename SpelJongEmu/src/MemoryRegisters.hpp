@@ -16,7 +16,7 @@ public:
         static_assert(std::is_base_of<Register, T>::value, "");
         for (auto& r : registers)
         {
-            assert(m_registers.find(r.getAddress() == m_registers.end()));
+            assert(m_registers.find(r.getAddress()) == m_registers.end());
             m_registers.insert(std::make_pair(r.getAddress(), r));
             //m_values.insert(std::make_pair(r.getAddress(), 0));
         }
@@ -30,7 +30,7 @@ public:
     void put(const T& r, std::uint8_t value)
     {
         assert(m_registers.find(r.getAddress()) != m_registers.end());
-        return m_registers[r.getAddress()].value;
+       m_registers[r.getAddress()].value = value;
     }
 
     MemoryRegisters<T> freeze() const

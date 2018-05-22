@@ -32,7 +32,7 @@ public:
 
     explicit InterruptManager(bool isColour);
 
-    AddressSpace::Type type() const override { return AddressSpace::Interrupt; }
+    AddressSpace::Type type() const override { return AddressSpace::Type::Interrupt; }
 
     void enableInterrupts(bool useDelay);
 

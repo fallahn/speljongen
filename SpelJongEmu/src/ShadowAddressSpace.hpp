@@ -16,7 +16,7 @@ public:
         assert(m_echoStart < m_echoEnd);
     }
 
-    AddressSpace::Type type() const override { return AddressSpace::ShadowSpace; }
+    AddressSpace::Type type() const override { return AddressSpace::Type::ShadowSpace; }
 
     bool accepts(std::uint16_t address) const override
     {

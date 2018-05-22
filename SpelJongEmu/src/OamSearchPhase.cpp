@@ -21,10 +21,7 @@ void OamSearchPhase::start()
     m_spritePositionX = 0;
     m_spritePositionY = 0;
     m_index = 0;
-    for (auto& sprite : m_sprites)
-    {
-        sprite = {};
-    }
+    m_sprites = {};
 }
 
 bool OamSearchPhase::tick()

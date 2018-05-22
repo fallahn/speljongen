@@ -18,7 +18,7 @@ Speljongen::Speljongen()
 {
     auto& oamRam = m_mmu.addAddressSpace<Ram>(0xfe00, 0x00a0);
     m_dma = &m_mmu.addAddressSpace<Dma>(oamRam, m_speedMode);
-    auto& interruptManager = m_mmu.getAddressSpace<InterruptManager>(AddressSpace::Interrupt);
+    auto& interruptManager = m_mmu.getAddressSpace<InterruptManager>(AddressSpace::Type::Interrupt);
     m_timer = &m_mmu.addAddressSpace<Timer>(interruptManager, m_speedMode);
 
     //TODO this is classic GB ram - colour GB is split

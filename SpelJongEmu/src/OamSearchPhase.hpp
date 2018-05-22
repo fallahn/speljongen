@@ -16,7 +16,7 @@ public:
     void start();
     bool tick() override;
 
-    const std::array<SpritePosition, 10>& getSprites() const { return m_sprites; }
+    std::array<SpritePosition, 10> getSprites() const { return m_sprites; }
     
 private:
     enum State

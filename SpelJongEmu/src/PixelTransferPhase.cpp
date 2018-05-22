@@ -3,15 +3,15 @@
 #include "ClassicPixelFifo.hpp"
 
 PixelTransferPhase::PixelTransferPhase(Ram& vram0, Ram& vram1, Ram& oam, Display& display, Lcdc& lcdc, MemoryRegisters<GpuRegister>& registers, bool colour)
-    : m_display(display),
-    m_lcdc(lcdc),
-    m_registers(registers),
-    m_colour(colour),
+    : m_display     (display),
+    m_lcdc          (lcdc),
+    m_registers     (registers),
+    m_colour        (colour),
     //m_fetcher(),
-    m_droppedPixels(0),
-    m_x(0),
-    m_window(false),
-    m_sprites(nullptr)
+    m_droppedPixels (0),
+    m_x             (0),
+    m_window        (false),
+    m_sprites       ({})
 {
     if (colour)
     {
@@ -26,9 +26,9 @@ PixelTransferPhase::PixelTransferPhase(Ram& vram0, Ram& vram1, Ram& oam, Display
 }
 
 //public
-void PixelTransferPhase::start(std::vector<SpritePosition>& sprites)
+void PixelTransferPhase::start(std::array<SpritePosition, 10> sprites)
 {
-    m_sprites = &sprites;
+    m_sprites = sprites;
     m_droppedPixels = 0;
     m_x = 0;
     m_window = false;
@@ -79,9 +79,9 @@ bool PixelTransferPhase::tick()
             }
 
             bool spriteAdded = false;
-            for (auto i = 0u; i < m_sprites->size(); ++i)
+            for (auto i = 0u; i < m_sprites.size(); ++i)
             {
-                auto& sprite = m_sprites->at(i);
+                auto& sprite = m_sprites[i];
                 if (sprite.getAddress() == 0) continue;
 
                 if (m_x == 0 && sprite.getX() < 8)
@@ -91,7 +91,7 @@ bool PixelTransferPhase::tick()
                         m_fetcher->addSprite(sprite, 8 - sprite.getX(), static_cast<std::uint16_t>(i));
                         spriteAdded = true;
                     }
-                    m_sprites->at(i) = {};
+                    m_sprites[i] = {};
                 }
                 else if (sprite.getX() - 8 == m_x)
                 {
@@ -100,7 +100,7 @@ bool PixelTransferPhase::tick()
                         m_fetcher->addSprite(sprite, 0, static_cast<std::uint16_t>(i));
                         spriteAdded = true;
                     }
-                    m_sprites->at(i) = {};
+                    m_sprites[i] = {};
                 }
 
                 if (spriteAdded)
