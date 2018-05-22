@@ -1,14 +1,51 @@
 #include "Display.hpp"
 
-Display::Display() {}
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/Image.hpp>
+
+#include <cassert>
+
+namespace
+{
+    const sf::Uint32 Width = 160;
+    const sf::Uint32 Height = 144;
+    constexpr sf::Uint32 MaxPixels = Width * Height;
+}
+
+Display::Display()
+    : m_pixelIndex(0)
+{
+    m_imageBuffer.create(Width, Height, sf::Color::Red);
+    m_texture.loadFromImage(m_imageBuffer);
+
+    m_vertices[1].position = { static_cast<float>(Width), 0 };
+    m_vertices[2].position = { static_cast<float>(Width), static_cast<float>(Height) };
+    m_vertices[3].position = { 0, static_cast<float>(Height) };
+}
 
 //public
-void Display::putPixel(std::uint8_t) {}
+void Display::putPixel(std::uint8_t)
+{
+    assert(m_pixelIndex < MaxPixels);
+    m_imageBuffer.setPixel(m_pixelIndex / Width, m_pixelIndex % Width, sf::Color::Green);
+}
 
-void Display::requestRefresh() {}
+void Display::requestRefresh()
+{
+    m_texture.update(m_imageBuffer);
+    m_pixelIndex = 0;
+}
 
 void Display::waitForRefresh() {}
 
 void Display::enableLCD() {}
 
 void Display::disableLCD() {}
+
+//private
+void Display::draw(sf::RenderTarget& rt, sf::RenderStates states) const
+{
+    states.transform *= getTransform();
+    states.texture = &m_texture;
+    rt.draw(m_vertices.data(), m_vertices.size(), sf::PrimitiveType::Quads, states);
+}

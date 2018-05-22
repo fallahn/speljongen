@@ -4,6 +4,7 @@
 #include "Mmu.hpp"
 #include "InterruptManager.hpp"
 #include "SpeedMode.hpp"
+#include "Display.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -11,6 +12,7 @@
 
 class Timer;
 class Dma;
+class Gpu;
 class Speljongen final : public sf::Drawable
 {
 public:
@@ -28,9 +30,14 @@ private:
     SpeedMode m_speedMode;
     Mmu m_mmu;
     Cpu m_cpu;
+    Display m_display;
 
     Timer* m_timer;
     Dma* m_dma;
+    Gpu* m_gpu;
+
+    bool m_requestRefresh;
+    bool m_lcdDisabled;
 
     void initRegisters();
 

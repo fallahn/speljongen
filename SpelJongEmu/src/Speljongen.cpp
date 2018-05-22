@@ -3,6 +3,7 @@
 #include "Dma.hpp"
 #include "Timer.hpp"
 #include "ShadowAddressSpace.hpp"
+#include "Gpu.hpp"
 
 #include <sstream>
 #include <iomanip>
@@ -10,16 +11,20 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 Speljongen::Speljongen()
-    : m_speedMode(),
-    m_mmu(),
-    m_cpu(m_mmu, m_mmu.addAddressSpace<InterruptManager>(false), m_speedMode),
-    m_timer(nullptr),
-    m_dma(nullptr)
+    : m_speedMode   (),
+    m_mmu           (),
+    m_cpu           (m_mmu, m_mmu.addAddressSpace<InterruptManager>(false), m_speedMode),
+    m_timer         (nullptr),
+    m_dma           (nullptr),
+    m_gpu           (nullptr),
+    m_requestRefresh(false),
+    m_lcdDisabled   (false)
 {
     auto& oamRam = m_mmu.addAddressSpace<Ram>(0xfe00, 0x00a0);
     m_dma = &m_mmu.addAddressSpace<Dma>(oamRam, m_speedMode);
     auto& interruptManager = m_mmu.getAddressSpace<InterruptManager>(AddressSpace::Type::Interrupt);
     m_timer = &m_mmu.addAddressSpace<Timer>(interruptManager, m_speedMode);
+    m_gpu = &m_mmu.addAddressSpace<Gpu>(m_display, interruptManager, *m_dma, oamRam, false);
 
     //TODO this is classic GB ram - colour GB is split
     //into two blocks with the second half having a specific layout
@@ -33,7 +38,8 @@ Speljongen::Speljongen()
     m_mmu.addAddressSpace<Ram>(0xff80, 0x7f);
     m_mmu.addAddressSpace<ShadowAddressSpace>(0xe000, 0xc000, 0x1e00);
 
-    //initRegisters(); //TODO only do this when not using boot rom
+    interruptManager.disableInterrupts(false);
+    initRegisters(); //TODO only do this when not using boot rom
     initRenderer();
 }
 
@@ -59,6 +65,31 @@ void Speljongen::tick()
     m_dma->tick();
     m_cpu.tick();
 
+    auto gpuMode = m_gpu->tick();
+    if (!m_lcdDisabled && !m_gpu->isLcdEnabled())
+    {
+        m_lcdDisabled = true;
+        m_display.requestRefresh();
+        //hdma
+    }
+    else if (gpuMode == Gpu::Mode::VBlank)
+    {
+        m_requestRefresh = true;
+        m_display.requestRefresh();
+    }
+
+    if (m_lcdDisabled && m_gpu->isLcdEnabled())
+    {
+        m_lcdDisabled = false;
+        m_display.waitForRefresh();
+        //TODO hdma
+    }
+    else if (m_requestRefresh && gpuMode == Gpu::Mode::OamSearch)
+    {
+        m_requestRefresh = false;
+        m_display.waitForRefresh();
+    }
+
     updateDebug();
 }
 
@@ -75,7 +106,7 @@ void Speljongen::initRegisters()
     r.setDE(0x00d8);
     r.setHL(0x014d);
     r.setSP(0xfffe);
-    r.setPC(0x0100);
+    //r.setPC(0x0100);
 }
 
 void Speljongen::initRenderer()
@@ -84,6 +115,9 @@ void Speljongen::initRenderer()
     m_text.setFont(m_font);
     m_text.setCharacterSize(12);
     m_text.setString("LCtrl toggle run/step\nSpace step\n");
+
+    m_display.setPosition(240, 100);
+    m_display.setScale(2.f, 2.f);
 }
 
 void Speljongen::updateDebug()
@@ -105,5 +139,6 @@ void Speljongen::updateDebug()
 
 void Speljongen::draw(sf::RenderTarget& rt, sf::RenderStates) const
 {
+    rt.draw(m_display);
     rt.draw(m_text);
 }
