@@ -17,7 +17,7 @@ Gpu::Gpu(Display& display, InterruptManager& ir, Dma& dma, Ram& oamRam, bool col
     m_oamSearchPhase    (oamRam, m_lcdc, m_registers),
     m_transferPhase     (m_videoRam0, m_videoRam1, oamRam, display, m_lcdc, m_registers, colour),
     m_currentPhase      (&m_oamSearchPhase),
-    m_lcdEnabled        (false),
+    m_lcdEnabled        (true),
     m_lcdEnableDelay    (0),
     m_ticksInLine       (0),
     m_currentMode       (Mode::OamSearch)

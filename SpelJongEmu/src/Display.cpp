@@ -10,6 +10,10 @@ namespace
     const sf::Uint32 Width = 160;
     const sf::Uint32 Height = 144;
     constexpr sf::Uint32 MaxPixels = Width * Height;
+    const std::array<sf::Color, 4u> colours = 
+    {
+        sf::Color::White, sf::Color(170, 170, 170), sf::Color(85, 85, 85), sf::Color::Black
+    };
 }
 
 Display::Display()
@@ -24,10 +28,10 @@ Display::Display()
 }
 
 //public
-void Display::putPixel(std::uint8_t)
+void Display::putPixel(std::uint8_t px)
 {
     assert(m_pixelIndex < MaxPixels);
-    m_imageBuffer.setPixel(m_pixelIndex / Width, m_pixelIndex % Width, sf::Color::Green);
+    m_imageBuffer.setPixel(m_pixelIndex / Width, m_pixelIndex % Width, colours[px]);
 }
 
 void Display::requestRefresh()
