@@ -141,6 +141,7 @@
     <ClCompile Include="src\OpCode.cpp" />
     <ClCompile Include="src\OpCodeBuilder.cpp" />
     <ClCompile Include="src\OpCodesImpl.cpp" />
+    <ClCompile Include="src\PixelTransferPhase.cpp" />
     <ClCompile Include="src\SpeedMode.cpp" />
     <ClCompile Include="src\Speljongen.cpp" />
     <ClCompile Include="src\Timer.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="src\OpCodeBuilder.hpp" />
     <ClInclude Include="src\OpCodesImpl.hpp" />
     <ClInclude Include="src\PixelFifo.hpp" />
+    <ClInclude Include="src\PixelTransferPhase.hpp" />
     <ClInclude Include="src\Ram.hpp" />
     <ClInclude Include="src\Register.hpp" />
     <ClInclude Include="src\CpuRegisters.hpp" />
