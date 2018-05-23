@@ -131,6 +131,8 @@ void Speljongen::initRegisters()
     r.setSP(0xfffe);
     //r.setPC(0x0100);
     //r.setPC(0);
+
+    //m_mmu.setByte(0xff47, 0xfc);
 }
 
 void Speljongen::initRenderer()
@@ -164,6 +166,7 @@ void Speljongen::updateDebug()
 
     ss << "\n\nLY: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff44);
     ss << "\nSTAT: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff41);
+    ss << "\nBGP: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff47);
     ss << "\nSerial: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff01);
 
     m_text.setString(ss.str());

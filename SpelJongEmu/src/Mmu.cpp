@@ -30,7 +30,7 @@ bool Mmu::accepts(std::uint16_t address) const
 }
 
 void Mmu::setByte(std::uint16_t address, std::uint8_t value)
-{
+{   
     //I don't like having to do this but some spaces such
     //as the GPU have special accessors
     for (auto& space : m_spaces)

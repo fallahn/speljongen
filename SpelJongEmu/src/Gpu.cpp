@@ -110,6 +110,7 @@ Gpu::Mode Gpu::tick()
             default: break;
             case Mode::OamSearch:
                 m_currentMode = Mode::PixelTransfer;
+                m_transferPhase.start(m_oamSearchPhase.getSprites());
                 m_currentPhase = &m_transferPhase;
                 break;
             case Mode::PixelTransfer:

@@ -48,6 +48,7 @@ void ClassicPixelFifo::enqueue8Pixels(const std::array<std::uint8_t, 8u>& pixelL
         m_pixels.push(p);
         m_palettes.push(m_memoryRegisters.get(GpuRegister::registers[GpuRegister::BGP]));
         m_pixelType.push(0);
+        if (p != 0) std::cout << p << "\n";
     }
 }
 
@@ -90,5 +91,6 @@ void ClassicPixelFifo::clear()
 //private
 std::uint8_t ClassicPixelFifo::getColour(std::uint8_t palette, std::uint8_t index) const
 {
+    if (index > 0) std::cout << index << "\n";
     return (palette >> (index * 2)) & 0b11;
 }

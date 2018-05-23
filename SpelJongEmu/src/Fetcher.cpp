@@ -19,7 +19,7 @@ Fetcher::Fetcher(PixelFifo& fifo, Ram& ram0, Ram& ram1, Ram& oam, Lcdc& lcdc, Me
     m_registers         (registers),
     m_colour            (colour),
     m_state             (ReadTileID),
-    m_fetchingDisabled  (true),
+    m_fetchingDisabled  (false),
     m_mapAddress        (0),
     m_xOffset           (0),
     m_tileDataAddress   (0),
@@ -43,7 +43,7 @@ void Fetcher::init()
     m_tileID = 0;
     m_tileData1 = 0;
     m_tileData2 = 0;
-    m_divisor = 2;
+    //m_divisor = 2;
     m_fetchingDisabled = false;
 }
 
