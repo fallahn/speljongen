@@ -7,13 +7,15 @@
 
 #include <sstream>
 #include <iomanip>
+#include <iostream>
+#include <fstream>
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
 Speljongen::Speljongen()
     : m_speedMode   (),
     m_mmu           (),
-    m_cpu           (m_mmu, m_mmu.addAddressSpace<InterruptManager>(false), m_speedMode),
+    m_cpu           (m_mmu, m_mmu.addAddressSpace<InterruptManager>(false), m_speedMode, m_display),
     m_timer         (nullptr),
     m_dma           (nullptr),
     m_gpu           (nullptr),
@@ -93,6 +95,27 @@ void Speljongen::tick()
     updateDebug();
 }
 
+void Speljongen::load(const std::string& path)
+{
+    std::cout << "loading: " << path << "\n";
+    //TODO some file size checking
+    std::ifstream file(path, std::ios::binary);
+
+    file.seekg(0, file.end);
+    size_t length = file.tellg();
+    file.seekg(0, file.beg);
+    std::vector<char> buf(length);
+    file.read(buf.data(), length);
+    file.close();
+
+    std::uint16_t address = 0;
+    for (auto c : buf) m_mmu.setByte(address++, c);
+
+    initRegisters();
+    m_cpu.getRegisters().setPC(0x100);
+    updateDebug();
+}
+
 //private
 void Speljongen::initRegisters()
 {
@@ -107,6 +130,7 @@ void Speljongen::initRegisters()
     r.setHL(0x014d);
     r.setSP(0xfffe);
     //r.setPC(0x0100);
+    //r.setPC(0);
 }
 
 void Speljongen::initRenderer()
@@ -118,6 +142,8 @@ void Speljongen::initRenderer()
 
     m_display.setPosition(240, 100);
     m_display.setScale(2.f, 2.f);
+
+    updateDebug();
 }
 
 void Speljongen::updateDebug()
@@ -130,9 +156,15 @@ void Speljongen::updateDebug()
     ss << " : 0x" << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(reg.getPC());
     ss << "\nCurrent op : " << (int)m_cpu.getCurrentOpcode().getOpcode() << ", " << m_cpu.getCurrentOpcode().getLabel();
     ss << "\nSP: 0x" << std::setfill('0') << std::setw(4) << reg.getSP();
+    ss << "\nBC: 0x" << std::setfill('0') << std::setw(4) << reg.getBC();
+    ss << "\nDE: 0x" << std::setfill('0') << std::setw(4) << reg.getDE();
     ss << "\nHL: 0x" << std::setfill('0') << std::setw(4) << reg.getHL();
     ss << "\nA: 0x" << std::setfill('0') << std::setw(2) << (int)reg.getA();
     ss << "\nZ: " << reg.getFlags().isSet(Flags::Z) << " C: " << reg.getFlags().isSet(Flags::C);
+
+    ss << "\n\nLY: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff44);
+    ss << "\nSTAT: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff41);
+    ss << "\nSerial: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff01);
 
     m_text.setString(ss.str());
 }

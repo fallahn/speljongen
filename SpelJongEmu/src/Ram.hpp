@@ -18,7 +18,7 @@ public:
         m_end       (start + length)
     {
         assert(m_end > m_start); //values have wrpapped around by becoming negative or something :S
-        if (sharedStorage)
+        if (!sharedStorage)
         {
             //set storage to local
             m_ownStorage.resize(m_end); //it's a bit of a waste, but meh

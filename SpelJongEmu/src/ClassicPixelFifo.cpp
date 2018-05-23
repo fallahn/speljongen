@@ -3,6 +3,8 @@
 #include "Lcdc.hpp"
 #include "TileAttributes.hpp"
 
+#include <iostream>
+
 ClassicPixelFifo::ClassicPixelFifo(Display& display, Lcdc& lcdc, MemoryRegisters<GpuRegister>& registers)
     : m_display         (display),
     m_lcdc              (lcdc),

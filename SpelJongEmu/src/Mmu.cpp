@@ -31,10 +31,29 @@ bool Mmu::accepts(std::uint16_t address) const
 
 void Mmu::setByte(std::uint16_t address, std::uint8_t value)
 {
+    //I don't like having to do this but some spaces such
+    //as the GPU have special accessors
+    for (auto& space : m_spaces)
+    {
+        if (space->accepts(address))
+        {
+            space->setByte(address, value);
+            return;
+        }
+    }
+    
     m_storage[address] = value;
 }
 
 std::uint8_t Mmu::getByte(std::uint16_t address) const
 {
+    for (auto& space : m_spaces)
+    {
+        if (space->accepts(address))
+        {
+            return space->getByte(address);
+        }
+    }
+
     return m_storage[address];
 }

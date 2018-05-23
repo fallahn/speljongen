@@ -28,6 +28,15 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -Wextra -Wreorder -Wheader-guard")
 endif()
 
+# UI libs for NFD
+if (APPLE)
+find_library(CORESERVICES_LIBRARY CoreServices)
+find_library(APPKIT AppKit)
+elseif(UNIX)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK REQUIRED gtk+-3.0)
+endif()
+
 # Only works with SFML version 2.4 and above
 SET(SFML_MIN_VERSION 2.4)
 find_package(SFML ${SFML_MIN_VERSION} REQUIRED graphics window audio system network)
@@ -48,6 +57,21 @@ endif()
 
 # Project source files
 add_subdirectory(src)
+
+# platform specific for file dialogue
+if(APPLE)
+  SET(NFD_SRC 
+    src/nfd/nfd_common.c
+    src/nfd/nfd_cocoa.m)
+elseif(UNIX)
+  SET(NFD_SRC 
+    src/nfd/nfd_common.c
+    src/nfd/nfd_gtk.c)
+elseif(WIN32)
+  SET(NFD_SRC 
+    src/nfd/nfd_common.c
+    src/nfd/nfd_win.cpp)
+endif()
 
 # Create the actual executable (PROJECT_SRC variable is set inside previous steps)
 If (APPLE)
@@ -75,10 +99,10 @@ ENDIF("${isSystemDir}" STREQUAL "-1")
     ${CMAKE_SOURCE_DIR}/assets PROPERTIES MACOSX_PACKAGE_LOCATION Resources )
 set_source_files_properties(
     ${CMAKE_SOURCE_DIR}/macOS/icon.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources )
-  add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${PROJECT_SRC} ${CMAKE_SOURCE_DIR}/assets ${CMAKE_SOURCE_DIR}/macOS/icon.icns)
+  add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${PROJECT_SRC} ${NFD_SRC} ${CMAKE_SOURCE_DIR}/assets ${CMAKE_SOURCE_DIR}/macOS/icon.icns)
   set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE icon.icns)
 else()
-  add_executable(${PROJECT_NAME} ${PROJECT_SRC})
+  add_executable(${PROJECT_NAME} ${PROJECT_SRC} ${NFD_SRC})
 endif(APPLE)
 
 # Linker settings
@@ -89,6 +113,13 @@ target_link_libraries(${PROJECT_NAME}
 if(X11_FOUND)
   target_link_libraries(${PROJECT_NAME}
     ${X11_LIBRARIES})
+endif()
+
+# NFD deps
+if (APPLE)
+target_link_libraries(${PROJECT_NAME} ${CORESERVICES_LIBRARY} ${APPKIT})
+elseif(UNIX)
+target_link_libraries(${PROJECT_NAME} ${GTK_LIBRARIES})
 endif()
 
 # Install executable

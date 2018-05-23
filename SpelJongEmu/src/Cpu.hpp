@@ -8,6 +8,7 @@
 
 class AddressSpace;
 class SpeedMode;
+class Display;
 
 class Cpu final
 {
@@ -30,7 +31,7 @@ public:
         HAS_INTERRUPT_REQUEST = IRQ_READ_IF | IRQ_READ_IE | IRQ_PUSH_1 | IRQ_PUSH_2 | IRQ_JUMP
     };
 
-    Cpu(AddressSpace&, InterruptManager&, SpeedMode&);
+    Cpu(AddressSpace&, InterruptManager&, SpeedMode&, Display&);
 
     void tick();
     
@@ -47,6 +48,7 @@ private:
     AddressSpace& m_addressSpace;
     InterruptManager& m_interruptManager;
     SpeedMode& m_speedMode;
+    Display& m_display;
 
     std::uint8_t m_opcodeOne;
     std::uint8_t m_opcodeTwo;

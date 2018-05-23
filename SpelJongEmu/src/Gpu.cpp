@@ -97,7 +97,7 @@ Gpu::Mode Gpu::tick()
     m_ticksInLine++;
     if (m_currentPhase->tick())
     {
-        if (m_ticksInLine == 4 && m_currentMode == Mode::VBlank &&
+        if (/*m_ticksInLine == 4 &&*/ m_currentMode == Mode::VBlank && //this will never be true because VBlank mode always resets ticksInLine
             m_registers.get(GpuRegister::registers[GpuRegister::LY]) == 153)
         {
             m_registers.put(GpuRegister::registers[GpuRegister::LY], 0);

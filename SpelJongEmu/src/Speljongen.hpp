@@ -23,6 +23,8 @@ public:
 
     void tick();
 
+    void load(const std::string&);
+
 private:
 
     bool m_running;

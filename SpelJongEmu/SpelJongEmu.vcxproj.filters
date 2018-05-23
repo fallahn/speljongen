@@ -31,6 +31,9 @@
     <Filter Include="Source Files\mmu">
       <UniqueIdentifier>{c2cfd4cc-68d3-41e4-91bc-b286eeebd94f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\nfd">
+      <UniqueIdentifier>{1627a78e-15f5-4ee3-b7ba-e4828ad8649c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -92,6 +95,12 @@
     </ClCompile>
     <ClCompile Include="src\Gpu.cpp">
       <Filter>Source Files\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nfd\nfd_common.c">
+      <Filter>Source Files\nfd</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nfd\nfd_win.cpp">
+      <Filter>Source Files\nfd</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

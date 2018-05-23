@@ -401,7 +401,7 @@ void OpCodeBuilder::store(const std::string& target)
         op.operandLength = arg->getOperandLength();
         op.execute = [](Registers&, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t context)
         {
-            addressSpace.setByte(BitUtil::toWord(args), static_cast<std::uint8_t>(context));
+            addressSpace.setByte(BitUtil::toWord(args), static_cast<std::uint8_t>(context & 0xff));
             return context;
         };
 

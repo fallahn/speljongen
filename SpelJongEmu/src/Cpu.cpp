@@ -1,12 +1,14 @@
 #include "Cpu.hpp"
+#include "Display.hpp"
 #include "AddressSpace.hpp"
 #include "SpeedMode.hpp"
 #include "OpCodesImpl.hpp"
 
-Cpu::Cpu(AddressSpace& addressSpace, InterruptManager& interruptManager, SpeedMode& speedMode)
+Cpu::Cpu(AddressSpace& addressSpace, InterruptManager& interruptManager, SpeedMode& speedMode, Display& display)
     : m_addressSpace        (addressSpace),
     m_interruptManager      (interruptManager),
     m_speedMode             (speedMode),
+    m_display               (display),
     m_opcodeOne             (0),
     m_opcodeTwo             (0),
     m_opArgs                ({}),
@@ -33,7 +35,10 @@ void Cpu::tick()
     {
         if (m_interruptManager.isIME() && m_interruptManager.isInterruptRequested())
         {
-            //TODO enable LCD if STOPPED
+            if (m_state == State::STOPPED)
+            {
+                m_display.enableLCD();
+            }
             m_state = State::IRQ_READ_IF;
         }
     }
@@ -126,7 +131,7 @@ void Cpu::tick()
                 else
                 {
                     m_state = State::STOPPED;
-                    //TODO disable display
+                    m_display.disableLCD();
                 }
                 return;
             }

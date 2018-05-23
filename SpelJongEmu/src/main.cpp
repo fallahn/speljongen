@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Speljongen.hpp"
+#include "nfd/nfd.h"
 
 #ifdef __LINUX__
 #include <X11.h>
@@ -37,13 +38,34 @@ int main()
                     window.setVerticalSyncEnabled(run);
                     run = !run;
                     break;
+                default: break;
+                }
+            }
+            else if (evt.type == sf::Event::KeyPressed)
+            {
+                switch (evt.key.code)
+                {
+                default: break;
                 case sf::Keyboard::Space:
                     if (!run)
                     {
                         gameboy.tick();
                     }
                     break;
-                default: break;
+                }
+            }
+            else if (evt.type == sf::Event::MouseButtonReleased)
+            {
+                if (evt.mouseButton.button == sf::Mouse::Right)
+                {
+                    //TODO check also inside window
+                    nfdchar_t *outPath = nullptr;
+                    nfdresult_t result = NFD_OpenDialog("gb", nullptr, &outPath);
+                    if (result == NFD_OKAY)
+                    {
+                        gameboy.load(outPath);
+                        free(outPath);
+                    }
                 }
             }
         }
