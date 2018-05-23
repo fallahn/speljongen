@@ -55,6 +55,11 @@ if(X11_FOUND)
   include_directories(${X11_INCLUDE_DIRS})
 endif()
 
+if(UNIX)
+  include_directories(${GTK_INCLUDE_DIRS})
+  link_directories(${GTK_LIBRARY_DIRS})
+endif()
+
 # Project source files
 add_subdirectory(src)
 
