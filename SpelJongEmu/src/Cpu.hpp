@@ -33,7 +33,7 @@ public:
 
     Cpu(AddressSpace&, InterruptManager&, SpeedMode&, Display&);
 
-    void tick();
+    bool tick(); //returns false when in the middle of a an op
     
     Registers& getRegisters() { return m_registers; }
     void clearState();
@@ -67,6 +67,7 @@ private:
     Interrupt::Type m_requestedInterrupt;
 
     std::uint32_t m_clockCycle;
+    bool m_haltBugMode;
 
     void handleInterrupt();
 };

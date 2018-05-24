@@ -70,16 +70,16 @@ void Speljongen::stop()
     m_running = false;
 }
 
-void Speljongen::tick()
+bool Speljongen::tick()
 {
 #ifdef RUN_TESTS
-    return;
+    return true;
 #endif
     
     //TODO these can be ticked internally by mmu
     m_timer->tick();
     m_dma->tick();
-    m_cpu.tick();
+    auto ret = m_cpu.tick();
 
     auto gpuMode = m_gpu->tick();
     if (!m_lcdDisabled && !m_gpu->isLcdEnabled())
@@ -90,6 +90,11 @@ void Speljongen::tick()
     }
     else if (gpuMode == Gpu::Mode::VBlank)
     {
+        /*for (auto i = 0x8800; i < 0x9800; ++i)
+        {
+            m_display.putPixel(m_mmu.getByte(i));
+        }*/
+        
         m_requestRefresh = true;
         m_display.requestRefresh();
     }
@@ -105,8 +110,9 @@ void Speljongen::tick()
         m_requestRefresh = false;
         m_display.waitForRefresh();
     }
-
     updateDebug();
+
+    return ret;
 }
 
 void Speljongen::load(const std::string& path)

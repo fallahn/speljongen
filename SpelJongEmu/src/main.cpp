@@ -49,7 +49,7 @@ int main()
                 case sf::Keyboard::Space:
                     if (!run)
                     {
-                        gameboy.tick();
+                        while (!gameboy.tick()) {};
                     }
                     break;
                 }

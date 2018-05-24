@@ -28,7 +28,7 @@ public:
     void start();
     void stop();
 
-    void tick();
+    bool tick();
 
     void load(const std::string&);
 

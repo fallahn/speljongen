@@ -19,17 +19,18 @@ Cpu::Cpu(AddressSpace& addressSpace, InterruptManager& interruptManager, SpeedMo
     m_interruptFlag         (0),
     m_interruptEnabled      (0),
     m_requestedInterrupt    (Interrupt::Type::Count),
-    m_clockCycle            (0)
+    m_clockCycle            (0),
+    m_haltBugMode           (false)
 {
     //compile opcodes
     OpCodes::init();
 }
 
 //public
-void Cpu::tick()
+bool Cpu::tick()
 {
     m_clockCycle = (m_clockCycle + 1) % (4 / m_speedMode.getSpeedMode());
-    if (m_clockCycle != 0) return;
+    if (m_clockCycle != 0) return false;
 
     if(m_state & OPCODE_HALTED_STOPPED)
     {
@@ -46,7 +47,7 @@ void Cpu::tick()
     if(m_state & HAS_INTERRUPT_REQUEST)
     {
         handleInterrupt();
-        return;
+        return true;
     }
 
     if (m_state == State::HALTED && m_interruptManager.isInterruptRequested())
@@ -56,7 +57,7 @@ void Cpu::tick()
 
     if(m_state & HALTED_STOPPED)
     {
-        return;
+        return true;
     }
 
 
@@ -72,7 +73,7 @@ void Cpu::tick()
         default: 
         //case State::HALTED:
         //case State::STOPPED:
-            return;
+            return true;
         case State::OPCODE: //check current opcode, jump to extend opcodes or switch to collecting operands
             clearState();
             m_opcodeOne = m_addressSpace.getByte(m_registers.getPC());
@@ -94,11 +95,18 @@ void Cpu::tick()
                 assert(m_currentOpcode); //invalid opcode!
                 m_state = State::OPERAND;
             }
-            //TODO pause here if debug mode enabled
-            m_registers.incrementPC();
+            //pause here if debug mode enabled
+            if (!m_haltBugMode)
+            {
+                m_registers.incrementPC();
+            }
+            else
+            {
+                m_haltBugMode = false;
+            }
             break;
         case State::EXT_OPCODE: //check valid extended opcode and start collecting operands
-            if (accessedMemory) return;
+            if (accessedMemory) return true;
             accessedMemory = true;
             m_opcodeTwo = m_addressSpace.getByte(m_registers.getPC());
             if (!m_currentOpcode)
@@ -112,7 +120,7 @@ void Cpu::tick()
         case State::OPERAND: //collect any operands for current opcode
             while (m_operandIndex < m_currentOpcode.getOperandLength())
             {
-                if (accessedMemory) return;
+                if (accessedMemory) return true;
 
                 accessedMemory = true;
                 m_opArgs[m_operandIndex++] = m_addressSpace.getByte(m_registers.getPC());
@@ -133,14 +141,20 @@ void Cpu::tick()
                     m_state = State::STOPPED;
                     m_display.disableLCD();
                 }
-                return;
+                return true;
             }
             else if (m_opcodeOne == 0x76) //HALT
             {
-                //TODO switch on some debug output and continue running
-                //else
-                m_state = State::HALTED;
-                return;
+                if (m_interruptManager.isHaltBug())
+                {
+                    m_state = State::OPCODE;
+                    m_haltBugMode = true;
+                }
+                else
+                {
+                    m_state = State::HALTED;
+                }
+                return true;
             }
 
             if (m_opIndex < m_ops.size())
@@ -149,7 +163,7 @@ void Cpu::tick()
                 bool opAccessesMemory = op.readsMemory || op.writesMemory;
                 if (accessedMemory && opAccessesMemory)
                 {
-                    return;
+                    return true;
                 }
                 m_opIndex++;
 
@@ -166,7 +180,7 @@ void Cpu::tick()
 
                 if (op.forceFinishCycle)
                 {
-                    return;
+                    return true;
                 }
 
                 if (opAccessesMemory)
@@ -180,12 +194,14 @@ void Cpu::tick()
                 m_state = State::OPCODE;
                 m_operandIndex = 0;
                 m_interruptManager.onInstructionFinished();
-                return;
+                return true;
             }
 
             break;
         }
     }
+
+    return true;
 }
 
 void Cpu::clearState()

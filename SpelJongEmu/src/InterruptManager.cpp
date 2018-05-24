@@ -2,8 +2,8 @@
 
 InterruptManager::InterruptManager(bool isColour)
     : m_isColour                (isColour),
-    m_ime                       (false),
-    m_interruptFlag             (0xe1), //not 0xe0?
+    m_ime                       (true),
+    m_interruptFlag             (0xe1),
     m_interruptEnabled          (0),
     m_pendingEnableInterrupts   (-1),
     m_pendingDisableInterrupts  (-1)
@@ -34,7 +34,7 @@ void InterruptManager::disableInterrupts(bool useDelay)
     }
     else
     {
-        m_ime = true;
+        m_ime = false;
     }
 }
 
@@ -74,7 +74,7 @@ bool InterruptManager::isInterruptRequested() const
 
 void InterruptManager::flush()
 {
-    m_interruptFlag = 0xe0;
+    m_interruptFlag = 0xe0; //not 0xe1?
 }
 
 bool InterruptManager::isHaltBug() const
@@ -89,6 +89,7 @@ bool InterruptManager::accepts(std::uint16_t address) const
 
 void InterruptManager::setByte(std::uint16_t address, std::uint8_t value)
 {
+    assert(accepts(address));
     switch (address)
     {
     default: return;
@@ -103,6 +104,7 @@ void InterruptManager::setByte(std::uint16_t address, std::uint8_t value)
 
 std::uint8_t InterruptManager::getByte(std::uint16_t address) const
 {
+    assert(accepts(address));
     switch (address)
     {
     default: return 0xff;
