@@ -21,6 +21,9 @@ Speljongen::Speljongen()
     m_gpu           (nullptr),
     m_requestRefresh(false),
     m_lcdDisabled   (false)
+#ifdef RUN_TESTS
+    ,m_fifoTest     (m_display)
+#endif
 {
     auto& oamRam = m_mmu.addAddressSpace<Ram>(0xfe00, 0x00a0);
     m_dma = &m_mmu.addAddressSpace<Dma>(oamRam, m_speedMode);
@@ -43,6 +46,13 @@ Speljongen::Speljongen()
     interruptManager.disableInterrupts(false);
     initRegisters(); //TODO only do this when not using boot rom
     initRenderer();
+
+#ifdef RUN_TESTS   
+    m_fifoTest.testEnqueue();
+    m_fifoTest.testDequeue();
+    m_fifoTest.testZip();
+    testTiming();
+#endif
 }
 
 //public
@@ -62,6 +72,10 @@ void Speljongen::stop()
 
 void Speljongen::tick()
 {
+#ifdef RUN_TESTS
+    return;
+#endif
+    
     //TODO these can be ticked internally by mmu
     m_timer->tick();
     m_dma->tick();

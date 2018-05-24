@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Image.hpp>
 
 #include <cassert>
+#include <iostream>
 
 namespace
 {
@@ -31,13 +32,15 @@ Display::Display()
 void Display::putPixel(std::uint8_t px)
 {
     assert(m_pixelIndex < MaxPixels);
-    m_imageBuffer.setPixel(m_pixelIndex / Width, m_pixelIndex % Width, colours[px]);
+    m_imageBuffer.setPixel(m_pixelIndex % Width, m_pixelIndex / Width, colours[px]);
+    m_pixelIndex = (m_pixelIndex + 1) % MaxPixels;
+    if (px > 0)std::cout << px << "\n";
 }
 
 void Display::requestRefresh()
 {
     m_texture.update(m_imageBuffer);
-    m_pixelIndex = 0;
+    //m_pixelIndex = 0;
 }
 
 void Display::waitForRefresh() {}

@@ -147,6 +147,7 @@
     <ClCompile Include="src\PixelTransferPhase.cpp" />
     <ClCompile Include="src\SpeedMode.cpp" />
     <ClCompile Include="src\Speljongen.cpp" />
+    <ClCompile Include="src\Tests.cpp" />
     <ClCompile Include="src\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

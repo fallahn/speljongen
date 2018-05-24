@@ -1,7 +1,7 @@
 #include "SpeedMode.hpp"
 
 SpeedMode::SpeedMode()
-    : m_currentSpeed    (true),
+    : m_currentSpeed    (false),
     m_prepareSpeedSwitch(false)
 {
 

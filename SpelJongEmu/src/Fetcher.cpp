@@ -43,7 +43,7 @@ void Fetcher::init()
     m_tileID = 0;
     m_tileData1 = 0;
     m_tileData2 = 0;
-    //m_divisor = 2;
+    m_divisor = 2;
     m_fetchingDisabled = false;
 }
 
@@ -185,7 +185,8 @@ PixelLine Fetcher::zip(std::uint8_t data1, std::uint8_t data2, bool reverse, Pix
 }
 
 //private
-std::uint8_t Fetcher::getTileData(std::uint8_t tileID, std::uint8_t tileLine, std::uint8_t byteNumber, std::uint16_t tileAddress, bool isSigned, const TileAttributes& attributes, std::uint8_t tileHeight)
+std::uint8_t Fetcher::getTileData(std::uint8_t tileID, std::uint8_t tileLine, std::uint8_t byteNumber,
+    std::uint16_t tileAddress, bool isSigned, const TileAttributes& attributes, std::uint8_t tileHeight)
 {
     //hmm the original source has some dubious shadowing going on
     //with both the parameter name and member name being tileDataAddress.
@@ -200,7 +201,7 @@ std::uint8_t Fetcher::getTileData(std::uint8_t tileID, std::uint8_t tileLine, st
         effectiveLine = tileLine;
     }
 
-    std::int16_t address = 0;
+    std::int32_t address = 0;
     if (isSigned)
     {
         address = tileAddress + BitUtil::toSigned(tileID) * 0x10;

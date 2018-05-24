@@ -3,6 +3,8 @@
 #include "InterruptManager.hpp"
 #include "Dma.hpp"
 
+#include <iostream>
+
 Gpu::Gpu(Display& display, InterruptManager& ir, Dma& dma, Ram& oamRam, bool colour)
     : m_display         (display),
     m_interruptManager  (ir),
@@ -59,7 +61,7 @@ void Gpu::setByte(std::uint16_t address, std::uint8_t value)
 std::uint8_t Gpu::getByte(std::uint16_t address) const
 {
     assert(accepts(address));
-    if (address == GpuRegister::registers[GpuRegister::STAT].getAddress())
+    if (address == /*GpuRegister::registers[GpuRegister::STAT].getAddress()*/0xff41)
     {
         return getStat();
     }
@@ -79,7 +81,7 @@ Gpu::Mode Gpu::tick()
 {
     if (!m_lcdEnabled)
     {
-        if(m_lcdEnableDelay != -1)
+        if (m_lcdEnableDelay != -1)
         {
             if (--m_lcdEnableDelay == 0)
             {
@@ -97,65 +99,66 @@ Gpu::Mode Gpu::tick()
     m_ticksInLine++;
     if (m_currentPhase->tick())
     {
-        if (/*m_ticksInLine == 4 &&*/ m_currentMode == Mode::VBlank && //this will never be true because VBlank mode always resets ticksInLine
+        if (m_ticksInLine == 4 && m_currentMode == Mode::VBlank && //this will never be true because VBlank mode always resets ticksInLine
             m_registers.get(GpuRegister::registers[GpuRegister::LY]) == 153)
         {
             m_registers.put(GpuRegister::registers[GpuRegister::LY], 0);
             requestLycEqualsLyInterrupt();
         }
-        else
+        //std::cout << "flaps\n";
+    }
+    else
+    {
+        switch (oldMode)
         {
-            switch (oldMode)
+        default: break;
+        case Mode::OamSearch:
+            m_currentMode = Mode::PixelTransfer;
+            m_transferPhase.start(m_oamSearchPhase.getSprites());
+            m_currentPhase = &m_transferPhase;
+            break;
+        case Mode::PixelTransfer:
+            m_currentMode = Mode::HBlank;
+            m_hblankPhase.start(m_ticksInLine);
+            m_currentPhase = &m_hblankPhase;
+            requestLcdInterrupt(3);
+            break;
+        case Mode::HBlank:
+            m_ticksInLine = 0;
+            if (m_registers.preIncrement(GpuRegister::registers[GpuRegister::LY]) == 144)
             {
-            default: break;
-            case Mode::OamSearch:
-                m_currentMode = Mode::PixelTransfer;
-                m_transferPhase.start(m_oamSearchPhase.getSprites());
-                m_currentPhase = &m_transferPhase;
-                break;
-            case Mode::PixelTransfer:
-                m_currentMode = Mode::HBlank;
-                m_hblankPhase.start(m_ticksInLine);
-                m_currentPhase = &m_hblankPhase;
-                requestLcdInterrupt(3);
-                break;
-            case Mode::HBlank:
-                m_ticksInLine = 0;
-                if (m_registers.preIncrement(GpuRegister::registers[GpuRegister::LY]) == 144)
-                {
-                    m_currentMode = Mode::VBlank;
-                    m_vblankPhase.start();
-                    m_currentPhase = &m_vblankPhase;
-                    m_interruptManager.requestInterrupt(Interrupt::Type::VBlank);
-                    requestLcdInterrupt(4);
-                }
-                else
-                {
-                    m_currentMode = Mode::OamSearch;
-                    m_oamSearchPhase.start();
-                    m_currentPhase = &m_oamSearchPhase;
-                }
-                requestLcdInterrupt(5);
-                requestLycEqualsLyInterrupt();
-                break;
-            case Mode::VBlank:
-                m_ticksInLine = 0;
-                if (m_registers.preIncrement(GpuRegister::registers[GpuRegister::LY]) == 1)
-                {
-                    m_currentMode = Mode::OamSearch;
-                    m_registers.put(GpuRegister::registers[GpuRegister::LY], 0);
-                    m_oamSearchPhase.start();
-                    m_currentPhase = &m_oamSearchPhase;
-                    requestLcdInterrupt(5);
-                }
-                else
-                {
-                    m_vblankPhase.start();
-                    m_currentPhase = &m_vblankPhase;
-                }
-                requestLycEqualsLyInterrupt();
-                break;
+                m_currentMode = Mode::VBlank;
+                m_vblankPhase.start();
+                m_currentPhase = &m_vblankPhase;
+                m_interruptManager.requestInterrupt(Interrupt::Type::VBlank);
+                requestLcdInterrupt(4);
             }
+            else
+            {
+                m_currentMode = Mode::OamSearch;
+                m_oamSearchPhase.start();
+                m_currentPhase = &m_oamSearchPhase;
+            }
+            requestLcdInterrupt(5);
+            requestLycEqualsLyInterrupt();
+            break;
+        case Mode::VBlank:
+            m_ticksInLine = 0;
+            if (m_registers.preIncrement(GpuRegister::registers[GpuRegister::LY]) == 1)
+            {
+                m_currentMode = Mode::OamSearch;
+                m_registers.put(GpuRegister::registers[GpuRegister::LY], 0);
+                m_oamSearchPhase.start();
+                m_currentPhase = &m_oamSearchPhase;
+                requestLcdInterrupt(5);
+            }
+            else
+            {
+                m_vblankPhase.start();
+                m_currentPhase = &m_vblankPhase;
+            }
+            requestLycEqualsLyInterrupt();
+            break;
         }
     }
 
@@ -245,9 +248,8 @@ std::uint8_t Gpu::getStat() const
 {
     std::uint8_t m = m_registers.get(GpuRegister::registers[GpuRegister::STAT]) |
         static_cast<std::uint8_t>(m_currentMode) |
-        (m_registers.get(GpuRegister::registers[GpuRegister::LYC]) == m_registers.get(GpuRegister::registers[GpuRegister::LY])) ? (1 << 2) : 0 |
+        ((m_registers.get(GpuRegister::registers[GpuRegister::LYC]) == m_registers.get(GpuRegister::registers[GpuRegister::LY])) ? 2 : 0) |
         0x80;
-
     return m;
 }
 
