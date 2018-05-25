@@ -12,7 +12,8 @@ public:
     bool isObjDisplay() const { return (m_value & 0x02) != 0; }
     std::uint8_t getSpriteHeight() const { return ((m_value & 0x04) == 0) ? 8 : 16; }
     std::uint16_t getBgTileMapDisplay() const { return ((m_value & 0x08) == 0) ? 0x9800 : 0x9c00; }
-    std::uint16_t getBgWindowTileData() const { return ((m_value & 0x10) == 0) ? 0x9000 : 0x8000; }
+    //although the other set actually starts at 0x8800 the negative offset is applied by the fetcher
+    std::uint16_t getBgWindowTileData() const { return ((m_value & 0x10) == 0) ? 0x9000 : 0x8000; } 
     bool isBgWindowTileDataSigned() const { return (m_value & 0x10) == 0; }
     bool isWindowDisplay() const { return (m_value & 0x20) != 0; }
     std::uint16_t getWindowTileMapDisplay() const { return ((m_value & 0x40) == 0) ? 0x9800 : 0x9c00; }

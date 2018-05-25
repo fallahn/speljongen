@@ -97,7 +97,7 @@ void Fetcher::tick()
     {
         return;
     }
-
+    //std::cout << "Fetcher state: " << m_state << "\n";
     switch (m_state)
     {
     default: break;
@@ -112,10 +112,12 @@ void Fetcher::tick()
             m_tileAttributes = EmptyTileAttribs;
         }
         m_state = ReadData1;
+        //if (m_xOffset > 0) std::cout << "xOffset: " << (int)m_xOffset << "\n";
         break;
     case ReadData1:
         m_tileData1 = getTileData(m_tileID, m_tileLine, 0, m_tileDataAddress, m_tileIDSigned, m_tileAttributes, 8);
         m_state = ReadData2;
+        //if (m_tileDataAddress > 0) std::cout << "Tile address: " << (int)m_tileDataAddress << "\n";
         break;
     case ReadData2:
         m_tileData2 = getTileData(m_tileID, m_tileLine, 1, m_tileDataAddress, m_tileIDSigned, m_tileAttributes, 8);
@@ -127,15 +129,25 @@ void Fetcher::tick()
             m_fifo.enqueue8Pixels(zip(m_tileData1, m_tileData2, m_tileAttributes.isXFlip()), m_tileAttributes);
             m_xOffset = (m_xOffset + 2) % 0x20;
             m_state = ReadTileID;
+
+            if (m_tileData1 > 0 || m_tileData2 > 0)
+            {
+                std::cout << (int)m_tileData1 << ": " << (int)m_tileData2 << "\n";
+            }
         }
         break;
     case ReadSpriteTileID:
         m_tileID = m_oamRam.getByte(m_sprite.getAddress() + 2);
         m_state = ReadSpriteFlags;
+        if (m_tileID > 0) std::cout << "TileID: " << m_tileID << "\n";
         break;
     case ReadSpriteFlags:
-        m_spriteAttributes = TileAttributes::valueOf(m_oamRam.getByte(m_sprite.getAddress() + 3));
+    {
+        std::uint8_t b = m_oamRam.getByte(m_sprite.getAddress() + 3);
+        m_spriteAttributes = TileAttributes::valueOf(b);
         m_state = ReadSpriteData1;
+        if (b > 0) std::cout << "Read: " << (int)b << " from OAM\n";
+    }
         break;
     case ReadSpriteData1:
         if (m_lcdc.getSpriteHeight() == 16)
@@ -191,7 +203,7 @@ std::uint8_t Fetcher::getTileData(std::uint8_t tileID, std::uint8_t tileLine, st
     //hmm the original source has some dubious shadowing going on
     //with both the parameter name and member name being tileDataAddress.
     //this assumes the original refers to the local (parameter) value, and renames it tileAddress
-    std::uint8_t effectiveLine = 0;
+    std::uint16_t effectiveLine = 0;
     if (attributes.isYFlip())
     {
         effectiveLine = tileHeight - 1 - tileLine;
@@ -210,7 +222,7 @@ std::uint8_t Fetcher::getTileData(std::uint8_t tileID, std::uint8_t tileLine, st
     {
         address = tileAddress + tileID * 0x10;
     }
-
+    
     Ram& videoRam = (attributes.getBank() == 0 || !m_colour) ? m_videoRam0 : m_videoRam1;
-    return videoRam.getByte(address + effectiveLine * 2 + byteNumber);
+    return videoRam.getByte(address + effectiveLine * 2 + byteNumber + 1280);
 }
