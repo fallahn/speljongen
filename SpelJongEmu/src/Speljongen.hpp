@@ -79,6 +79,7 @@ private:
 
 
     private:
+        std::vector<std::uint8_t> m_storage;
         Lcdc m_lcdc;
         MemoryRegisters<GpuRegister> m_registers;
         ClassicPixelFifo m_fifo;

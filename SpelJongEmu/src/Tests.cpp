@@ -1,28 +1,36 @@
 #include "Speljongen.hpp"
 #include "OpCode.hpp"
+#include "CpuRegisters.hpp"
 
 #include <iostream>
 #include <iomanip>
 
 #ifdef _WIN32
 #include <Windows.h>
+#include <VersionHelpers.h>
 #endif
 
 #ifdef RUN_TESTS
 namespace
 {
-    const std::string redBegin("\x1b[31;1;0m");
-    const std::string greenBegin("\x1b[32;1;0m");
-    const std::string colourEnd("\x1b[0m");
+    std::string redBegin("\x1b[31;1;0m");
+    std::string greenBegin("\x1b[32;1;0m");
+    std::string colourEnd("\x1b[0m");
 }
 
 void Speljongen::testTiming()
 {
+    //to test ret we need the stacl pointing as if it had a return address on it..
+    m_cpu.getRegisters().setSP(0xfffc);
     assertTiming(16, { 0xc9, 0, 0 }); // RET
+    m_cpu.getRegisters().setSP(0xfffc);
     assertTiming(16, { 0xd9, 0, 0 }); // RETI
+    m_cpu.getRegisters().setSP(0xfffc);
     m_cpu.getRegisters().getFlags().set(Flags::Z, false);
     assertTiming(20, { 0xc0, 0, 0 }); // RET NZ
+    m_cpu.getRegisters().setSP(0xfffc);
     m_cpu.getRegisters().getFlags().set(Flags::Z, true);
+    m_cpu.getRegisters().setSP(0xfffc);
     assertTiming(8, { 0xc0, 0, 0 }); // RET NZ
     assertTiming(24, { 0xcd, 0, 0 }); // CALL a16
     assertTiming(16, { 0xc5 }); // PUSH BC
@@ -118,32 +126,42 @@ void Speljongen::assertTiming(std::int32_t expected, std::vector<std::uint8_t> o
 }
 
 Speljongen::FifoTest::FifoTest(Display& display)
-    : m_registers(GpuRegister::registers),
-    m_fifo(display, m_lcdc, m_registers)
+    : m_storage (0xffff),
+    m_lcdc      (m_storage),
+    m_registers (m_storage, GpuRegister::registers),
+    m_fifo      (display, m_lcdc, m_registers)
 {
     m_registers.setByte(0xff47, 0b11100100); //default palette
 
     //if on windows enable virtual terminal output
 #ifdef _WIN32
-    // Set output mode to handle virtual terminal sequences
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (hOut == INVALID_HANDLE_VALUE)
+    if (IsWindows10OrGreater())
     {
-        std::cout << "Failed to get console handle\n";
-    }
+        // Set output mode to handle virtual terminal sequences
+        HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        if (hOut == INVALID_HANDLE_VALUE)
+        {
+            std::cout << "Failed to get console handle\n";
+        }
 
-    DWORD dwMode = 0;
-    if (!GetConsoleMode(hOut, &dwMode))
+        DWORD dwMode = 0;
+        if (!GetConsoleMode(hOut, &dwMode))
+        {
+            std::cout << "Failed retrieving console window mode\n";
+        }
+
+        dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        if (!SetConsoleMode(hOut, dwMode))
+        {
+            std::cout << "Failed enabling Virtual Terminal commands in console\n";
+        }
+    }
+    else
     {
-        std::cout << "Failed retrieving console window mode\n";
+        redBegin = {};
+        greenBegin = {};
+        colourEnd = {};
     }
-
-    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-    if (!SetConsoleMode(hOut, dwMode))
-    {
-        std::cout << "Failed enabling Virtual Terminal commands in console\n";
-    }
-
 #endif
 }
 

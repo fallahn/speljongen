@@ -8,7 +8,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 Speljongen::Speljongen()
-    : m_storage         (0xffff),
+    : m_storage         (0x10000),
     m_mmu               (m_storage),
     m_speedMode         (m_storage),
     m_interruptManager  (m_storage, false),
