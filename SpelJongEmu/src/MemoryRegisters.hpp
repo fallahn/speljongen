@@ -11,7 +11,8 @@ template <class T>
 class MemoryRegisters final : public AddressSpace
 {
 public:
-    explicit MemoryRegisters(const std::vector<T>& registers)
+    MemoryRegisters(std::vector<std::uint8_t>& storage, const std::vector<T>& registers)
+        : AddressSpace(storage)
     {
         static_assert(std::is_base_of<Register, T>::value, "");
         for (auto& r : registers)

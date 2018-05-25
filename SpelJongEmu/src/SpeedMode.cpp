@@ -1,7 +1,8 @@
 #include "SpeedMode.hpp"
 
-SpeedMode::SpeedMode()
-    : m_currentSpeed    (false),
+SpeedMode::SpeedMode(std::vector<std::uint8_t>& storage)
+    : AddressSpace      (storage),
+    m_currentSpeed      (false),
     m_prepareSpeedSwitch(false)
 {
 
@@ -16,11 +17,13 @@ bool SpeedMode::accepts(std::uint16_t address) const
 void SpeedMode::setByte(std::uint16_t address, std::uint8_t value)
 {
     m_prepareSpeedSwitch = ((value & 0x01) != 0);
+    setStorageValue(address, value);
 }
 
 std::uint8_t SpeedMode::getByte(std::uint16_t address) const
 {
-    return (m_currentSpeed ? (1 << 7) : 0) | (m_prepareSpeedSwitch ? (1 << 0) : 0) | 0b01111110;
+    //return (m_currentSpeed ? (1 << 7) : 0) | (m_prepareSpeedSwitch ? (1 << 0) : 0) | 0b01111110;
+    return getStorageValue(address);
 }
 
 bool SpeedMode::onStop()

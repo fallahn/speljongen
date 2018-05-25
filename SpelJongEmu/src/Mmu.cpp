@@ -13,14 +13,16 @@ namespace
     };
 }
 
-Mmu::Mmu()
-    :m_storage(0xffff)
+Mmu::Mmu(std::vector<std::uint8_t>& storage)
+    : AddressSpace(storage),
+    m_addressSpaces(0xffff)
 {
     //TODO check if GBC
     //logo code at 0x104 so we see something when no game inserted - this is normally
     //part of the ROM data.
-    std::memcpy(m_storage.data(), BootRom::CLASSIC.data(), BootRom::CLASSIC.size());
-    std::memcpy(m_storage.data() + 0x104, logo.data(), logo.size());
+    //std::memcpy(m_storage.data(), BootRom::CLASSIC.data(), BootRom::CLASSIC.size());
+    //std::memcpy(m_storage.data() + 0x104, logo.data(), logo.size());
+    for (auto& s : m_addressSpaces) s = nullptr;
 }
 
 //public
@@ -33,27 +35,65 @@ void Mmu::setByte(std::uint16_t address, std::uint8_t value)
 {   
     //I don't like having to do this but some spaces such
     //as the GPU have special accessors
-    for (auto& space : m_spaces)
+    //for (auto& space : m_spaces)
+    //{
+    //    if (space->accepts(address))
+    //    {
+    //        space->setByte(address, value);
+    //        return;
+    //    }
+    //}
+    //
+    //m_storage[address] = value;
+
+    if (m_addressSpaces[address])
     {
-        if (space->accepts(address))
-        {
-            space->setByte(address, value);
-            return;
-        }
+        m_addressSpaces[address]->setByte(address, value);
     }
-    
-    m_storage[address] = value;
+    else
+    {
+        setStorageValue(address, value);
+    }
 }
 
 std::uint8_t Mmu::getByte(std::uint16_t address) const
 {
-    for (auto& space : m_spaces)
+    //for (auto& space : m_spaces)
+    //{
+    //    if (space->accepts(address))
+    //    {
+    //        return space->getByte(address);
+    //    }
+    //}
+
+    //return m_storage[address];
+
+    if (m_addressSpaces[address]) return m_addressSpaces[address]->getByte(address);
+    return getStorageValue(address);
+}
+
+void Mmu::addAddressSpace(AddressSpace& space)
+{
+    for (auto i = 0u; i < m_addressSpaces.size(); ++i)
     {
-        if (space->accepts(address))
+        if (space.accepts(i))
         {
-            return space->getByte(address);
+            m_addressSpaces[i] = &space;
         }
     }
+}
 
-    return m_storage[address];
+void Mmu::initBios()
+{
+    std::uint16_t address = 0;
+    for (auto b : BootRom::CLASSIC)
+    {
+        setByte(address++, b);
+    }
+
+    address = 0x104;
+    for (auto b : logo)
+    {
+        setByte(address++, b);
+    }
 }

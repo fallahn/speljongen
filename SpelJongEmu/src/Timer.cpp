@@ -10,8 +10,9 @@ namespace
     constexpr std::array<std::int32_t, 4u> FreqToBit = { 9, 3, 5, 7 };
 }
 
-Timer::Timer(InterruptManager& im, const SpeedMode& sm)
-    : m_interruptManager(im),
+Timer::Timer(std::vector<std::uint8_t>& storage, InterruptManager& im, const SpeedMode& sm)
+    : AddressSpace      (storage),
+    m_interruptManager  (im),
     m_speedMode         (sm),
     m_div               (0),
     m_tac               (0),

@@ -7,7 +7,7 @@ class SpeedMode;
 class Timer final : public AddressSpace
 {
 public:
-    Timer(InterruptManager&, const SpeedMode&);
+    Timer(std::vector<std::uint8_t>&, InterruptManager&, const SpeedMode&);
 
     void tick();
     bool accepts(std::uint16_t) const override;

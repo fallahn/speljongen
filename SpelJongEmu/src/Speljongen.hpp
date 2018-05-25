@@ -5,6 +5,11 @@
 #include "InterruptManager.hpp"
 #include "SpeedMode.hpp"
 #include "Display.hpp"
+#include "Ram.hpp"
+#include "Dma.hpp"
+#include "Timer.hpp"
+#include "ShadowAddressSpace.hpp"
+#include "Gpu.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -33,17 +38,19 @@ public:
     void load(const std::string&);
 
 private:
-
+    std::vector<std::uint8_t> m_storage;
     bool m_running;
-
-    SpeedMode m_speedMode;
     Mmu m_mmu;
-    Cpu m_cpu;
+    SpeedMode m_speedMode;
+    InterruptManager m_interruptManager;
     Display m_display;
+    Cpu m_cpu;
 
-    Timer* m_timer;
-    Dma* m_dma;
-    Gpu* m_gpu;
+    Ram m_oamRam;
+    ShadowAddressSpace m_shadowSpace;
+    Timer m_timer;
+    Dma m_dma;
+    Gpu m_gpu;
 
     bool m_requestRefresh;
     bool m_lcdDisabled;

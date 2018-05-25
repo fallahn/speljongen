@@ -5,17 +5,19 @@
 
 #include <iostream>
 
-Gpu::Gpu(Display& display, InterruptManager& ir, Dma& dma, Ram& oamRam, bool colour)
-    : m_display         (display),
+Gpu::Gpu(std::vector<std::uint8_t>& storage, Display& display, InterruptManager& ir, Dma& dma, Ram& oamRam, bool colour)
+    : AddressSpace      (storage),
+    m_display           (display),
     m_interruptManager  (ir),
     m_dma               (dma),
     m_oamRam            (oamRam),
     m_colour            (colour),
-    m_videoRam0         (0x8000, 0x2000, false),
-    m_videoRam1         (0x8000, 0x2000, false),
-    m_bgPalette         (0xff68),
-    m_oamPalette        (0xff6a),
-    m_registers         (GpuRegister::registers),
+    m_videoRam0         (storage, 0x8000, 0x2000, false),
+    m_videoRam1         (storage, 0x8000, 0x2000, false),
+    m_lcdc              (storage),
+    m_bgPalette         (storage, 0xff68),
+    m_oamPalette        (storage, 0xff6a),
+    m_registers         (storage, GpuRegister::registers),
     m_oamSearchPhase    (oamRam, m_lcdc, m_registers),
     m_transferPhase     (m_videoRam0, m_videoRam1, oamRam, display, m_lcdc, m_registers, colour),
     m_currentPhase      (&m_oamSearchPhase),

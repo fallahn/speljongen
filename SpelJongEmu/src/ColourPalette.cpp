@@ -1,9 +1,10 @@
 #include "ColourPalette.hpp"
 
-ColourPalette::ColourPalette(std::uint16_t offset)
-    : m_indexAddress    (offset),
+ColourPalette::ColourPalette(std::vector<std::uint8_t>& storage, std::uint16_t offset)
+    : AddressSpace      (storage),
+    m_indexAddress      (offset),
     m_dataAddress       (offset + 1),
-    m_index             (0),
+    //m_index             (0),
     m_autoIncrement     (false)
 {
 
@@ -20,13 +21,14 @@ void ColourPalette::setByte(std::uint16_t address, std::uint8_t value)
     assert(accepts(address));
     if (address == m_indexAddress)
     {
-        m_index = value & 0x3f;
+        setStorageValue(address, value & 0x3f);
         m_autoIncrement = (value & (1 << 7)) != 0;
     }
     else if (address == m_dataAddress)
     {
-        auto colour = m_palettes[m_index / 8][(m_index % 8) / 2];
-        if (m_index % 2 == 0)
+        auto currValue = getStorageValue(m_indexAddress);
+        auto colour = m_palettes[currValue / 8][(currValue % 8) / 2];
+        if (currValue % 2 == 0)
         {
             colour = (colour & 0xff00) | value;
         }
@@ -35,10 +37,10 @@ void ColourPalette::setByte(std::uint16_t address, std::uint8_t value)
             colour = (colour & 0x00ff) | (value << 8);
         }
 
-        m_palettes[m_index / 8][(m_index % 8) / 2] = colour;
+        m_palettes[currValue / 8][(currValue % 8) / 2] = colour;
         if (m_autoIncrement)
         {
-            m_index = (m_index + 1) & 0x3f;
+            setStorageValue(m_indexAddress, (currValue + 1) & 0x3f);
         }
     }
 }
@@ -49,11 +51,11 @@ std::uint8_t ColourPalette::getByte(std::uint16_t address) const
 
     if (address == m_indexAddress)
     {
-        return m_index | (m_autoIncrement ? 0x80 : 0) | 0x40;
+        return getStorageValue(address) | (m_autoIncrement ? 0x80 : 0) | 0x40;
     }
 
-    auto colour = m_palettes[m_index / 8][(m_index % 8) / 2];
-    if (m_index % 2 == 0)
+    auto colour = m_palettes[getStorageValue(address) / 8][(getStorageValue(address) % 8) / 2];
+    if (getStorageValue(address) % 2 == 0)
     {
         return colour & 0xff;
     }

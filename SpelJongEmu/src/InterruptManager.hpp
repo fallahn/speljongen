@@ -30,7 +30,7 @@ class InterruptManager final : public AddressSpace
 {
 public:
 
-    explicit InterruptManager(bool isColour);
+    InterruptManager(std::vector<std::uint8_t>&, bool isColour);
 
     AddressSpace::Type type() const override { return AddressSpace::Type::Interrupt; }
 

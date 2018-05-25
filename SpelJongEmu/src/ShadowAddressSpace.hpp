@@ -10,8 +10,8 @@
 class ShadowAddressSpace final : public AddressSpace
 {
 public:
-    ShadowAddressSpace(std::uint16_t echoStart, std::uint16_t targetStart, std::uint16_t length)
-        : m_echoStart(echoStart), m_targetStart(targetStart), m_echoEnd(m_echoStart + length)
+    ShadowAddressSpace(std::vector<std::uint8_t>& storage, std::uint16_t echoStart, std::uint16_t targetStart, std::uint16_t length)
+        : AddressSpace(storage), m_echoStart(echoStart), m_targetStart(targetStart), m_echoEnd(m_echoStart + length)
     {
         assert(m_echoStart < m_echoEnd);
     }

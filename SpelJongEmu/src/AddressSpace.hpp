@@ -18,6 +18,8 @@ public:
         Interrupt
     };
 
+    AddressSpace(std::vector<std::uint8_t>& storage) :m_storage(storage) {}
+
     virtual ~AddressSpace() = default;
 
     virtual Type type() const { return Type::VOID; }
@@ -28,20 +30,20 @@ public:
 
     virtual std::uint8_t getByte(std::uint16_t address) const = 0;
 
-    void setStorage(std::vector<std::uint8_t>& storage) { m_storage = &storage; }
-
 protected:
     std::vector<std::uint8_t>& getStorage()
     {
-        assert(m_storage);
-        return *m_storage;
+        return m_storage;
     }
 
     const std::vector<std::uint8_t>& getStorage() const
     {
-        assert(m_storage);
-        return *m_storage;
+        return m_storage;
     }
+
+    std::uint8_t getStorageValue(std::uint16_t address) const { return m_storage[address]; }
+
+    void setStorageValue(std::uint16_t address, std::uint8_t value) { m_storage[address] = value; }
 private:
-    std::vector<std::uint8_t>* m_storage = nullptr;
+    std::vector<std::uint8_t>& m_storage;
 };

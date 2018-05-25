@@ -21,7 +21,7 @@ public:
         HBlank, VBlank, OamSearch, PixelTransfer, None //order is important!
     };
 
-    Gpu(Display&, InterruptManager&, Dma&, Ram&, bool);
+    Gpu(std::vector<std::uint8_t>&, Display&, InterruptManager&, Dma&, Ram&, bool);
 
     Ram& getVRam0();
     Ram& getVRam1();
@@ -65,7 +65,6 @@ private:
     Mode m_currentMode;
 
     AddressSpace* getAddressSpace(std::uint16_t) const;
-    //Ram& getVideoRam();
     void requestLcdInterrupt(std::uint8_t);
     void requestLycEqualsLyInterrupt(); //can you tell this was ported from java?
     std::uint8_t getStat() const;

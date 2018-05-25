@@ -14,17 +14,18 @@
 class Ram final : public AddressSpace
 {
 public:
-    Ram(std::uint16_t start, std::uint16_t length, bool sharedStorage = true)
-        : m_start   (start),
-        m_end       (start + length)
+    Ram(std::vector<std::uint8_t>& storage, std::uint16_t start, std::uint16_t length, bool sharedStorage = true)
+        : AddressSpace  (storage),
+        m_start         (start),
+        m_end           (start + length),
+        m_useInternal   (false)
     {
         assert(m_end > m_start); //values have wrpapped around by becoming negative or something :S
         if (!sharedStorage)
         {
             //set storage to local
             m_ownStorage.resize(m_end); //it's a bit of a waste, but meh
-            setStorage(m_ownStorage);
-            ownStorage = true;
+            m_useInternal = true; //TODO map this via MMU so that corect data is returned at requested address
         }
     }
 
@@ -38,6 +39,11 @@ public:
     void setByte(std::uint16_t address, std::uint8_t value) override
     {
         assert(accepts(address));
+        if (m_useInternal)
+        {
+            m_ownStorage[address] = value;
+            return;
+        }
         getStorage()[address] = value;
         //if (!ownStorage && value > 0) std::cout << "Wrote to: " << address << ": " << (int)value << "\n";
         //if (ownStorage && value > 0) wasWritten = true;
@@ -47,6 +53,10 @@ public:
     {
         assert(accepts(address));
         //if (!ownStorage /*&& wasWritten*/&& getStorage()[address] > 0) std::cout << "Read from: " << address << ": " << (int)getStorage()[address] << "\n";
+        if (m_useInternal)
+        {
+            return m_ownStorage[address];
+        }
         return getStorage()[address];
     }
 
@@ -54,6 +64,6 @@ private:
     std::uint16_t m_start = 0;
     std::uint16_t m_end = 0;
     std::vector<std::uint8_t> m_ownStorage;
-    bool ownStorage = false;
-    bool wasWritten = false;
+    bool m_useInternal;
+    //bool wasWritten = false;
 };

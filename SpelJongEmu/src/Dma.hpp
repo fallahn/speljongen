@@ -8,11 +8,11 @@
 class Dma final : public AddressSpace
 {
 public:
-    Dma(AddressSpace& oam, const SpeedMode& speedMode)
-        : m_oam(oam), m_speedMode(speedMode),
-        m_inProgress(false), m_restarted(false), m_from(0), m_ticks(0)
+    Dma(std::vector<std::uint8_t>& storage, const SpeedMode& speedMode)
+        : AddressSpace(storage), m_speedMode(speedMode),
+        m_inProgress(false), m_restarted(false), m_ticks(0)
     {
-
+        setStorageValue(0xff46, 0);
     }
 
     AddressSpace::Type type() const override { return AddressSpace::Type::Dma; }
@@ -27,7 +27,7 @@ public:
     void setByte(std::uint16_t address, std::uint8_t value) override
     {
         assert(accepts(address));
-        m_from = value * 0x100;
+        setStorageValue(address, value);
         m_restarted = isOamBlocked();
         m_ticks = 0;
         m_inProgress = true;
@@ -49,21 +49,20 @@ public:
                 m_ticks = 0;
 
                 //do transfer
+                std::uint16_t from = getStorageValue(0xff46) * 0x100;
                 for (std::uint16_t i = 0; i < 0xa0; ++i)
                 {
-                    m_oam.setByte(0xfe00 + i, getStorage()[m_from + i]);
+                    setStorageValue(0xfe00 + i, getStorageValue(from + i));
                 }
             }
         }
     }
 
 private:
-    AddressSpace& m_oam;
     const SpeedMode& m_speedMode;
 
     bool m_inProgress;
     bool m_restarted;
 
-    std::uint16_t m_from;
     std::uint32_t m_ticks;
 };

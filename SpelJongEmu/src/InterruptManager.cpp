@@ -1,7 +1,8 @@
 #include "InterruptManager.hpp"
 
-InterruptManager::InterruptManager(bool isColour)
-    : m_isColour                (isColour),
+InterruptManager::InterruptManager(std::vector<std::uint8_t>&storage, bool isColour)
+    : AddressSpace              (storage),
+    m_isColour                  (isColour),
     m_ime                       (true),
     m_interruptFlag             (0xe1),
     m_interruptEnabled          (0),
@@ -94,10 +95,12 @@ void InterruptManager::setByte(std::uint16_t address, std::uint8_t value)
     {
     default: return;
     case 0xff0f:
-        m_interruptFlag = (value | 0xe0);
+        m_interruptFlag = (value | 0xe0); //why switch on top bits?
+        setStorageValue(address, m_interruptFlag);
         break;
     case 0xffff:
         m_interruptEnabled = value;
+        setStorageValue(address, value);
         break;
     }
 }

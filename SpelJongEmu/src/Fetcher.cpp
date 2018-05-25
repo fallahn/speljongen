@@ -224,5 +224,5 @@ std::uint8_t Fetcher::getTileData(std::uint8_t tileID, std::uint8_t tileLine, st
     }
     
     Ram& videoRam = (attributes.getBank() == 0 || !m_colour) ? m_videoRam0 : m_videoRam1;
-    return videoRam.getByte(address + effectiveLine * 2 + byteNumber + 1280);
+    return videoRam.getByte(address + effectiveLine * 2 + byteNumber);
 }

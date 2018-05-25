@@ -5,7 +5,7 @@
 class SpeedMode final : public AddressSpace
 {
 public:
-    SpeedMode();
+    explicit SpeedMode(std::vector<std::uint8_t>&);
 
     bool accepts(std::uint16_t) const override;
     void setByte(std::uint16_t, std::uint8_t) override;
