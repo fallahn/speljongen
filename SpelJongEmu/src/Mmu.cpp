@@ -1,7 +1,9 @@
 #include "Mmu.hpp"
 #include "BootRom.hpp"
+#include "MemoryRegisters.hpp"
 
 #include <cstring>
+#include <iostream>
 
 namespace
 {
@@ -36,6 +38,12 @@ void Mmu::setByte(std::uint16_t address, std::uint8_t value)
     else
     {
         setStorageValue(address, value);
+    }
+
+    //temp
+    if (address == MemoryRegisters::SC && value == 0x81)
+    {
+        std::cout << getByte(MemoryRegisters::SB);
     }
 }
 

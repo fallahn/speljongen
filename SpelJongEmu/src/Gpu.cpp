@@ -30,6 +30,14 @@ Gpu::Gpu(std::vector<std::uint8_t>& storage, Display& display, InterruptManager&
 }
 
 //public
+void Gpu::reset()
+{
+    m_lcdEnabled = true;
+    m_lcdEnableDelay = 0;
+    m_ticksInLine = 0;
+    m_currentMode = Mode::OamSearch;
+}
+
 Ram& Gpu::getVRam0() { return m_videoRam0; }
 
 Ram& Gpu::getVRam1() { return m_videoRam1; }

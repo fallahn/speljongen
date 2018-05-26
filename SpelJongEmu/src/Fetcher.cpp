@@ -132,7 +132,7 @@ void Fetcher::tick()
 
             if (m_tileData1 > 0 || m_tileData2 > 0)
             {
-                std::cout << (int)m_tileData1 << ": " << (int)m_tileData2 << "\n";
+                std::cout << "TileData: " << (int)m_tileData1 << ": " << (int)m_tileData2 << "\n";
             }
         }
         break;

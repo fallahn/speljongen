@@ -13,7 +13,7 @@ namespace
     constexpr sf::Uint32 MaxPixels = Width * Height;
     const std::array<sf::Color, 4u> colours = 
     {
-        sf::Color::White, sf::Color(170, 170, 170), sf::Color(85, 85, 85), sf::Color::Black
+        sf::Color::White, sf::Color(170, 170, 170), sf::Color(85, 85, 85), sf::Color::Green
     };
 }
 
@@ -24,23 +24,29 @@ Display::Display()
     m_texture.loadFromImage(m_imageBuffer);
 
     m_vertices[1].position = { static_cast<float>(Width), 0 };
+    m_vertices[1].texCoords = m_vertices[1].position;
     m_vertices[2].position = { static_cast<float>(Width), static_cast<float>(Height) };
+    m_vertices[2].texCoords = m_vertices[2].position;
     m_vertices[3].position = { 0, static_cast<float>(Height) };
+    m_vertices[3].texCoords = m_vertices[3].position;
 }
 
 //public
 void Display::putPixel(std::uint8_t px)
 {
     assert(m_pixelIndex < MaxPixels);
-    m_imageBuffer.setPixel(m_pixelIndex % Width, m_pixelIndex / Width, colours[px]);
+    auto x = m_pixelIndex % Width;
+    auto y = m_pixelIndex / Width;
+    m_imageBuffer.setPixel(x , y, colours[px]);
     m_pixelIndex = (m_pixelIndex + 1) % MaxPixels;
-    if (px > 0) std::cout << (int)px << "\n";
+    if (px > 0) std::cout << "screen px, " << x << ", " << y << ": " << (int)px << "\n";
 }
 
 void Display::requestRefresh()
 {
     m_texture.update(m_imageBuffer);
     m_pixelIndex = 0;
+    std::cout << "updated buffer...\n";
 }
 
 void Display::waitForRefresh() {}

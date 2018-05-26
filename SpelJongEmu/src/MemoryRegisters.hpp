@@ -17,6 +17,8 @@ public:
 
     std::uint8_t preIncrement(std::uint16_t);
 
+    void reset();
+
     enum
     {
         P1 = 0xff00,

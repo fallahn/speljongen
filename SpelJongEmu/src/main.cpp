@@ -35,8 +35,16 @@ int main()
                     window.close();
                     break;
                 case sf::Keyboard::LControl:
-                    window.setVerticalSyncEnabled(run);
+                    //window.setVerticalSyncEnabled(run);
                     run = !run;
+                    if (run)
+                    {
+                        gameboy.start();
+                    }
+                    else
+                    {
+                        gameboy.stop();
+                    }
                     break;
                 default: break;
                 }
@@ -49,7 +57,7 @@ int main()
                 case sf::Keyboard::Space:
                     if (!run)
                     {
-                        while (!gameboy.tick()) {};
+                        gameboy.step();
                     }
                     break;
                 }
@@ -58,6 +66,8 @@ int main()
             {
                 if (evt.mouseButton.button == sf::Mouse::Right)
                 {
+                    gameboy.stop();
+                    
                     //TODO check also inside window
                     nfdchar_t *outPath = nullptr;
                     nfdresult_t result = NFD_OpenDialog("gb", nullptr, &outPath);
@@ -69,8 +79,6 @@ int main()
                 }
             }
         }
-
-        if(run) gameboy.tick();
 
         window.clear(sf::Color::Blue);
         window.draw(gameboy);

@@ -19,6 +19,7 @@ Speljongen::Speljongen()
     m_shadowSpace       (m_storage, 0xe000, 0xc000, 0x1e00),
     m_dma               (m_storage, m_speedMode),
     m_gpu               (m_storage, m_display, m_interruptManager, m_dma, m_oamRam, m_memoryRegisters, false),
+    m_thread            (&Speljongen::threadFunc, this),
     m_requestRefresh    (false),
     m_lcdDisabled       (false)
 #ifdef RUN_TESTS
@@ -33,7 +34,7 @@ Speljongen::Speljongen()
     m_mmu.addAddressSpace(m_timer);
     m_mmu.addAddressSpace(m_gpu);
     m_mmu.addAddressSpace(m_shadowSpace);
-    m_mmu.addAddressSpace(m_memoryRegisters);
+    //m_mmu.addAddressSpace(m_memoryRegisters); //mmu maps these via sub spaces, ie GPU
 
     //TODO this is classic GB ram - colour GB is split
     //into two blocks with the second half having a specific layout
@@ -60,19 +61,38 @@ Speljongen::Speljongen()
 #endif
 }
 
+Speljongen::~Speljongen()
+{
+    if (m_running)
+    {
+        stop();
+    }
+}
+
 //public
 void Speljongen::start()
 {
     m_running = true;
-    while (m_running)
-    {
-        tick();
-    }
+    m_thread.launch();
 }
 
 void Speljongen::stop()
 {
     m_running = false;
+    m_thread.wait();
+}
+
+void Speljongen::reset()
+{
+    m_cpu.clearState();
+
+    initRegisters();
+    m_cpu.getRegisters().setPC(0x100);
+
+    m_gpu.reset();
+    m_mmu.setByte(MemoryRegisters::BGP, 0xfc);
+
+    updateDebug();
 }
 
 bool Speljongen::tick()
@@ -81,7 +101,6 @@ bool Speljongen::tick()
     return true;
 #endif
     
-    //TODO these can be ticked internally by mmu
     m_timer.tick();
     m_dma.tick();
     auto ret = m_cpu.tick();
@@ -90,34 +109,38 @@ bool Speljongen::tick()
     if (!m_lcdDisabled && !m_gpu.isLcdEnabled())
     {
         m_lcdDisabled = true;
+        m_requestRefresh = true;
         m_display.requestRefresh();
+        m_requestRefresh = false;
         //hdma
     }
     else if (gpuMode == Gpu::Mode::VBlank)
-    {
-        /*for (auto i = 0x8800; i < 0x9800; ++i)
-        {
-            m_display.putPixel(m_mmu.getByte(i));
-        }*/
-        
+    {        
         m_requestRefresh = true;
         m_display.requestRefresh();
+        updateDebug();
+        m_requestRefresh = false;
     }
 
     if (m_lcdDisabled && m_gpu.isLcdEnabled())
     {
         m_lcdDisabled = false;
-        m_display.waitForRefresh();
+        //m_display.waitForRefresh();
         //TODO hdma
     }
     else if (m_requestRefresh && gpuMode == Gpu::Mode::OamSearch)
     {
         m_requestRefresh = false;
-        m_display.waitForRefresh();
+        //m_display.waitForRefresh();
     }
-    updateDebug();
 
     return ret;
+}
+
+void Speljongen::step()
+{
+    while (!tick()) {}
+    updateDebug();
 }
 
 void Speljongen::load(const std::string& path)
@@ -136,12 +159,18 @@ void Speljongen::load(const std::string& path)
     std::uint16_t address = 0;
     for (auto c : buf) m_mmu.setByte(address++, c);
 
-    initRegisters();
-    m_cpu.getRegisters().setPC(0x100);
-    updateDebug();
+    reset();
 }
 
 //private
+void Speljongen::threadFunc()
+{
+    while (m_running)
+    {
+        tick();
+    }
+}
+
 void Speljongen::initRegisters()
 {
     Registers& r = m_cpu.getRegisters();
@@ -197,6 +226,8 @@ void Speljongen::updateDebug()
 
 void Speljongen::draw(sf::RenderTarget& rt, sf::RenderStates) const
 {
+    if (m_requestRefresh) return;
+
     rt.draw(m_display);
     rt.draw(m_text);
 }

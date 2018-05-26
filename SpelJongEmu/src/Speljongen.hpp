@@ -15,6 +15,9 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Font.hpp>
+#include <SFML/System/Thread.hpp>
+
+#include <atomic>
 
 //#define RUN_TESTS
 #ifdef RUN_TESTS
@@ -30,11 +33,19 @@ class Speljongen final : public sf::Drawable
 {
 public:
     Speljongen();
+    ~Speljongen();
+
+    Speljongen(const Speljongen&) = delete;
+    Speljongen(Speljongen&&) = delete;
+    Speljongen& operator = (const Speljongen&) = delete;
+    Speljongen& operator = (Speljongen&&) = delete;
 
     void start();
     void stop();
+    void reset();
 
     bool tick();
+    void step();
 
     void load(const std::string&);
 
@@ -59,6 +70,8 @@ private:
 
     void initRegisters();
 
+    sf::Thread m_thread;
+    void threadFunc();
 
     mutable sf::Text m_text;
     sf::Font m_font;

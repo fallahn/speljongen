@@ -9,11 +9,6 @@ namespace
 MemoryRegisters::MemoryRegisters(std::vector<std::uint8_t>& storage)
     : AddressSpace(storage)
 {
-    /*for (auto i = RegistersStart; i < RegistersEnd; ++i)
-    {
-        storage[i] = 0xff;
-    }*/
-
     for (auto i = 0; i < 0x4c; ++i)
     {
         m_readFlags.push_back(ReadWrite);
@@ -57,4 +52,12 @@ std::uint8_t MemoryRegisters::preIncrement(std::uint16_t address)
     value++;
     setStorageValue(address, value);
     return value;
+}
+
+void MemoryRegisters::reset()
+{
+    for (auto i = RegistersStart; i < RegistersEnd; ++i)
+    {
+        setStorageValue(i, 0);
+    }
 }
