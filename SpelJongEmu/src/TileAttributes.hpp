@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GpuRegister.hpp"
+#include "MemoryRegisters.hpp"
 
 #include <array>
 
@@ -25,7 +25,7 @@ public:
 
     bool isXFlip() const { return (m_value & (1 << 5)) != 0; }
 
-    GpuRegister getClassicPalette() const { return (m_value & (1 << 4)) == 0 ? GpuRegister::registers[GpuRegister::OBP0] : GpuRegister::registers[GpuRegister::OBP1]; }
+    std::uint16_t getClassicPalette() const { return (m_value & (1 << 4)) == 0 ? MemoryRegisters::OBP0 : MemoryRegisters::OBP1; }
 
     std::uint8_t getBank() const { return (m_value & (1 << 3)) == 0 ? 0 : 1; }
 

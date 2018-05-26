@@ -16,7 +16,7 @@ class Lcdc;
 class Fetcher final
 {
 public:
-    Fetcher(PixelFifo&, Ram&, Ram&, Ram&, Lcdc&, MemoryRegisters<GpuRegister>&, bool);
+    Fetcher(PixelFifo&, Ram&, Ram&, Ram&, Lcdc&, MemoryRegisters&, bool);
 
     void init();
     void startFetching(std::uint16_t, std::uint16_t, std::uint8_t, bool, std::uint8_t);
@@ -35,7 +35,7 @@ private:
     Ram& m_videoRam1;
     Ram& m_oamRam;
     Lcdc& m_lcdc;
-    MemoryRegisters<GpuRegister>& m_registers;
+    MemoryRegisters& m_registers;
     bool m_colour;
     PixelLine m_pixelLine = {};
 

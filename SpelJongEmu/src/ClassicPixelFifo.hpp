@@ -15,7 +15,7 @@ class Lcdc;
 class ClassicPixelFifo final : public PixelFifo
 {
 public:
-    ClassicPixelFifo(Display&, Lcdc&, MemoryRegisters<GpuRegister>&);
+    ClassicPixelFifo(Display&, Lcdc&, MemoryRegisters&);
 
     std::size_t length() const override;
 
@@ -40,7 +40,7 @@ private:
     PixelQueue m_pixelType; //0 = bg, 1 = sprite/obj
     Display& m_display;
     Lcdc& m_lcdc;
-    MemoryRegisters<GpuRegister>& m_memoryRegisters;
+    MemoryRegisters& m_memoryRegisters;
 
     std::uint8_t getColour(std::uint8_t palette, std::uint8_t index) const;
 };

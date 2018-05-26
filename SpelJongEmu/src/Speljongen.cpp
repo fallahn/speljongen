@@ -11,13 +11,14 @@ Speljongen::Speljongen()
     : m_storage         (0x10000),
     m_mmu               (m_storage),
     m_speedMode         (m_storage),
+    m_memoryRegisters   (m_storage),
     m_interruptManager  (m_storage, false),
     m_cpu               (m_mmu, m_interruptManager, m_speedMode, m_display),
     m_timer             (m_storage, m_interruptManager, m_speedMode),
     m_oamRam            (m_storage, 0xfe00, 0x00a0),
     m_shadowSpace       (m_storage, 0xe000, 0xc000, 0x1e00),
     m_dma               (m_storage, m_speedMode),
-    m_gpu               (m_storage, m_display, m_interruptManager, m_dma, m_oamRam, false),
+    m_gpu               (m_storage, m_display, m_interruptManager, m_dma, m_oamRam, m_memoryRegisters, false),
     m_requestRefresh    (false),
     m_lcdDisabled       (false)
 #ifdef RUN_TESTS
@@ -32,7 +33,7 @@ Speljongen::Speljongen()
     m_mmu.addAddressSpace(m_timer);
     m_mmu.addAddressSpace(m_gpu);
     m_mmu.addAddressSpace(m_shadowSpace);
-   
+    m_mmu.addAddressSpace(m_memoryRegisters);
 
     //TODO this is classic GB ram - colour GB is split
     //into two blocks with the second half having a specific layout

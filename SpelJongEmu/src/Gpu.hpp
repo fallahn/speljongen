@@ -21,7 +21,7 @@ public:
         HBlank, VBlank, OamSearch, PixelTransfer, None //order is important!
     };
 
-    Gpu(std::vector<std::uint8_t>&, Display&, InterruptManager&, Dma&, Ram&, bool);
+    Gpu(std::vector<std::uint8_t>&, Display&, InterruptManager&, Dma&, Ram&, MemoryRegisters&, bool);
 
     Ram& getVRam0();
     Ram& getVRam1();
@@ -32,7 +32,7 @@ public:
     Mode tick();
     std::uint16_t getTicksInLine() const;
     Lcdc& getLcdc();
-    MemoryRegisters<GpuRegister>& getRegisters();
+    //MemoryRegisters<GpuRegister>& getRegisters();
     bool isColour() const;
     ColourPalette& getBgPalette();
     Mode getMode() const;
@@ -51,7 +51,7 @@ private:
     ColourPalette m_bgPalette;
     ColourPalette m_oamPalette;
 
-    MemoryRegisters<GpuRegister> m_registers;
+    MemoryRegisters& m_registers;
 
     HBlankPhase m_hblankPhase;
     VBlankPhase m_vblankPhase;

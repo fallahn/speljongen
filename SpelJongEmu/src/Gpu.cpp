@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-Gpu::Gpu(std::vector<std::uint8_t>& storage, Display& display, InterruptManager& ir, Dma& dma, Ram& oamRam, bool colour)
+Gpu::Gpu(std::vector<std::uint8_t>& storage, Display& display, InterruptManager& ir, Dma& dma, Ram& oamRam, MemoryRegisters& registers, bool colour)
     : AddressSpace      (storage),
     m_display           (display),
     m_interruptManager  (ir),
@@ -17,7 +17,7 @@ Gpu::Gpu(std::vector<std::uint8_t>& storage, Display& display, InterruptManager&
     m_lcdc              (storage),
     m_bgPalette         (storage, 0xff68),
     m_oamPalette        (storage, 0xff6a),
-    m_registers         (storage, GpuRegister::registers),
+    m_registers         (registers),
     m_oamSearchPhase    (oamRam, m_lcdc, m_registers),
     m_transferPhase     (m_videoRam0, m_videoRam1, oamRam, display, m_lcdc, m_registers, colour),
     m_currentPhase      (&m_oamSearchPhase),
@@ -42,7 +42,7 @@ bool Gpu::accepts(std::uint16_t address) const
 void Gpu::setByte(std::uint16_t address, std::uint8_t value)
 {
     assert(accepts(address));
-    if (address == GpuRegister::registers[GpuRegister::STAT].getAddress())
+    if (address == MemoryRegisters::STAT)
     {
         setStat(value);
     }
@@ -63,11 +63,11 @@ void Gpu::setByte(std::uint16_t address, std::uint8_t value)
 std::uint8_t Gpu::getByte(std::uint16_t address) const
 {
     assert(accepts(address));
-    if (address == /*GpuRegister::registers[GpuRegister::STAT].getAddress()*/0xff41)
+    if (address == MemoryRegisters::STAT)
     {
         return getStat();
     }
-    if (address == GpuRegister::registers[GpuRegister::VBK].getAddress())
+    if (address == MemoryRegisters::VBK)
     {
         return m_colour ? 0xfe : 0xff;
     }
@@ -102,12 +102,11 @@ Gpu::Mode Gpu::tick()
     if (m_currentPhase->tick())
     {
         if (m_ticksInLine == 4 && m_currentMode == Mode::VBlank &&
-            m_registers.get(GpuRegister::registers[GpuRegister::LY]) == 153)
+            m_registers.getByte(MemoryRegisters::LY) == 153)
         {
-            m_registers.put(GpuRegister::registers[GpuRegister::LY], 0);
+            m_registers.setByte(MemoryRegisters::LY, 0);
             requestLycEqualsLyInterrupt();
         }
-        //std::cout << "flaps\n";
     }
     else
     {
@@ -127,7 +126,7 @@ Gpu::Mode Gpu::tick()
             break;
         case Mode::HBlank:
             m_ticksInLine = 0;
-            if (m_registers.preIncrement(GpuRegister::registers[GpuRegister::LY]) == 144)
+            if (m_registers.preIncrement(MemoryRegisters::LY) == 144)
             {
                 m_currentMode = Mode::VBlank;
                 m_vblankPhase.start();
@@ -146,10 +145,10 @@ Gpu::Mode Gpu::tick()
             break;
         case Mode::VBlank:
             m_ticksInLine = 0;
-            if (m_registers.preIncrement(GpuRegister::registers[GpuRegister::LY]) == 1)
+            if (m_registers.preIncrement(MemoryRegisters::LY) == 1)
             {
                 m_currentMode = Mode::OamSearch;
-                m_registers.put(GpuRegister::registers[GpuRegister::LY], 0);
+                m_registers.setByte(MemoryRegisters::LY, 0);
                 m_oamSearchPhase.start();
                 m_currentPhase = &m_oamSearchPhase;
                 requestLcdInterrupt(5);
@@ -176,7 +175,7 @@ std::uint16_t Gpu::getTicksInLine() const { return m_ticksInLine; }
 
 Lcdc& Gpu::getLcdc() { return m_lcdc; }
 
-MemoryRegisters<GpuRegister>& Gpu::getRegisters() { return m_registers; }
+//MemoryRegisters<GpuRegister>& Gpu::getRegisters() { return m_registers; }
 
 bool Gpu::isColour() const { return m_colour; }
 
@@ -191,7 +190,7 @@ AddressSpace* Gpu::getAddressSpace(std::uint16_t address) const
 {
     if (m_videoRam0.accepts(address))
     {
-        if (m_colour && (m_registers.get(GpuRegister::registers[GpuRegister::VBK]) & 1) == 1)
+        if (m_colour && (m_registers.getByte(MemoryRegisters::VBK) & 1) == 1)
         {
             //eww. FFS
             return static_cast<AddressSpace*>(const_cast<Ram*>(&m_videoRam1));
@@ -211,7 +210,7 @@ AddressSpace* Gpu::getAddressSpace(std::uint16_t address) const
 
     if (m_registers.accepts(address))
     {
-        return static_cast<AddressSpace*>(const_cast<MemoryRegisters<GpuRegister>*>(&m_registers));
+        return static_cast<AddressSpace*>(const_cast<MemoryRegisters*>(&m_registers));
     }
 
     if (m_colour)
@@ -231,7 +230,7 @@ AddressSpace* Gpu::getAddressSpace(std::uint16_t address) const
 
 void Gpu::requestLcdInterrupt(std::uint8_t bit)
 {
-    if ((m_registers.get(GpuRegister::registers[GpuRegister::STAT]) & (1 << bit)) != 0)
+    if ((m_registers.getByte(MemoryRegisters::STAT) & (1 << bit)) != 0)
     {
         m_interruptManager.requestInterrupt(Interrupt::Type::LCDC);
     }
@@ -239,8 +238,8 @@ void Gpu::requestLcdInterrupt(std::uint8_t bit)
 
 void Gpu::requestLycEqualsLyInterrupt()
 {
-    if (m_registers.get(GpuRegister::registers[GpuRegister::LYC]) ==
-        m_registers.get(GpuRegister::registers[GpuRegister::LY]))
+    if (m_registers.getByte(MemoryRegisters::LYC) ==
+        m_registers.getByte(MemoryRegisters::LY))
     {
         requestLcdInterrupt(6);
     }
@@ -248,16 +247,16 @@ void Gpu::requestLycEqualsLyInterrupt()
 
 std::uint8_t Gpu::getStat() const
 {
-    std::uint8_t m = m_registers.get(GpuRegister::registers[GpuRegister::STAT]) |
+    std::uint8_t m = m_registers.getByte(MemoryRegisters::STAT) |
         static_cast<std::uint8_t>(m_currentMode) |
-        ((m_registers.get(GpuRegister::registers[GpuRegister::LYC]) == m_registers.get(GpuRegister::registers[GpuRegister::LY])) ? 2 : 0) |
+        ((m_registers.getByte(MemoryRegisters::LYC) == m_registers.getByte(MemoryRegisters::LY)) ? 2 : 0) |
         0x80;
     return m;
 }
 
 void Gpu::setStat(std::uint8_t value)
 {
-    m_registers.put(GpuRegister::registers[GpuRegister::STAT], value & 0xf8);
+    m_registers.setByte(MemoryRegisters::STAT, value & 0xf8);
 }
 
 void Gpu::setLcdc(std::uint8_t value)
@@ -275,7 +274,7 @@ void Gpu::setLcdc(std::uint8_t value)
 
 void Gpu::disableLCD()
 {
-    m_registers.put(GpuRegister::registers[GpuRegister::LY], 0);
+    m_registers.setByte(MemoryRegisters::LY, 0);
     m_ticksInLine = 0;
     m_hblankPhase.start(250);
     m_currentPhase = &m_hblankPhase;

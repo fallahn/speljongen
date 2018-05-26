@@ -72,9 +72,6 @@
     <ClCompile Include="src\Timer.cpp">
       <Filter>Source Files\mmu</Filter>
     </ClCompile>
-    <ClCompile Include="src\GpuRegisters.cpp">
-      <Filter>Source Files\gpu</Filter>
-    </ClCompile>
     <ClCompile Include="src\OamSearchPhase.cpp">
       <Filter>Source Files\gpu</Filter>
     </ClCompile>
@@ -104,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="src\Tests.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MemoryRegisters.cpp">
+      <Filter>Source Files\mmu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,9 +169,6 @@
     </ClInclude>
     <ClInclude Include="src\MemoryRegisters.hpp">
       <Filter>Header Files\mmu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GpuRegister.hpp">
-      <Filter>Header Files\gpu</Filter>
     </ClInclude>
     <ClInclude Include="src\Lcdc.hpp">
       <Filter>Header Files\gpu</Filter>

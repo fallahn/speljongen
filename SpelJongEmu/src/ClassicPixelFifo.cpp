@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-ClassicPixelFifo::ClassicPixelFifo(Display& display, Lcdc& lcdc, MemoryRegisters<GpuRegister>& registers)
+ClassicPixelFifo::ClassicPixelFifo(Display& display, Lcdc& lcdc, MemoryRegisters& registers)
     : m_display         (display),
     m_lcdc              (lcdc),
     m_memoryRegisters   (registers)
@@ -46,7 +46,7 @@ void ClassicPixelFifo::enqueue8Pixels(const std::array<std::uint8_t, 8u>& pixelL
     for (auto p : pixelLine)
     {
         m_pixels.push(p);
-        m_palettes.push(m_memoryRegisters.get(GpuRegister::registers[GpuRegister::BGP]));
+        m_palettes.push(m_memoryRegisters.getByte(MemoryRegisters::BGP));
         m_pixelType.push(0);
         if (p != 0) std::cout << (int)p << "\n";
     }
@@ -55,7 +55,7 @@ void ClassicPixelFifo::enqueue8Pixels(const std::array<std::uint8_t, 8u>& pixelL
 void ClassicPixelFifo::setOverlay(const std::array<std::uint8_t, 8u>& pixelLine, std::uint16_t offset, const TileAttributes& attribs, std::uint16_t oamIndex)
 {
     bool priority = attribs.isPriority();
-    std::uint8_t overlayPalette = m_memoryRegisters.get(attribs.getClassicPalette());
+    std::uint8_t overlayPalette = m_memoryRegisters.getByte(attribs.getClassicPalette());
 
     for (auto j = offset; j < pixelLine.size(); ++j)
     {

@@ -134,9 +134,9 @@
     <ClCompile Include="src\Display.cpp" />
     <ClCompile Include="src\Fetcher.cpp" />
     <ClCompile Include="src\Gpu.cpp" />
-    <ClCompile Include="src\GpuRegisters.cpp" />
     <ClCompile Include="src\InterruptManager.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MemoryRegisters.cpp" />
     <ClCompile Include="src\Mmu.cpp" />
     <ClCompile Include="src\nfd\nfd_common.c" />
     <ClCompile Include="src\nfd\nfd_win.cpp" />
@@ -164,7 +164,6 @@
     <ClInclude Include="src\Fetcher.hpp" />
     <ClInclude Include="src\Gpu.hpp" />
     <ClInclude Include="src\GpuPhase.hpp" />
-    <ClInclude Include="src\GpuRegister.hpp" />
     <ClInclude Include="src\IndexedQueue.hpp" />
     <ClInclude Include="src\InterruptManager.hpp" />
     <ClInclude Include="src\Lcdc.hpp" />

@@ -10,7 +10,7 @@ namespace
     const TileAttributes EmptyTileAttribs;
 }
 
-Fetcher::Fetcher(PixelFifo& fifo, Ram& ram0, Ram& ram1, Ram& oam, Lcdc& lcdc, MemoryRegisters<GpuRegister>& registers, bool colour)
+Fetcher::Fetcher(PixelFifo& fifo, Ram& ram0, Ram& ram1, Ram& oam, Lcdc& lcdc, MemoryRegisters& registers, bool colour)
     : m_fifo            (fifo),
     m_videoRam0         (ram0),
     m_videoRam1         (ram1),
@@ -72,7 +72,7 @@ void Fetcher::addSprite(SpritePosition sprite, std::uint8_t offset, std::uint16_
 {
     m_sprite = sprite;
     m_state = ReadSpriteTileID;
-    m_spriteTileLine = m_registers.get(GpuRegister::registers[GpuRegister::LY]) + 16 - sprite.getY();
+    m_spriteTileLine = m_registers.getByte(MemoryRegisters::LY) + 16 - sprite.getY();
     m_spriteOffset = offset;
     m_spriteOamIndex = oamIndex;
 }

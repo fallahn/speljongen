@@ -16,7 +16,7 @@ class Lcdc;
 class PixelTransferPhase final : public GpuPhase
 {
 public:
-    PixelTransferPhase(Ram&, Ram&, Ram&, Display&, Lcdc&, MemoryRegisters<GpuRegister>&, bool);
+    PixelTransferPhase(Ram&, Ram&, Ram&, Display&, Lcdc&, MemoryRegisters&, bool);
 
     void start(std::array<SpritePosition, 10> sprites);
 
@@ -25,7 +25,7 @@ public:
 private:
     Display & m_display;
     Lcdc& m_lcdc;
-    MemoryRegisters<GpuRegister>& m_registers;
+    MemoryRegisters& m_registers;
     bool m_colour;
 
     //Fetcher m_fetcher;

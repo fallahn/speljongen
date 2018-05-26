@@ -3,7 +3,7 @@
 #include "Ram.hpp"
 #include "GpuRegister.hpp"
 
-OamSearchPhase::OamSearchPhase(Ram& oamRam, Lcdc& lcdc, MemoryRegisters<GpuRegister>& registers)
+OamSearchPhase::OamSearchPhase(Ram& oamRam, Lcdc& lcdc, MemoryRegisters& registers)
     : m_oamRam          (oamRam),
     m_lcdc              (lcdc),
     m_registers         (registers),
@@ -33,7 +33,7 @@ bool OamSearchPhase::tick()
     case ReadingX:
         m_spritePositionX = m_oamRam.getByte(spriteAddress + 1);
     {
-        auto regVal = m_registers.get(GpuRegister::registers[GpuRegister::LY]);
+        auto regVal = m_registers.getByte(MemoryRegisters::LY);
         if (m_spritePosIndex < m_sprites.size()
             && between(m_spritePositionY, regVal + 16, m_spritePositionY + m_lcdc.getSpriteHeight()))
         {

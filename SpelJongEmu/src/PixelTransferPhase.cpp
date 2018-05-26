@@ -2,7 +2,7 @@
 #include "Lcdc.hpp"
 #include "ClassicPixelFifo.hpp"
 
-PixelTransferPhase::PixelTransferPhase(Ram& vram0, Ram& vram1, Ram& oam, Display& display, Lcdc& lcdc, MemoryRegisters<GpuRegister>& registers, bool colour)
+PixelTransferPhase::PixelTransferPhase(Ram& vram0, Ram& vram1, Ram& oam, Display& display, Lcdc& lcdc, MemoryRegisters& registers, bool colour)
     : m_display     (display),
     m_lcdc          (lcdc),
     m_registers     (registers),
@@ -55,7 +55,7 @@ bool PixelTransferPhase::tick()
             return true;
         }
 
-        if (m_droppedPixels < m_registers.get(GpuRegister::registers[GpuRegister::SCX]) % 0x08)
+        if (m_droppedPixels < m_registers.getByte(MemoryRegisters::SCX) % 0x08)
         {
             m_fifo->dropPixel();
             m_droppedPixels++;
@@ -63,8 +63,8 @@ bool PixelTransferPhase::tick()
         }
 
         if (!m_window && m_lcdc.isWindowDisplay()
-            && m_registers.get(GpuRegister::registers[GpuRegister::LY]) >= m_registers.get(GpuRegister::registers[GpuRegister::WY])
-            && m_x == (m_registers.get(GpuRegister::registers[GpuRegister::WX]) - 7))
+            && m_registers.getByte(MemoryRegisters::LY) >= m_registers.getByte(MemoryRegisters::WY)
+            && m_x == (m_registers.getByte(MemoryRegisters::WX) - 7))
         {
             m_window = true;
             startFetchingWindow();
@@ -122,14 +122,14 @@ bool PixelTransferPhase::tick()
 //private
 void PixelTransferPhase::startFetchingBackground()
 {
-    std::uint8_t bgX = m_registers.get(GpuRegister::registers[GpuRegister::SCX]) / 0x08;
-    std::uint8_t bgY = (m_registers.get(GpuRegister::registers[GpuRegister::SCY]) + m_registers.get(GpuRegister::registers[GpuRegister::LY])) % 0x100;
+    std::uint8_t bgX = m_registers.getByte(MemoryRegisters::SCX) / 0x08;
+    std::uint8_t bgY = (m_registers.getByte(MemoryRegisters::SCY) + m_registers.getByte(MemoryRegisters::LY)) % 0x100;
     m_fetcher->startFetching(m_lcdc.getBgTileMapDisplay() + (bgY / 0x08) * 0x20, m_lcdc.getBgWindowTileData(), bgX, m_lcdc.isBgWindowTileDataSigned(), bgY % 0x08);
 }
 
 void PixelTransferPhase::startFetchingWindow()
 {
-    std::uint8_t winX = (m_x - m_registers.get(GpuRegister::registers[GpuRegister::WX]) + 7) / 0x08;
-    std::uint8_t winY = m_registers.get(GpuRegister::registers[GpuRegister::LY]) - m_registers.get(GpuRegister::registers[GpuRegister::WY]);
+    std::uint8_t winX = (m_x - m_registers.getByte(MemoryRegisters::WX) + 7) / 0x08;
+    std::uint8_t winY = m_registers.getByte(MemoryRegisters::LY) - m_registers.getByte(MemoryRegisters::WY);
     m_fetcher->startFetching(m_lcdc.getWindowTileMapDisplay() + (winY / 0x08) * 0x20, m_lcdc.getBgWindowTileData(), winX, m_lcdc.isBgWindowTileDataSigned(), winY % 0x08);
 }

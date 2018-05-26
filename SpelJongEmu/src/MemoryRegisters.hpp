@@ -1,77 +1,76 @@
 #pragma once
 
 #include "AddressSpace.hpp"
-#include "GpuRegister.hpp"
+#include <cstdint>
 
-#include <map>
-#include <vector>
-#include <cassert>
 
-template <class T>
 class MemoryRegisters final : public AddressSpace
 {
 public:
-    MemoryRegisters(std::vector<std::uint8_t>& storage, const std::vector<T>& registers)
-        : AddressSpace(storage)
-    {
-        static_assert(std::is_base_of<Register, T>::value, "");
-        for (auto& r : registers)
-        {
-            assert(m_registers.find(r.getAddress()) == m_registers.end());
-            m_registers.insert(std::make_pair(r.getAddress(), r));
-            //m_values.insert(std::make_pair(r.getAddress(), 0));
-        }
-    }
-    std::uint8_t get(const T& r) const
-    {
-        auto ret = m_registers.find(r.getAddress());
-        assert(ret != m_registers.end());
-        return ret->second.value;
-    }
-    void put(const T& r, std::uint8_t value)
-    {
-        assert(m_registers.find(r.getAddress()) != m_registers.end());
-       m_registers[r.getAddress()].value = value;
-    }
+    MemoryRegisters(std::vector<std::uint8_t>& storage);
+    
+    bool accepts(std::uint16_t address) const override;
 
-    MemoryRegisters<T> freeze() const
-    {
-        return *this;
-    }
-    std::uint8_t preIncrement(const T& r)
-    {
-        assert(m_registers.find(r.getAddress()) != m_registers.end());
-        uint8_t value = ++m_registers[r.getAddress()].value;
-        return value;
-    }
+    void setByte(std::uint16_t address, uint8_t value) override;
 
-    bool accepts(std::uint16_t address) const override
-    {
-        return m_registers.count(address) > 0;
-    }
-    void setByte(std::uint16_t address, uint8_t value) override
-    {
-        assert(accepts(address));
-        if (m_registers[address].getType() & Register::W)
-        {
-            m_registers[address].value = value;
-        }
-    }
-    std::uint8_t getByte(std::uint16_t address) const override
-    {
-        assert(accepts(address));
-        auto result = m_registers.find(address);
-        if (result->second.getType() & Register::R)
-        {
-            return result->second.value;
-        }
+    std::uint8_t getByte(std::uint16_t address) const override;
 
-        return 0xff;
-    }
+    std::uint8_t preIncrement(std::uint16_t);
+
+    enum
+    {
+        P1 = 0xff00,
+        SB = 0xff01,
+        SC = 0xff02,
+        DIV = 0xff04,
+        TIMA = 0xff05,
+        TMA = 0xff06,
+        TAC = 0xff07,
+        IF = 0xff0f,
+        NR10 = 0xff10,
+        NR11 = 0xff11,
+        NR12 = 0xff12,
+        NR13 = 0xff13,
+        NR14 = 0xff14,
+        NR21 = 0xff16,
+        NR22 = 0xff17,
+        NR23 = 0xff18,
+        NR24 = 0xff19,
+        NR30 = 0xff1a,
+        NR31 = 0xff1b,
+        NR32 = 0xff1c,
+        NR33 = 0xff1d,
+        NR34 = 0xff1e,
+        NR41 = 0xff20,
+        NR42 = 0xff21,
+        NR43 = 0xff22,
+        NR44 = 0xff23,
+        NR50 = 0xff24,
+        NR51 = 0xff25,
+        NR52 = 0xff26,
+        LCDC = 0xff40,
+        STAT = 0xff41,
+        SCY = 0xff42,
+        SCX = 0xff43,
+        LY = 0xff44,
+        LYC = 0xff45,
+        DMA = 0xff46,
+        BGP = 0xff47,
+        OBP0 = 0xff48,
+        OBP1 = 0xff49,
+        WY = 0xff4a,
+        WX = 0xff4b,
+        VBK = 0xff4f
+    };
+
 private:
-    //TODO we want to see where this is used and preferably
-    //map to the shared memory space in the MMU
-    std::map<std::uint16_t, T> m_registers;
-    //std::map<std::uint16_t, std::uint8_t> m_values;
 
+    enum ReadFlags
+    {
+        Read = 0b01,
+        Write = 0b10,
+        ReadWrite = 0b11
+    };
+
+    std::vector<ReadFlags> m_readFlags;
 };

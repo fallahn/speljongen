@@ -11,7 +11,7 @@ class GpuRegister;
 class OamSearchPhase final : public GpuPhase
 {
 public:
-    OamSearchPhase(Ram& oamRam, Lcdc& lcdc, MemoryRegisters<GpuRegister>& registers);
+    OamSearchPhase(Ram& oamRam, Lcdc& lcdc, MemoryRegisters& registers);
 
     void start();
     bool tick() override;
@@ -26,7 +26,7 @@ private:
 
     Ram& m_oamRam;
     Lcdc& m_lcdc;
-    MemoryRegisters<GpuRegister>&  m_registers;
+    MemoryRegisters&  m_registers;
     std::array<SpritePosition, 10> m_sprites;
     std::uint8_t m_spritePositionX;
     std::uint8_t m_spritePositionY;

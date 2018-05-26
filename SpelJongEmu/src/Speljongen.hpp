@@ -10,6 +10,7 @@
 #include "Timer.hpp"
 #include "ShadowAddressSpace.hpp"
 #include "Gpu.hpp"
+#include "MemoryRegisters.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -42,6 +43,7 @@ private:
     bool m_running;
     Mmu m_mmu;
     SpeedMode m_speedMode;
+    MemoryRegisters m_memoryRegisters;
     InterruptManager m_interruptManager;
     Display m_display;
     Cpu m_cpu;

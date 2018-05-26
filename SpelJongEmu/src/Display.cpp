@@ -34,7 +34,7 @@ void Display::putPixel(std::uint8_t px)
     assert(m_pixelIndex < MaxPixels);
     m_imageBuffer.setPixel(m_pixelIndex % Width, m_pixelIndex / Width, colours[px]);
     m_pixelIndex = (m_pixelIndex + 1) % MaxPixels;
-    if (px > 0) std::cout << px << "\n";
+    if (px > 0) std::cout << (int)px << "\n";
 }
 
 void Display::requestRefresh()

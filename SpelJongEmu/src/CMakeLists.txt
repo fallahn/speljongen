@@ -9,9 +9,9 @@ set(PROJECT_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/Display.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Fetcher.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Gpu.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/GpuRegisters.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/InterruptManager.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/MemoryRegisters.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Mmu.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/OpCode.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/OamSearchPhase.cpp
