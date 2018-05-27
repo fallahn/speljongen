@@ -105,6 +105,9 @@
     <ClCompile Include="src\MemoryRegisters.cpp">
       <Filter>Source Files\mmu</Filter>
     </ClCompile>
+    <ClCompile Include="src\VramViewer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\InterruptManager.hpp">
@@ -208,6 +211,9 @@
     </ClInclude>
     <ClInclude Include="src\Gpu.hpp">
       <Filter>Header Files\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VramViewer.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

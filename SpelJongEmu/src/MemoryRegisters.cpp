@@ -32,21 +32,21 @@ bool MemoryRegisters::accepts(std::uint16_t address) const
 
 void MemoryRegisters::setByte(std::uint16_t address, std::uint8_t value)
 {
-    assert(accepts(address) && (m_readFlags[address - RegistersStart] & Write));
+    //assert(accepts(address) && (m_readFlags[address - RegistersStart] & Write));
 
     setStorageValue(address, value);
 }
 
 std::uint8_t MemoryRegisters::getByte(std::uint16_t address) const
 {
-    assert(accepts(address) && (m_readFlags[address - RegistersStart] & Read));
+    //assert(accepts(address) && (m_readFlags[address - RegistersStart] & Read));
 
     return getStorageValue(address);
 }
 
 std::uint8_t MemoryRegisters::preIncrement(std::uint16_t address)
 {
-    assert(accepts(address) && (m_readFlags[address - RegistersStart] & Write));
+    //assert(accepts(address) && (m_readFlags[address - RegistersStart] & Write));
 
     std::uint8_t value = getStorageValue(address);
     value++;

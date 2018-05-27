@@ -149,6 +149,7 @@
     <ClCompile Include="src\Speljongen.cpp" />
     <ClCompile Include="src\Tests.cpp" />
     <ClCompile Include="src\Timer.cpp" />
+    <ClCompile Include="src\VramViewer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AddressSpace.hpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="src\SpritePosition.hpp" />
     <ClInclude Include="src\TileAttributes.hpp" />
     <ClInclude Include="src\Timer.hpp" />
+    <ClInclude Include="src\VramViewer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

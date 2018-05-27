@@ -11,6 +11,7 @@
 #include "ShadowAddressSpace.hpp"
 #include "Gpu.hpp"
 #include "MemoryRegisters.hpp"
+#include "VramViewer.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -73,10 +74,12 @@ private:
     sf::Thread m_thread;
     void threadFunc();
 
-    mutable sf::Text m_text;
+    VramViewer m_vramViewer;
+    sf::Text m_text;
     sf::Font m_font;
     void initRenderer();
     void updateDebug();
+    void updateVramView();
     void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
 #ifdef RUN_TESTS

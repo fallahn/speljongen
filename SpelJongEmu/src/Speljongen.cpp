@@ -92,6 +92,19 @@ void Speljongen::reset()
     m_gpu.reset();
     m_mmu.setByte(MemoryRegisters::BGP, 0xfc);
 
+    //clear VRAM
+    for (std::uint16_t i = 0x8000; i < 0x9800; ++i)
+    {
+        m_mmu.setByte(i, 0);
+    }
+
+   std::array<char, 6> test = { 'r', 'e', 's', 'e', 't', '\n' };
+   for (auto c : test)
+   {
+       m_mmu.setByte(MemoryRegisters::SB, c);
+       m_mmu.setByte(MemoryRegisters::SC, 0x81);
+   }
+
     updateDebug();
 }
 
@@ -109,9 +122,9 @@ bool Speljongen::tick()
     if (!m_lcdDisabled && !m_gpu.isLcdEnabled())
     {
         m_lcdDisabled = true;
-        m_requestRefresh = true;
+        //m_requestRefresh = true;
         m_display.requestRefresh();
-        m_requestRefresh = false;
+        //m_requestRefresh = false;
         //hdma
     }
     else if (gpuMode == Gpu::Mode::VBlank)
@@ -119,7 +132,7 @@ bool Speljongen::tick()
         m_requestRefresh = true;
         m_display.requestRefresh();
         updateDebug();
-        m_requestRefresh = false;
+        //m_requestRefresh = false;
     }
 
     if (m_lcdDisabled && m_gpu.isLcdEnabled())
@@ -145,6 +158,8 @@ void Speljongen::step()
 
 void Speljongen::load(const std::string& path)
 {
+    reset();    
+    
     std::cout << "loading: " << path << "\n";
     //TODO some file size checking
     std::ifstream file(path, std::ios::binary);
@@ -158,8 +173,6 @@ void Speljongen::load(const std::string& path)
 
     std::uint16_t address = 0;
     for (auto c : buf) m_mmu.setByte(address++, c);
-
-    reset();
 }
 
 //private
@@ -194,8 +207,11 @@ void Speljongen::initRenderer()
     m_text.setCharacterSize(12);
     m_text.setString("LCtrl toggle run/step\nSpace step\n");
 
-    m_display.setPosition(240, 100);
+    m_display.setPosition(140, 100);
     m_display.setScale(2.f, 2.f);
+
+    m_vramViewer.setPosition(800.f - 312.f, 100.f);
+    m_vramViewer.setScale(2.f, 2.f);
 
     updateDebug();
 }
@@ -222,12 +238,60 @@ void Speljongen::updateDebug()
     ss << "\nSerial: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff01);
 
     m_text.setString(ss.str());
+
+    updateVramView();
+}
+
+void Speljongen::updateVramView()
+{
+    std::uint16_t address = 0x8000;
+
+    for (auto gridY = 0; gridY < 16; ++gridY)
+    {
+        for (auto gridX = 0; gridX < 16; ++gridX)
+        {
+            for (auto pxY = 0; pxY < 8; ++pxY)
+            {
+                auto x = (gridX * 8);
+                auto y = (gridY * 8) + pxY;   
+
+                //OK, so gameboy pixel values are incredibly convoluted:
+                /*
+                A colour is represented in 2 bits, 0 - 2 decimal. (Which are used as a palette index)
+                A row in the tile is represented by 2 consecutive VRAM bytes.
+                Each bit in the byte represents 1 pixel index, bit 7 is px0, bit 6 is px1 etc
+
+                The first byte represents the lower bit of a colour value. The second byte contains the upper bits!
+                eg: byte 1 0b00111100, byte 2 0b01111110
+                which translates to:
+                    0b 0 0 1 1 1 1 0 0
+                    0b 0 1 1 1 1 1 1 0
+
+                aka:
+                    0b00 0b10 0b11 0b11 0b11 0b11 0b10 0b00
+                    0,   2,   3,   3,   3,   3,   2,   0
+                */
+
+                auto byte0 = m_mmu.getByte(address++);
+                auto byte1 = m_mmu.getByte(address++);
+
+                for (auto i = 7; i >= 0; --i)
+                {
+                    std::uint8_t colour = (byte0 & (1 << i)) ? 1 : 0;
+                    colour |= (byte1 & (1 << i)) ? 2 : 0;
+
+                    m_vramViewer.setPixel(x + (7 - i), y, colour);
+                }
+            }
+        }
+    }
+
+    m_vramViewer.update();
 }
 
 void Speljongen::draw(sf::RenderTarget& rt, sf::RenderStates) const
 {
-    if (m_requestRefresh) return;
-
     rt.draw(m_display);
+    rt.draw(m_vramViewer);
     rt.draw(m_text);
 }

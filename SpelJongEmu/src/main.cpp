@@ -67,6 +67,7 @@ int main()
                 if (evt.mouseButton.button == sf::Mouse::Right)
                 {
                     gameboy.stop();
+                    gameboy.reset();
                     
                     //TODO check also inside window
                     nfdchar_t *outPath = nullptr;

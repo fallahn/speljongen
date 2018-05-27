@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Image.hpp>
+#include <SFML/System/Lock.hpp>
 
 #include <cassert>
 #include <iostream>
@@ -13,7 +14,7 @@ namespace
     constexpr sf::Uint32 MaxPixels = Width * Height;
     const std::array<sf::Color, 4u> colours = 
     {
-        sf::Color::White, sf::Color(170, 170, 170), sf::Color(85, 85, 85), sf::Color::Green
+        sf::Color(155, 188, 15), sf::Color(139, 172, 15), sf::Color(48, 98, 48), sf::Color(15, 56, 15)
     };
 }
 
@@ -39,14 +40,17 @@ void Display::putPixel(std::uint8_t px)
     auto y = m_pixelIndex / Width;
     m_imageBuffer.setPixel(x , y, colours[px]);
     m_pixelIndex = (m_pixelIndex + 1) % MaxPixels;
-    if (px > 0) std::cout << "screen px, " << x << ", " << y << ": " << (int)px << "\n";
+    //if (px > 0) std::cout << "screen px, " << x << ", " << y << ": " << (int)px << "\n";
 }
 
 void Display::requestRefresh()
 {
-    m_texture.update(m_imageBuffer);
     m_pixelIndex = 0;
-    std::cout << "updated buffer...\n";
+
+    sf::Lock lock(m_mutex);
+    m_texture.update(m_imageBuffer);
+    
+    //std::cout << "updated buffer...\n";
 }
 
 void Display::waitForRefresh() {}
@@ -60,5 +64,7 @@ void Display::draw(sf::RenderTarget& rt, sf::RenderStates states) const
 {
     states.transform *= getTransform();
     states.texture = &m_texture;
+    
+    sf::Lock lock(m_mutex);
     rt.draw(m_vertices.data(), m_vertices.size(), sf::PrimitiveType::Quads, states);
 }

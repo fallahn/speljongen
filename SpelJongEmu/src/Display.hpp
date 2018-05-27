@@ -5,6 +5,8 @@
 #include <SFML/Graphics/Vertex.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 
+#include <SFML/System/Mutex.hpp>
+
 #include <array>
 #include <cstdint>
 
@@ -25,6 +27,8 @@ private:
 
     sf::Image m_imageBuffer;
     sf::Uint32 m_pixelIndex;
+
+    sf::Mutex mutable m_mutex;
 
     void draw(sf::RenderTarget&, sf::RenderStates) const override;
 };

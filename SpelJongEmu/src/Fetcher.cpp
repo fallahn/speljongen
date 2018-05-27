@@ -130,10 +130,10 @@ void Fetcher::tick()
             m_xOffset = (m_xOffset + 2) % 0x20;
             m_state = ReadTileID;
 
-            if (m_tileData1 > 0 || m_tileData2 > 0)
+            /*if (m_tileData1 > 0 || m_tileData2 > 0)
             {
                 std::cout << "TileData: " << (int)m_tileData1 << ": " << (int)m_tileData2 << "\n";
-            }
+            }*/
         }
         break;
     case ReadSpriteTileID:
