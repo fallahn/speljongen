@@ -20,7 +20,7 @@ namespace
 
 void Speljongen::testTiming()
 {
-    //to test ret we need the stacl pointing as if it had a return address on it..
+    //to test ret we need the stack pointing as if it had a return address on it..
     m_cpu.getRegisters().setSP(0xfffc);
     assertTiming(16, { 0xc9, 0, 0 }); // RET
     m_cpu.getRegisters().setSP(0xfffc);
@@ -125,10 +125,145 @@ void Speljongen::assertTiming(std::int32_t expected, std::vector<std::uint8_t> o
     }
 }
 
+void Speljongen::testZFlags()
+{
+    std::cout << "\n";
+    
+    //ADD
+    m_cpu.getRegisters().setA(128);
+    m_cpu.getRegisters().setB(128);
+    assertZFlags({ 0x80 });
+
+    m_cpu.getRegisters().setA(128);
+    m_cpu.getRegisters().setB(18);
+    assertZFlags({ 0x80 });
+
+    //SUB
+    m_cpu.getRegisters().setA(120);
+    m_cpu.getRegisters().setB(120);
+    assertZFlags({ 0x90 });
+
+    m_cpu.getRegisters().setA(160);
+    m_cpu.getRegisters().setB(120);
+    assertZFlags({ 0x90 });
+
+    //pop af
+    m_cpu.getRegisters().setA(120);
+    m_cpu.getRegisters().setSP(0xfffc);
+    m_mmu.setByte(0xfffc, 0xf0);
+    m_mmu.setByte(0xfffd, 0x0);
+    assertZFlags({ 0xf1 });
+
+    //AND
+    m_cpu.getRegisters().setA(0xf0);
+    m_cpu.getRegisters().setB(0x0f);
+    assertZFlags({ 0xA0 });
+
+    m_cpu.getRegisters().setA(0xf0);
+    m_cpu.getRegisters().setB(0xff);
+    assertZFlags({ 0xA0 });
+
+    //OR
+    m_cpu.getRegisters().setA(0x01);
+    m_cpu.getRegisters().setB(0x0);
+    assertZFlags({ 0xB0 });
+
+    m_cpu.getRegisters().setA(0x0);
+    m_cpu.getRegisters().setB(0x0);
+    assertZFlags({ 0xB0 });
+
+    //INC
+    m_cpu.getRegisters().setA(0xff);
+    assertZFlags({ 0x3C });
+
+    //DEC
+    m_cpu.getRegisters().setA(0x01);
+    assertZFlags({ 0x3D });
+
+    //cp
+    m_cpu.getRegisters().setA(0x0);
+    assertZFlags({ 0xBF });
+
+    //xor
+    m_cpu.getRegisters().setA(0x0F);
+    assertZFlags({ 0xAF });
+
+    //ADC
+    m_cpu.getRegisters().setA(128);
+    m_cpu.getRegisters().setB(128);
+    assertZFlags({ 0x88 });
+
+    //SBC
+    m_cpu.getRegisters().setA(120);
+    m_cpu.getRegisters().setB(120);
+    assertZFlags({ 0x98 });
+
+    //RLC
+    m_cpu.getRegisters().setA(128);
+    assertZFlags({ 0xCB, 0x07 });
+
+    //RRC
+    assertZFlags({ 0xCB, 0x0f });
+
+    //RL
+    m_cpu.getRegisters().setA(128);
+    assertZFlags({ 0xCB, 0x17 });
+
+    //RR
+    assertZFlags({ 0xCB, 0x1f });
+
+    //SLA
+    m_cpu.getRegisters().setA(129);
+    assertZFlags({ 0xCB, 0x27 });
+
+    //SRA
+    assertZFlags({ 0xCB, 0x2f });
+
+    //TODO SWAP
+    //TODO SRL
+
+    //BIT 0
+    m_cpu.getRegisters().setA(0);
+    assertZFlags({ 0xCB, 0x47 });
+}
+
+void Speljongen::assertZFlags(std::vector<std::uint8_t> opcodes)
+{
+    static const std::uint16_t Offset = 0x100;
+
+    for (auto i = 0u; i < opcodes.size(); ++i)
+    {
+        m_mmu.setByte(Offset + i, opcodes[i]);
+    }
+    m_cpu.clearState();
+    m_cpu.getRegisters().setPC(Offset);
+
+    OpCode opcode;
+    std::uint16_t ticks = 0;
+    do
+    {
+        m_cpu.tick();
+        if (!opcode && m_cpu.getCurrentOpcode())
+        {
+            opcode = m_cpu.getCurrentOpcode();
+        }
+        ticks++;
+    } while (m_cpu.getState() != Cpu::State::OPCODE || ticks < 4);
+
+    if (m_cpu.getRegisters().getFlags().isSet(Flags::Z) == static_cast<bool>(m_cpu.getRegisters().getA()))
+    {
+        std::cout << opcode.getLabel() << ": FAILED. Z flag is " << m_cpu.getRegisters().getFlags().isSet(Flags::Z) << " and A register is " << (int)m_cpu.getRegisters().getA() << "\n";
+    }
+    else
+    {
+        std::cout << opcode.getLabel() << ": PASSED. Z flag is " << m_cpu.getRegisters().getFlags().isSet(Flags::Z) << " and A register is " << (int)m_cpu.getRegisters().getA() << "\n";
+    }
+}
+
 Speljongen::FifoTest::FifoTest(Display& display)
     : m_storage (0xffff),
     m_lcdc      (m_storage),
-    m_registers (m_storage, GpuRegister::registers),
+    m_registers (m_storage),
     m_fifo      (display, m_lcdc, m_registers)
 {
     m_registers.setByte(0xff47, 0b11100100); //default palette

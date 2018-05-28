@@ -5,6 +5,7 @@
 #include "CpuRegisters.hpp"
 
 #include <vector>
+#include <fstream>
 
 class AddressSpace;
 class SpeedMode;
@@ -68,6 +69,8 @@ private:
 
     std::uint32_t m_clockCycle;
     bool m_haltBugMode;
+
+    std::ofstream m_logFile;
 
     void handleInterrupt();
 };

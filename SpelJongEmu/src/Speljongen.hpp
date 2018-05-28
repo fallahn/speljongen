@@ -20,7 +20,7 @@
 
 #include <atomic>
 
-//#define RUN_TESTS
+#define RUN_TESTS
 #ifdef RUN_TESTS
 #include "ClassicPixelFifo.hpp"
 #include "Fetcher.hpp"
@@ -86,6 +86,9 @@ private:
     void testTiming();
     void assertTiming(std::int32_t, std::vector<std::uint8_t>);
 
+    void testZFlags();
+    void assertZFlags(std::vector<std::uint8_t>);
+
     class FifoTest final
     {
     public:
@@ -99,7 +102,7 @@ private:
     private:
         std::vector<std::uint8_t> m_storage;
         Lcdc m_lcdc;
-        MemoryRegisters<GpuRegister> m_registers;
+        MemoryRegisters m_registers;
         ClassicPixelFifo m_fifo;
 
         PixelLine zip(std::uint8_t, std::uint8_t, bool);

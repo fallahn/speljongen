@@ -58,6 +58,7 @@ Speljongen::Speljongen()
     m_fifoTest.testDequeue();
     m_fifoTest.testZip();
     testTiming();
+    testZFlags();
 #endif
 }
 
@@ -146,6 +147,11 @@ bool Speljongen::tick()
         m_requestRefresh = false;
         //m_display.waitForRefresh();
     }
+
+    //if (m_cpu.getRegisters().getFlags().isSet(Flags::Z))
+    //{
+    //    std::cout << std::hex << m_cpu.getRegisters().getPC() << "\n";
+    //}
 
     return ret;
 }

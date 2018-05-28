@@ -4,6 +4,9 @@
 #include "SpeedMode.hpp"
 #include "OpCodesImpl.hpp"
 
+#include <iostream>
+#include <iomanip>
+
 Cpu::Cpu(AddressSpace& addressSpace, InterruptManager& interruptManager, SpeedMode& speedMode, Display& display)
     : m_addressSpace        (addressSpace),
     m_interruptManager      (interruptManager),
@@ -24,6 +27,8 @@ Cpu::Cpu(AddressSpace& addressSpace, InterruptManager& interruptManager, SpeedMo
 {
     //compile opcodes
     OpCodes::init();
+
+    m_logFile.open("pc.log", std::ios::out);
 }
 
 //public
@@ -46,6 +51,7 @@ bool Cpu::tick()
 
     if(m_state & HAS_INTERRUPT_REQUEST)
     {
+        std::cout << "Interrupt!\n";
         handleInterrupt();
         return true;
     }
@@ -65,9 +71,7 @@ bool Cpu::tick()
     bool accessedMemory = false;
     while (1)
     {
-        //don't use a copy else it may become out of date
-        //call getPC() directly
-        //std::uint16_t pc = m_registers.getPC();
+        std::uint16_t pc = m_registers.getPC();
         switch (m_state)
         {
         default: 
@@ -76,7 +80,8 @@ bool Cpu::tick()
             return true;
         case State::OPCODE: //check current opcode, jump to extend opcodes or switch to collecting operands
             clearState();
-            m_opcodeOne = m_addressSpace.getByte(m_registers.getPC());
+            m_opcodeOne = m_addressSpace.getByte(pc);
+            //m_logFile << std::hex << /*std::setfill('0') << std::setw(2) <<*/ pc << "\n";
             accessedMemory = true;
             if (m_opcodeOne == 0xcb) //jumps to extended ops
             {
@@ -108,7 +113,7 @@ bool Cpu::tick()
         case State::EXT_OPCODE: //check valid extended opcode and start collecting operands
             if (accessedMemory) return true;
             accessedMemory = true;
-            m_opcodeTwo = m_addressSpace.getByte(m_registers.getPC());
+            m_opcodeTwo = m_addressSpace.getByte(pc);
             if (!m_currentOpcode)
             {
                 m_currentOpcode = OpCodes::ExtCommands[m_opcodeTwo];
@@ -123,7 +128,7 @@ bool Cpu::tick()
                 if (accessedMemory) return true;
 
                 accessedMemory = true;
-                m_opArgs[m_operandIndex++] = m_addressSpace.getByte(m_registers.getPC());
+                m_opArgs[m_operandIndex++] = m_addressSpace.getByte(pc);
                 m_registers.incrementPC();
             }
             m_ops = m_currentOpcode.getOps();
