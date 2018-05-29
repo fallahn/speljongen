@@ -27,14 +27,14 @@ Mbc1::Mbc1(std::vector<std::uint8_t>& storage, const std::vector<char>& buf, std
 //public
 bool Mbc1::accepts(std::uint16_t address) const
 {
-    return (address >= 0 && address < 0x8000)
+    return (address < 0x8000)
         || (address >= 0xa000 && address < 0xc000);
 }
 
 void Mbc1::setByte(std::uint16_t address, std::uint8_t value)
 {
     assert(accepts(address));
-    if (address >= 0 && address < 0x2000)
+    if (address < 0x2000)
     {
         m_writeEnabled = (value & 0b1010) != 0;
     }
@@ -77,7 +77,7 @@ std::uint8_t Mbc1::getByte(std::uint16_t address) const
 {
     assert(accepts(address));
 
-    if (address >= 0x0000 && address < 0x4000)
+    if (address < 0x4000)
     {
         return getRomByte(getRomBankForZero(), address);
     }
@@ -95,7 +95,7 @@ std::uint8_t Mbc1::getByte(std::uint16_t address) const
 //private
 std::uint8_t Mbc1::getRomByte(std::int32_t bank, std::uint16_t address) const
 {
-    auto offset = bank * 0x4000 + address;
+    std::size_t offset = bank * 0x4000 + address;
     assert(offset < m_cartidgeData.size());
     return m_cartidgeData[offset];
 }

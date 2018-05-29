@@ -20,7 +20,7 @@ struct Op final
     std::size_t operandLength = 0;
 
     OpExecution execute =
-        [](Registers& registers, AddressSpace& addressSpace, const OpArgs& args, std::uint16_t context)
+        [](Registers&, AddressSpace&, const OpArgs&, std::uint16_t context)
     {
         return context;
     };

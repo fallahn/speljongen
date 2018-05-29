@@ -13,7 +13,7 @@ std::uint8_t AluFunction::inc(Flags& flags, std::uint8_t arg)
     return result;
 }
 
-std::uint16_t AluFunction::inc16(Flags& flags, std::uint16_t arg)
+std::uint16_t AluFunction::inc16(Flags&, std::uint16_t arg)
 {
     return arg + 1;
 }
@@ -27,7 +27,7 @@ std::uint8_t AluFunction::dec(Flags& flags, std::uint8_t arg)
     return result;
 }
 
-std::uint16_t AluFunction::dec16(Flags& flags, std::uint16_t arg)
+std::uint16_t AluFunction::dec16(Flags&, std::uint16_t arg)
 {
     return arg - 1;
 }
@@ -40,7 +40,7 @@ std::uint16_t AluFunction::add(Flags& flags, std::uint16_t arg1, std::uint16_t a
     return arg1 + arg2;
 }
 
-std::uint16_t AluFunction::add(Flags& flags, std::uint16_t arg1, std::int8_t arg2)
+std::uint16_t AluFunction::add(Flags&, std::uint16_t arg1, std::int8_t arg2)
 {
     return arg1 + arg2;
 }

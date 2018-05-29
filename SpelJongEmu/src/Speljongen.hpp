@@ -60,21 +60,21 @@ private:
     InterruptManager m_interruptManager;
     Display m_display;
     Cpu m_cpu;
-
+    Timer m_timer;
     Ram m_oamRam;
     ShadowAddressSpace m_shadowSpace;
-    Timer m_timer;
+
     Dma m_dma;
     Gpu m_gpu;
 
     Cartridge m_cartridge;
+    sf::Thread m_thread;
 
     bool m_requestRefresh;
     bool m_lcdDisabled;
 
     void initRegisters();
 
-    sf::Thread m_thread;
     void threadFunc();
 
     VramViewer m_vramViewer;

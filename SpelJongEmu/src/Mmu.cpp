@@ -24,7 +24,7 @@ Mmu::Mmu(std::vector<std::uint8_t>& storage)
 }
 
 //public
-bool Mmu::accepts(std::uint16_t address) const
+bool Mmu::accepts(std::uint16_t) const
 {
     return true;
 }

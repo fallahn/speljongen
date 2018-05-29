@@ -264,7 +264,7 @@ namespace
         return nullptr;
     }
 
-    OpExecution findAluD8(const std::string& operation, DataType type, std::uint8_t value)
+    OpExecution findAluD8(const std::string& operation, DataType, std::uint8_t value)
     {
         if (operation == "ADD")
         {
@@ -331,14 +331,14 @@ namespace
         }
         else if (operation == "SET")
         {
-            return [value](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t val1)
+            return [value](Registers&, AddressSpace&, const OpArgs&, std::uint16_t val1)
             {
                 return AluFunction::set(static_cast<std::uint8_t>(val1), value);
             };
         }
         else if (operation == "RES")
         {
-            return [value](Registers& registers, AddressSpace&, const OpArgs&, std::uint16_t val1)
+            return [value](Registers&, AddressSpace&, const OpArgs&, std::uint16_t val1)
             {
                 return AluFunction::res(static_cast<std::uint8_t>(val1), value);
             };
@@ -494,7 +494,7 @@ void OpCodeBuilder::pop()
     m_ops.emplace_back();
     auto& op = m_ops.back();
     op.readsMemory = true;
-    op.execute = [](Registers& registers, AddressSpace& addressSpace, const OpArgs&, std::uint16_t context)
+    op.execute = [](Registers& registers, AddressSpace& addressSpace, const OpArgs&, std::uint16_t)
     {
         std::uint8_t lsb = addressSpace.getByte(registers.getSP());
         registers.setSP(AluFunction::inc16(registers.getFlags(), registers.getSP()));

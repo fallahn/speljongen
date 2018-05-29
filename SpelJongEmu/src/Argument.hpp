@@ -248,7 +248,7 @@ public:
     {
         return args[0];
     }
-    void write(Registers&, AddressSpace&, const std::array<std::uint8_t, 2>&, std::uint16_t value) override
+    void write(Registers&, AddressSpace&, const std::array<std::uint8_t, 2>&, std::uint16_t) override
     {
         assert(false);
     }
@@ -263,7 +263,7 @@ public:
     {
         return BitUtil::toWord(args);
     }
-    void write(Registers&, AddressSpace&, const std::array<std::uint8_t, 2>&, std::uint16_t value) override
+    void write(Registers&, AddressSpace&, const std::array<std::uint8_t, 2>&, std::uint16_t) override
     {
         assert(false);
     }
@@ -278,7 +278,7 @@ public:
     {
         return BitUtil::toSigned(args[0]);
     }
-    void write(Registers&, AddressSpace&, const std::array<std::uint8_t, 2>&, std::uint16_t value) override
+    void write(Registers&, AddressSpace&, const std::array<std::uint8_t, 2>&, std::uint16_t) override
     {
         assert(false);
     }
@@ -293,7 +293,7 @@ public:
     {
         return BitUtil::toWord(args);
     }
-    void write(Registers&, AddressSpace&, const std::array<std::uint8_t, 2>&, std::uint16_t value) override
+    void write(Registers&, AddressSpace&, const std::array<std::uint8_t, 2>&, std::uint16_t) override
     {
         assert(false);
     }
