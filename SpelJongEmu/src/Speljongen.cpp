@@ -191,6 +191,7 @@ void Speljongen::initRegisters()
     /*if (colour) {
         r.setA(0x11);
     }*/
+
     r.setBC(0x0013);
     r.setDE(0x00d8);
     r.setHL(0x014d);

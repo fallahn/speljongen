@@ -141,11 +141,11 @@ public:
     ArgumentL() : Argument("L", 0, false, DataType::D8) {}
     std::uint16_t read(const Registers& registers, const AddressSpace&, const std::array<std::uint8_t, 2>&) override
     {
-        return registers.getH();
+        return registers.getL();
     }
     void write(Registers& registers, AddressSpace&, const std::array<std::uint8_t, 2>&, std::uint16_t value) override
     {
-        registers.setH(static_cast<std::uint8_t>(value));
+        registers.setL(static_cast<std::uint8_t>(value));
     }
     std::int32_t id() const override { return Argument::L; }
 };

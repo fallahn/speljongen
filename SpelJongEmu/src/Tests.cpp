@@ -32,9 +32,11 @@ void Speljongen::testRomFault()
 
     std::vector<std::uint8_t> src =
     {
-        0xFA, 0x00, 0xD8, //ld a, (D800)
-        0xE6, 0x11, //AND a, 0x10
-        0xC4, 0x10, 0xD8 //call NZ D810
+        //0xFA, 0x00, 0xD8, //ld a, (D800)
+        //0xE6, 0x11, //AND a, 0x10
+        //0xC4, 0x10, 0xD8 //call NZ D810
+        0x7D, //ld a,l
+        0x76 //halt
     };
 
     static const std::uint16_t Offset = 0x100;
@@ -46,8 +48,9 @@ void Speljongen::testRomFault()
     m_mmu.setByte(0xD810, 0x76); //should jump to this HALT
     m_cpu.clearState();
     m_cpu.getRegisters().setPC(Offset);
+    m_cpu.getRegisters().setL(0x3e);
 
-    std::cout << "A is: " << (int)m_cpu.getRegisters().getA() << ", Z is: " << m_cpu.getRegisters().getFlags().isSet(Flags::Z) << "\n";
+    std::cout << "A is: " << (int)m_cpu.getRegisters().getA() << ", L is: " << (int)m_cpu.getRegisters().getL() << "\n";
 
     OpCode opcode;
     do
@@ -59,7 +62,7 @@ void Speljongen::testRomFault()
         {
             std::cout << opcode.getLabel() << "\n";  
         }
-        std::cout << "A is: " << (int)m_cpu.getRegisters().getA() << ", Z is: " << m_cpu.getRegisters().getFlags().isSet(Flags::Z) << "\n";
+        std::cout << "A is: " << (int)m_cpu.getRegisters().getA() << ", L is: " << (int)m_cpu.getRegisters().getL() << "\n";
 
     } while (m_cpu.getCurrentOpcode().getOpcode() != 0x76);
 }
