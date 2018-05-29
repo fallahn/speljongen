@@ -55,11 +55,12 @@ Speljongen::Speljongen()
     initRenderer();
 
 #ifdef RUN_TESTS   
-    m_fifoTest.testEnqueue();
+    /*m_fifoTest.testEnqueue();
     m_fifoTest.testDequeue();
     m_fifoTest.testZip();
     testTiming();
-    testZFlags();
+    testZFlags();*/
+    testRomFault();
 #endif
 }
 

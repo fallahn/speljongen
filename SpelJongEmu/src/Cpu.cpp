@@ -81,7 +81,11 @@ bool Cpu::tick()
         case State::OPCODE: //check current opcode, jump to extend opcodes or switch to collecting operands
             clearState();
             m_opcodeOne = m_addressSpace.getByte(pc);
-            //m_logFile << std::hex << /*std::setfill('0') << std::setw(2) <<*/ pc << "\n";
+            //m_logFile << std::hex << /*std::setfill('0') << std::setw(2) <<*/ pc << " " << m_registers.getFlags().isSet(Flags::Z) << "\n";
+            if (pc == 0xc803)
+            {
+                int buns = 0;
+            }
             accessedMemory = true;
             if (m_opcodeOne == 0xcb) //jumps to extended ops
             {

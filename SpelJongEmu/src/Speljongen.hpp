@@ -92,6 +92,8 @@ private:
     void testZFlags();
     void assertZFlags(std::vector<std::uint8_t>);
 
+    void testRomFault();
+
     class FifoTest final
     {
     public:

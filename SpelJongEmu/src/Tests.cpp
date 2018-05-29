@@ -18,6 +18,52 @@ namespace
     std::string colourEnd("\x1b[0m");
 }
 
+void Speljongen::testRomFault()
+{
+    //current fault:
+    /*
+    FA ld, a (a16) should load the value 0x11 stored at 0xD800
+    into A
+    E6 AND a, d8 should then AND 0x10 with A and result with 
+    Z flag not set (not zero). Currently flag is set...
+    */
+
+    m_mmu.setByte(0xD800, 0x11);
+
+    std::vector<std::uint8_t> src =
+    {
+        0xFA, 0x00, 0xD8, //ld a, (D800)
+        0xE6, 0x11, //AND a, 0x10
+        0xC4, 0x10, 0xD8 //call NZ D810
+    };
+
+    static const std::uint16_t Offset = 0x100;
+
+    for (auto i = 0u; i <src.size(); ++i)
+    {
+        m_mmu.setByte(Offset + i, src[i]);
+    }
+    m_mmu.setByte(0xD810, 0x76); //should jump to this HALT
+    m_cpu.clearState();
+    m_cpu.getRegisters().setPC(Offset);
+
+    std::cout << "A is: " << (int)m_cpu.getRegisters().getA() << ", Z is: " << m_cpu.getRegisters().getFlags().isSet(Flags::Z) << "\n";
+
+    OpCode opcode;
+    do
+    {
+        m_cpu.tick();
+        auto old = opcode;
+        opcode = m_cpu.getCurrentOpcode();
+        if (opcode.getOpcode() != old.getOpcode())
+        {
+            std::cout << opcode.getLabel() << "\n";  
+        }
+        std::cout << "A is: " << (int)m_cpu.getRegisters().getA() << ", Z is: " << m_cpu.getRegisters().getFlags().isSet(Flags::Z) << "\n";
+
+    } while (m_cpu.getCurrentOpcode().getOpcode() != 0x76);
+}
+
 void Speljongen::testTiming()
 {
     //to test ret we need the stack pointing as if it had a return address on it..
