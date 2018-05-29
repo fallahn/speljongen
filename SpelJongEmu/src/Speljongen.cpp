@@ -19,6 +19,7 @@ Speljongen::Speljongen()
     m_shadowSpace       (m_storage, 0xe000, 0xc000, 0x1e00),
     m_dma               (m_storage, m_speedMode),
     m_gpu               (m_storage, m_display, m_interruptManager, m_dma, m_oamRam, m_memoryRegisters, false),
+    m_cartridge         (m_storage),
     m_thread            (&Speljongen::threadFunc, this),
     m_requestRefresh    (false),
     m_lcdDisabled       (false)
@@ -166,19 +167,10 @@ void Speljongen::load(const std::string& path)
 {
     reset();    
     
-    std::cout << "loading: " << path << "\n";
-    //TODO some file size checking
-    std::ifstream file(path, std::ios::binary);
-
-    file.seekg(0, file.end);
-    size_t length = file.tellg();
-    file.seekg(0, file.beg);
-    std::vector<char> buf(length);
-    file.read(buf.data(), length);
-    file.close();
-
-    std::uint16_t address = 0;
-    for (auto c : buf) m_mmu.setByte(address++, c);
+    m_mmu.removeCartridge();
+    m_cartridge.load(path);
+    std::cout << "Loaded " << m_cartridge.getTitle() << "!\n";
+    m_mmu.insertCartridge(m_cartridge);
 }
 
 //private

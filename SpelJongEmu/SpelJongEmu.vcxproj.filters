@@ -108,6 +108,12 @@
     <ClCompile Include="src\VramViewer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Cartridge.cpp">
+      <Filter>Source Files\mmu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mbc1.cpp">
+      <Filter>Source Files\mmu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\InterruptManager.hpp">
@@ -214,6 +220,12 @@
     </ClInclude>
     <ClInclude Include="src\VramViewer.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cartridge.hpp">
+      <Filter>Header Files\mmu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mbc1.hpp">
+      <Filter>Header Files\mmu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

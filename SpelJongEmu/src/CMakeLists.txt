@@ -4,6 +4,7 @@ set(PROJECT_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/AluFunctions.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Argument.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ClassicPixelFifo.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/Cartridge.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ColourPalette.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Cpu.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Display.cpp
@@ -12,6 +13,7 @@ set(PROJECT_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/InterruptManager.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/MemoryRegisters.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/Mbc1.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Mmu.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/OpCode.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/OamSearchPhase.cpp

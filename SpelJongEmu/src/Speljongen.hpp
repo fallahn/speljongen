@@ -12,6 +12,7 @@
 #include "Gpu.hpp"
 #include "MemoryRegisters.hpp"
 #include "VramViewer.hpp"
+#include "Cartridge.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -20,7 +21,7 @@
 
 #include <atomic>
 
-#define RUN_TESTS
+//#define RUN_TESTS
 #ifdef RUN_TESTS
 #include "ClassicPixelFifo.hpp"
 #include "Fetcher.hpp"
@@ -65,6 +66,8 @@ private:
     Timer m_timer;
     Dma m_dma;
     Gpu m_gpu;
+
+    Cartridge m_cartridge;
 
     bool m_requestRefresh;
     bool m_lcdDisabled;

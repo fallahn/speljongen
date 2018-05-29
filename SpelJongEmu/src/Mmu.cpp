@@ -78,3 +78,16 @@ void Mmu::initBios()
         setByte(address++, b);
     }
 }
+
+void Mmu::removeCartridge()
+{
+    for (auto i = 0; i < 0x8000; ++i)
+    {
+        m_addressSpaces[i] = nullptr;
+    }
+}
+
+void Mmu::insertCartridge(AddressSpace& cartridge)
+{
+    addAddressSpace(cartridge);
+}

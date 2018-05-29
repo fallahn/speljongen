@@ -128,6 +128,7 @@
   <ItemGroup>
     <ClCompile Include="src\AluFunctions.cpp" />
     <ClCompile Include="src\Argument.cpp" />
+    <ClCompile Include="src\Cartridge.cpp" />
     <ClCompile Include="src\ClassicPixelFifo.cpp" />
     <ClCompile Include="src\ColourPalette.cpp" />
     <ClCompile Include="src\Cpu.cpp" />
@@ -136,6 +137,7 @@
     <ClCompile Include="src\Gpu.cpp" />
     <ClCompile Include="src\InterruptManager.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Mbc1.cpp" />
     <ClCompile Include="src\MemoryRegisters.cpp" />
     <ClCompile Include="src\Mmu.cpp" />
     <ClCompile Include="src\nfd\nfd_common.c" />
@@ -157,6 +159,7 @@
     <ClInclude Include="src\Argument.hpp" />
     <ClInclude Include="src\BitUtil.hpp" />
     <ClInclude Include="src\BootRom.hpp" />
+    <ClInclude Include="src\Cartridge.hpp" />
     <ClInclude Include="src\ClassicPixelFifo.hpp" />
     <ClInclude Include="src\ColourPalette.hpp" />
     <ClInclude Include="src\Cpu.hpp" />
@@ -168,6 +171,7 @@
     <ClInclude Include="src\IndexedQueue.hpp" />
     <ClInclude Include="src\InterruptManager.hpp" />
     <ClInclude Include="src\Lcdc.hpp" />
+    <ClInclude Include="src\Mbc1.hpp" />
     <ClInclude Include="src\MemoryRegisters.hpp" />
     <ClInclude Include="src\Mmu.hpp" />
     <ClInclude Include="src\OamSearchPhase.hpp" />

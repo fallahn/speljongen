@@ -21,6 +21,9 @@ public:
 
     void initBios();
 
+    void removeCartridge();
+    void insertCartridge(AddressSpace&);
+
 private:
 
     std::vector<AddressSpace*> m_addressSpaces;
