@@ -17,9 +17,6 @@ public:
     //pixel values are 0 - 3 in classic mode
     void putPixel(std::uint8_t);
     void requestRefresh();
-    void waitForRefresh();
-    void enableLCD();
-    void disableLCD();
 
 private:
     std::array<sf::Vertex, 4u> m_vertices;

@@ -2,6 +2,8 @@
 
 #include "Speljongen.hpp"
 #include "nfd/nfd.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui-SFML.h"
 
 #ifdef __LINUX__
 #include <X11.h>
@@ -13,16 +15,19 @@ int main()
     bool run = false;
 
     sf::RenderWindow window;
-    window.create({ 800, 600 }, "Speljongen");
+    window.create({ 800, 600 }, "Speljongen: STOPPED");
     window.setVerticalSyncEnabled(true);
 
-    sf::Clock clock;
+    ImGui::SFML::Init(window);
 
+    sf::Clock imguiClock;
     while (window.isOpen())
     {
         sf::Event evt;
         while (window.pollEvent(evt))
         {
+            ImGui::SFML::ProcessEvent(evt);
+
             if (evt.type == sf::Event::Closed)
             {
                 window.close();
@@ -35,15 +40,17 @@ int main()
                     window.close();
                     break;
                 case sf::Keyboard::LControl:
-                    //window.setVerticalSyncEnabled(run);
                     run = !run;
                     if (run)
                     {
                         gameboy.start();
+                        window.setTitle("Speljongen: STARTED");
                     }
                     else
                     {
+                        window.setTitle("Speljongen: STOPPING...");
                         gameboy.stop();
+                        window.setTitle("Speljongen: STOPPED");
                     }
                     break;
                 default: break;
@@ -82,12 +89,17 @@ int main()
             }
         }
 
+        ImGui::SFML::Update(window, imguiClock.restart());
+
+
         window.clear(sf::Color::Blue);
         window.draw(gameboy);
+        ImGui::SFML::Render(window);
         window.display();
 
-        window.setTitle("Speljongen " + std::to_string(1.f / clock.restart().asSeconds()));
+        //window.setTitle("Speljongen " + std::to_string(1.f / clock.restart().asSeconds()));
     }
 
+    ImGui::SFML::Shutdown();
     return 0;
 }

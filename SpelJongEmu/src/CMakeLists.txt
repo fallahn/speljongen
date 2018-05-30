@@ -25,4 +25,9 @@ set(PROJECT_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/Tests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Timer.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/VramViewer.cpp
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_demo.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_draw.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui-SFML.cpp
   PARENT_SCOPE)

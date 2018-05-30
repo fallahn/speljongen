@@ -1,8 +1,21 @@
 #### Speljongen - Gameboy emulator
 
-Originally a port of [Coffee GB](https://github.com/trekawek/coffee-gb/tree/master) from java to C++ for poops and giggles,
+Started as a port of [Coffee GB](https://github.com/trekawek/coffee-gb/tree/master) from java to C++ for poops and giggles,
 while the CPU/GPU emulation remains mostly unchanged the memory emulation has been implemented slightly differently. The interface,
-rendering and OS input handling has been all replaced with [SFML](https://sfml-dev.org) and implemented from scratch.
+rendering and OS input handling has been all replaced with [SFML](https://sfml-dev.org) and ImGui and implemented from scratch.
+
+
+##### Building
+Speljongen should compile on Windows, macOS and linux with the included CMake file.
+There is also a Visual Studio 2017 project included (with dependencies) for Windows
+users.
+
+Speljongen depends on SFML and OpenGL libraries, and on linux you will need to install
+pkgmanager and gtk+3 for the native file dialogue windows. On macOS the project needs
+to link to AppKit and CoreServices for the same reason. The CMake file also supports
+creating app bundles on macOS, which requires a valid icon set and XCode 9 command line
+tools installed.
+
 
 
 MIT License

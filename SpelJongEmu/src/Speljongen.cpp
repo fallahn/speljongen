@@ -6,6 +6,7 @@
 #include <fstream>
 
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/System/Clock.hpp>
 
 Speljongen::Speljongen()
     : m_storage         (0x10000),
@@ -125,9 +126,7 @@ bool Speljongen::tick()
     if (!m_lcdDisabled && !m_gpu.isLcdEnabled())
     {
         m_lcdDisabled = true;
-        //m_requestRefresh = true;
         m_display.requestRefresh();
-        //m_requestRefresh = false;
         //hdma
     }
     else if (gpuMode == Gpu::Mode::VBlank)
@@ -135,25 +134,17 @@ bool Speljongen::tick()
         m_requestRefresh = true;
         m_display.requestRefresh();
         updateDebug();
-        //m_requestRefresh = false;
     }
 
     if (m_lcdDisabled && m_gpu.isLcdEnabled())
     {
         m_lcdDisabled = false;
-        //m_display.waitForRefresh();
         //TODO hdma
     }
     else if (m_requestRefresh && gpuMode == Gpu::Mode::OamSearch)
     {
         m_requestRefresh = false;
-        //m_display.waitForRefresh();
     }
-
-    //if (m_cpu.getRegisters().getFlags().isSet(Flags::Z))
-    //{
-    //    std::cout << std::hex << m_cpu.getRegisters().getPC() << "\n";
-    //}
 
     return ret;
 }
@@ -177,9 +168,24 @@ void Speljongen::load(const std::string& path)
 //private
 void Speljongen::threadFunc()
 {
+    sf::Clock updateClock;
+    static const float frameTime = 1.f / 60.f;
+    static float accumulator = 0.f;
+    static const std::int32_t gameboyCycles = 4194304 / 60;
+
     while (m_running)
     {
-        tick();
+        accumulator += updateClock.restart().asSeconds();
+        while (accumulator > frameTime)
+        {
+            accumulator -= frameTime;
+
+            std::int32_t tickCounter = 0;
+            while (tickCounter++ < gameboyCycles && m_running)
+            {
+                tick();
+            }
+        }
     }
 }
 

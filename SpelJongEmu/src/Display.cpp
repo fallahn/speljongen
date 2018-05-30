@@ -40,7 +40,6 @@ void Display::putPixel(std::uint8_t px)
     auto y = m_pixelIndex / Width;
     m_imageBuffer.setPixel(x , y, colours[px]);
     m_pixelIndex = (m_pixelIndex + 1) % MaxPixels;
-    //if (px > 0) std::cout << "screen px, " << x << ", " << y << ": " << (int)px << "\n";
 }
 
 void Display::requestRefresh()
@@ -50,14 +49,7 @@ void Display::requestRefresh()
     sf::Lock lock(m_mutex);
     m_texture.update(m_imageBuffer);
     
-    //std::cout << "updated buffer...\n";
 }
-
-void Display::waitForRefresh() {}
-
-void Display::enableLCD() {}
-
-void Display::disableLCD() {}
 
 //private
 void Display::draw(sf::RenderTarget& rt, sf::RenderStates states) const

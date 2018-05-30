@@ -53,7 +53,7 @@ public:
 
 private:
     std::vector<std::uint8_t> m_storage;
-    bool m_running;
+    std::atomic<bool> m_running;
     Mmu m_mmu;
     SpeedMode m_speedMode;
     MemoryRegisters m_memoryRegisters;

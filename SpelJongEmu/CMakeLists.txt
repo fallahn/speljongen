@@ -41,6 +41,9 @@ endif()
 SET(SFML_MIN_VERSION 2.4)
 find_package(SFML ${SFML_MIN_VERSION} REQUIRED graphics window audio system network)
 
+#required by ImGui
+find_package(OpenGL REQUIRED)
+
 # X11 is required on unices
 if(UNIX AND NOT APPLE)
   find_package(X11 REQUIRED)
@@ -113,7 +116,8 @@ endif(APPLE)
 # Linker settings
 target_link_libraries(${PROJECT_NAME}
   ${SFML_LIBRARIES}
-  ${SFML_DEPENDENCIES})
+  ${SFML_DEPENDENCIES}
+  ${OPENGL_LIBRARIES})
 
 if(X11_FOUND)
   target_link_libraries(${PROJECT_NAME}

@@ -43,7 +43,7 @@ bool Cpu::tick()
         {
             if (m_state == State::STOPPED)
             {
-                m_display.enableLCD();
+                //m_display.enableLCD();
             }
             m_state = State::IRQ_READ_IF;
         }
@@ -146,7 +146,7 @@ bool Cpu::tick()
                 else
                 {
                     m_state = State::STOPPED;
-                    m_display.disableLCD();
+                    //m_display.disableLCD();
                 }
                 return true;
             }
