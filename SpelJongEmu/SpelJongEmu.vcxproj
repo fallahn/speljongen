@@ -196,6 +196,7 @@
     <ClInclude Include="src\Ram.hpp" />
     <ClInclude Include="src\Register.hpp" />
     <ClInclude Include="src\CpuRegisters.hpp" />
+    <ClInclude Include="src\Rom.hpp" />
     <ClInclude Include="src\ShadowAddressSpace.hpp" />
     <ClInclude Include="src\SpeedMode.hpp" />
     <ClInclude Include="src\Speljongen.hpp" />

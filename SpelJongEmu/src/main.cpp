@@ -15,7 +15,7 @@ int main()
     bool run = false;
 
     sf::RenderWindow window;
-    window.create({ 800, 600 }, "Speljongen: STOPPED");
+    window.create({ 800, 600 }, "Speljongen: STOPPED", sf::Style::Close | sf::Style::Titlebar);
     window.setVerticalSyncEnabled(true);
 
     ImGui::SFML::Init(window);
@@ -94,9 +94,9 @@ int main()
         gameboy.doImgui();
 
         window.clear(sf::Color(100, 149, 237));
-        gameboy.lockDisplay();
+        //gameboy.lockDisplay(); //hm. kills perf
         ImGui::SFML::Render(window);
-        gameboy.freeDisplay();
+        //gameboy.freeDisplay();
         window.display();
     }
 

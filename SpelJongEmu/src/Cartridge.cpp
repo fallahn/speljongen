@@ -1,5 +1,6 @@
 #include "Cartridge.hpp"
 #include "Mbc1.hpp"
+#include "Rom.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -101,7 +102,7 @@ void Cartridge::load(const std::string& path)
         break;
     case 0:
     case 1:
-        break;
+        //break;
     case 2: m_ramBanks = 1;
         break;
     case 3:
@@ -119,6 +120,10 @@ void Cartridge::load(const std::string& path)
     }
     else
     {
-        std::cout << "MBC type not yet implemented!\n";
+        m_mbc = std::make_unique<Rom>(getStorage(), buf);
+        if (m_info > 0)
+        {
+            std::cout << "WARNING incorrect MBC type loaded for cartridge\n";
+        }
     }
 }

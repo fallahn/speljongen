@@ -269,5 +269,8 @@
     <ClInclude Include="src\imgui\stb_truetype.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="src\Rom.hpp">
+      <Filter>Header Files\mmu</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -183,8 +183,6 @@ std::uint16_t Gpu::getTicksInLine() const { return m_ticksInLine; }
 
 Lcdc& Gpu::getLcdc() { return m_lcdc; }
 
-//MemoryRegisters<GpuRegister>& Gpu::getRegisters() { return m_registers; }
-
 bool Gpu::isColour() const { return m_colour; }
 
 ColourPalette& Gpu::getBgPalette() { return m_bgPalette; }

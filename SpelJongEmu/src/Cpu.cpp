@@ -51,7 +51,7 @@ bool Cpu::tick()
 
     if(m_state & HAS_INTERRUPT_REQUEST)
     {
-        std::cout << "Interrupt!\n";
+        //std::cout << "Interrupt!\n";
         handleInterrupt();
         return true;
     }

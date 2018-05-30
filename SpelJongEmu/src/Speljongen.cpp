@@ -165,16 +165,20 @@ void Speljongen::load(const std::string& path)
 
 void Speljongen::doImgui() const
 {
-    ImGui::SetNextWindowSize({ 360.f, 340.f });
+    ImGui::SetNextWindowSize({ 434.f, 340.f });
     ImGui::SetNextWindowPos({ 356.f, 10.f });
-    ImGui::Begin("VRAM");
+    ImGui::Begin("VRAM and register status", nullptr, ImGuiWindowFlags_NoCollapse);
     ImGui::Image(m_vramViewer.getTexture(), sf::Vector2f(256.f, 256.f));
+    ImGui::SameLine();
+    m_mutex.lock();
+    ImGui::Text("%s", m_registerString.c_str());
+    m_mutex.unlock();
     ImGui::End();
 
     std::string title = "Gameboy - " + m_cartridge.getTitle();
     ImGui::SetNextWindowSize({ 336.f, 340.f });
     ImGui::SetNextWindowPos({ 10.f, 10.f });
-    ImGui::Begin(title.c_str());
+    ImGui::Begin(title.c_str(), nullptr, ImGuiWindowFlags_NoCollapse);
     ImGui::Image(m_display.getTexture(), sf::Vector2f(320.f, 288.f));
     ImGui::Text("Display FPS: %.2f", ImGui::GetIO().Framerate);
     ImGui::SameLine();
@@ -183,10 +187,8 @@ void Speljongen::doImgui() const
 
     ImGui::SetNextWindowSize({ 780.f, 230.f });
     ImGui::SetNextWindowPos({ 10.f, 360.f });
-    ImGui::Begin("Inspector - F3 Step, F9 Run/Stop, Right click to load ROM");
-    m_mutex.lock();
-    ImGui::Text("%s", m_registerString.c_str());
-    m_mutex.unlock();
+    ImGui::Begin("Inspector - F3 Step, F9 Run/Stop, Right click to load ROM", nullptr, ImGuiWindowFlags_NoCollapse);
+
     ImGui::End();
 }
 
@@ -209,8 +211,13 @@ void Speljongen::threadFunc()
     static const sf::Time frameTime = sf::milliseconds(1000 / 60);
 
     sf::Clock tickClock;
+    sf::Time accumulator;
+
     while (m_running)
     {
+        auto duration = tickClock.restart();
+        accumulator += duration;
+        while(accumulator > frameTime)
         {
             std::int32_t tickCounter = 0;
             while (tickCounter++ < gameboyCycles && m_running)
@@ -218,12 +225,9 @@ void Speljongen::threadFunc()
                 tick();
             }
 
-            auto duration = tickClock.restart();
-            auto remain = frameTime - duration;
-            /*if (remain.asMilliseconds() > 0)*/ sf::sleep(remain);
+            m_tickTime = 100.f / (accumulator.asSeconds() / frameTime.asSeconds());
 
-            m_tickTime = 100.f / (duration.asSeconds() / frameTime.asSeconds());
-
+            accumulator -= frameTime;
             updateVramView(); //TODO only want to do this if VRAM flagged as changed, causes significant slow down
             updateDebug();
         }
@@ -258,9 +262,9 @@ void Speljongen::updateDebug()
     ss << "\nDE: 0x" << std::setfill('0') << std::setw(4) << reg.getDE();
     ss << "\nHL: 0x" << std::setfill('0') << std::setw(4) << reg.getHL();
     ss << "\nSP: 0x" << std::setfill('0') << std::setw(4) << reg.getSP();
-    ss << "PC: 0x" << std::setfill('0') << std::setw(4) << reg.getPC();
+    ss << "\nPC: 0x" << std::setfill('0') << std::setw(4) << reg.getPC();
     ss << " : 0x" << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(reg.getPC());
-    ss << "\nCurrent op : " << (int)m_cpu.getCurrentOpcode().getOpcode() << ", " << m_cpu.getCurrentOpcode().getLabel();
+    ss << "\n" << (int)m_cpu.getCurrentOpcode().getOpcode() << ", " << m_cpu.getCurrentOpcode().getLabel();
 
     ss << "\n\nLCDC: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(MemoryRegisters::LCDC);
     ss << "\nSTAT: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff41);
