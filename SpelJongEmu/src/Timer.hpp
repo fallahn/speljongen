@@ -19,9 +19,9 @@ private:
     const SpeedMode& m_speedMode;
 
     std::uint16_t m_div;
-    std::uint16_t m_tac;
-    std::uint16_t m_tma;
-    std::uint16_t m_tima;
+    /*std::uint8_t m_tac;
+    std::uint8_t m_tma;
+    std::uint8_t m_tima;*/
 
     bool m_prevBit;
     bool m_overflow;

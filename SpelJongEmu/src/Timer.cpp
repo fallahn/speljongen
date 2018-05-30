@@ -1,6 +1,7 @@
 #include "Timer.hpp"
 #include "InterruptManager.hpp"
 #include "SpeedMode.hpp"
+#include "MemoryRegisters.hpp"
 
 #include <array>
 #include <cassert>
@@ -15,9 +16,9 @@ Timer::Timer(std::vector<std::uint8_t>& storage, InterruptManager& im, const Spe
     m_interruptManager  (im),
     m_speedMode         (sm),
     m_div               (0),
-    m_tac               (0),
-    m_tma               (0),
-    m_tima              (0),
+    //m_tac               (0),
+    //m_tma               (0),
+    //m_tima              (0),
     m_prevBit           (false),
     m_overflow          (false),
     m_ticksSinceOverflow(0)
@@ -38,11 +39,13 @@ void Timer::tick()
         }
         else if (m_ticksSinceOverflow == 5)
         {
-            m_tima = m_tma;
+            //m_tima = m_tma;
+            setStorageValue(MemoryRegisters::TIMA, getStorageValue(MemoryRegisters::TMA));
         }
         else if (m_ticksSinceOverflow == 6)
         {
-            m_tima = m_tma;
+            //m_tima = m_tma;
+            setStorageValue(MemoryRegisters::TIMA, getStorageValue(MemoryRegisters::TMA));
             m_overflow = false;
             m_ticksSinceOverflow = 0;
         }
@@ -67,16 +70,14 @@ void Timer::setByte(std::uint16_t address, std::uint8_t value)
     case 0xff05:
         if (m_ticksSinceOverflow < 5)
         {
-            m_tima = value;
+            setStorageValue(address, value);
             m_overflow = false;
             m_ticksSinceOverflow = 0;
         }
         break;
     case 0xff06:
-        m_tma = value;
-        break;
     case 0xff07:
-        m_tac = value;
+        setStorageValue(address, value);
         break;
     }
 }
@@ -84,46 +85,51 @@ void Timer::setByte(std::uint16_t address, std::uint8_t value)
 std::uint8_t Timer::getByte(std::uint16_t address) const
 {
     assert(accepts(address));
-    switch (address)
-    {
-    default: break;
-    case 0xff04:
-        return static_cast<std::uint8_t>(m_div >> 8);
-        break;
-    case 0xff05:
-        return static_cast<std::uint8_t>(m_tima);
-    case 0xff06:
-        return static_cast<std::uint8_t>(m_tma);
-    case 0xff07:
-        return static_cast<std::uint8_t>(m_tac);
-    }
-    return 0;
+    //switch (address)
+    //{
+    //default: break;
+    //case 0xff04:
+    //    return static_cast<std::uint8_t>(m_div >> 8);
+    //case 0xff05:
+    //    return static_cast<std::uint8_t>(m_tima);
+    //case 0xff06:
+    //    return static_cast<std::uint8_t>(m_tma);
+    //case 0xff07:
+    //    return static_cast<std::uint8_t>(m_tac);
+    //}
+    //return 0;
+    return getStorageValue(address);
 }
 
 //private
 void Timer::incTma()
 {
-    m_tima++;
-    m_tima %= 0x100;
-    if (m_tima == 0)
+    std::uint8_t tima = getStorageValue(MemoryRegisters::TIMA);
+
+    tima++;
+    tima %= 0x100;
+    if (tima == 0)
     {
         m_overflow = true;
         m_ticksSinceOverflow = 0;
     }
+    setStorageValue(MemoryRegisters::TIMA, tima);
 }
 
 void Timer::updateDiv(std::uint16_t newDiv)
 {
     m_div = newDiv;
-    auto bitPos = FreqToBit[m_tac & 0b11];
+    auto bitPos = FreqToBit[getStorageValue(MemoryRegisters::TAC) & 0b11];
     bitPos <<= m_speedMode.getSpeedMode() - 1;
 
     bool bit = ((m_div & (1 << bitPos)) != 0);
-    bit &= ((m_tac & (1 << 2)) != 0);
+    bit &= ((getStorageValue(MemoryRegisters::TAC) & (1 << 2)) != 0);
 
     if (!bit && m_prevBit)
     {
         incTma();
     }
     m_prevBit = bit;
+
+    setStorageValue(MemoryRegisters::DIV, static_cast<std::uint8_t>(m_div >> 8));
 }

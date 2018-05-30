@@ -68,6 +68,7 @@ int main()
                 {
                     gameboy.stop();
                     gameboy.reset();
+                    run = false;
                     
                     //TODO check also inside window
                     nfdchar_t *outPath = nullptr;

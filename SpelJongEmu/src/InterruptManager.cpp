@@ -3,7 +3,7 @@
 InterruptManager::InterruptManager(std::vector<std::uint8_t>&storage, bool isColour)
     : AddressSpace              (storage),
     m_isColour                  (isColour),
-    m_ime                       (true),
+    m_ime                       (false),
     m_interruptFlag             (0xe1),
     m_interruptEnabled          (0),
     m_pendingEnableInterrupts   (-1),
