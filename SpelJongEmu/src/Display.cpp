@@ -21,15 +21,8 @@ namespace
 Display::Display()
     : m_pixelIndex(0)
 {
-    m_imageBuffer.create(Width, Height, sf::Color::Red);
+    m_imageBuffer.create(Width, Height, colours[3]);
     m_texture.loadFromImage(m_imageBuffer);
-
-    m_vertices[1].position = { static_cast<float>(Width), 0 };
-    m_vertices[1].texCoords = m_vertices[1].position;
-    m_vertices[2].position = { static_cast<float>(Width), static_cast<float>(Height) };
-    m_vertices[2].texCoords = m_vertices[2].position;
-    m_vertices[3].position = { 0, static_cast<float>(Height) };
-    m_vertices[3].texCoords = m_vertices[3].position;
 }
 
 //public
@@ -42,21 +35,19 @@ void Display::putPixel(std::uint8_t px)
     m_pixelIndex = (m_pixelIndex + 1) % MaxPixels;
 }
 
-void Display::requestRefresh()
+void Display::refresh()
 {
     m_pixelIndex = 0;
 
     sf::Lock lock(m_mutex);
+    m_texture.update(m_imageBuffer);   
+}
+
+void Display::clear(bool powerOn)
+{
+    sf::Lock lock(m_mutex);
+    m_imageBuffer.create(Width, Height, powerOn ? colours[0] : colours[3]);
     m_texture.update(m_imageBuffer);
-    
 }
 
 //private
-void Display::draw(sf::RenderTarget& rt, sf::RenderStates states) const
-{
-    states.transform *= getTransform();
-    states.texture = &m_texture;
-    
-    sf::Lock lock(m_mutex);
-    rt.draw(m_vertices.data(), m_vertices.size(), sf::PrimitiveType::Quads, states);
-}

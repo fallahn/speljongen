@@ -1,31 +1,32 @@
 #pragma once
 
-#include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Vertex.hpp>
-#include <SFML/Graphics/Transformable.hpp>
 
 #include <SFML/System/Mutex.hpp>
 
 #include <array>
 #include <cstdint>
 
-class Display final : public sf::Drawable, public sf::Transformable
+class Display final
 {
 public:
     Display();
     //pixel values are 0 - 3 in classic mode
     void putPixel(std::uint8_t);
-    void requestRefresh();
+    void refresh();
+    void clear(bool powerOn = false);
+
+    const sf::Texture& getTexture() const { return m_texture; }
+
+    void lockDisplay() { m_mutex.lock(); }
+    void freeDisplay() { m_mutex.unlock(); }
 
 private:
-    std::array<sf::Vertex, 4u> m_vertices;
+
     sf::Texture m_texture;
 
     sf::Image m_imageBuffer;
     sf::Uint32 m_pixelIndex;
 
-    sf::Mutex mutable m_mutex;
-
-    void draw(sf::RenderTarget&, sf::RenderStates) const override;
+    sf::Mutex m_mutex;
 };

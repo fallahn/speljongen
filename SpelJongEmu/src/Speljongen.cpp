@@ -1,4 +1,6 @@
 #include "Speljongen.hpp"
+#include "imgui/imgui.h"
+#include "imgui/imgui-SFML.h"
 
 #include <sstream>
 #include <iomanip>
@@ -83,6 +85,7 @@ void Speljongen::start()
 void Speljongen::stop()
 {
     m_running = false;
+    std::cout << "Stopping, please wait...\n";
     m_thread.wait();
 }
 
@@ -126,13 +129,13 @@ bool Speljongen::tick()
     if (!m_lcdDisabled && !m_gpu.isLcdEnabled())
     {
         m_lcdDisabled = true;
-        m_display.requestRefresh();
+        m_display.refresh();
         //hdma
     }
     else if (gpuMode == Gpu::Mode::VBlank)
     {        
         m_requestRefresh = true;
-        m_display.requestRefresh();
+        m_display.refresh();
         updateDebug();
     }
 
@@ -163,6 +166,31 @@ void Speljongen::load(const std::string& path)
     m_cartridge.load(path);
     std::cout << "Loaded " << m_cartridge.getTitle() << "!\n";
     m_mmu.insertCartridge(m_cartridge);
+}
+
+void Speljongen::doImgui() const
+{
+    ImGui::SetNextWindowSize({ 360, 340 });
+    ImGui::Begin("VRAM");
+    ImGui::Image(m_vramViewer.getTexture(), sf::Vector2f(256.f, 256.f));
+    ImGui::End();
+
+    ImGui::SetNextWindowSize({ 360, 340 });
+    ImGui::Begin("Gameboy");
+    ImGui::Image(m_display.getTexture(), sf::Vector2f(320.f, 288.f));
+    ImGui::End();
+}
+
+void Speljongen::lockDisplay()
+{
+    m_display.lockDisplay();
+    m_vramViewer.lockDisplay();
+}
+
+void Speljongen::freeDisplay()
+{
+    m_display.freeDisplay();
+    m_vramViewer.freeDisplay();
 }
 
 //private
@@ -212,12 +240,6 @@ void Speljongen::initRenderer()
     m_text.setFont(m_font);
     m_text.setCharacterSize(12);
     m_text.setString("LCtrl toggle run/step\nSpace step\n");
-
-    m_display.setPosition(140, 100);
-    m_display.setScale(2.f, 2.f);
-
-    m_vramViewer.setPosition(800.f - 312.f, 100.f);
-    m_vramViewer.setScale(2.f, 2.f);
 
     updateDebug();
 }
@@ -297,7 +319,6 @@ void Speljongen::updateVramView()
 
 void Speljongen::draw(sf::RenderTarget& rt, sf::RenderStates) const
 {
-    rt.draw(m_display);
-    rt.draw(m_vramViewer);
+    //rt.draw(m_display);
     rt.draw(m_text);
 }

@@ -1,8 +1,5 @@
 #pragma once
 
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/Transformable.hpp>
-#include <SFML/Graphics/Vertex.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Image.hpp>
 
@@ -10,7 +7,7 @@
 
 #include <array>
 
-class VramViewer final : public sf::Drawable, public sf::Transformable
+class VramViewer final
 {
 public:
     VramViewer();
@@ -19,14 +16,15 @@ public:
 
     void update();
 
-private:
+    const sf::Texture& getTexture() const { return m_texture; }
 
+    void lockDisplay() { m_mutex.lock(); }
+    void freeDisplay() { m_mutex.unlock(); }
+
+private:
     sf::Image m_imageBuffer;
     sf::Texture m_texture;
-    std::array<sf::Vertex, 4u> m_vertices;
 
-    mutable sf::Mutex m_mutex;
-
-    void draw(sf::RenderTarget&, sf::RenderStates) const override;
+    sf::Mutex m_mutex;
 };
 

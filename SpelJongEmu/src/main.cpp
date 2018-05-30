@@ -91,13 +91,14 @@ int main()
 
         ImGui::SFML::Update(window, imguiClock.restart());
 
+        gameboy.doImgui();
 
         window.clear(sf::Color::Blue);
         window.draw(gameboy);
+        gameboy.lockDisplay();
         ImGui::SFML::Render(window);
+        gameboy.freeDisplay();
         window.display();
-
-        //window.setTitle("Speljongen " + std::to_string(1.f / clock.restart().asSeconds()));
     }
 
     ImGui::SFML::Shutdown();

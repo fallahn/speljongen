@@ -95,7 +95,7 @@ Gpu::Mode Gpu::tick()
         {
             if (--m_lcdEnableDelay == 0)
             {
-                //m_display.enableLCD();
+                m_display.clear(true);
                 m_lcdEnabled = true;
             }
         }
@@ -289,7 +289,7 @@ void Gpu::disableLCD()
     m_currentMode = Mode::HBlank;
     m_lcdEnabled = false;
     m_lcdEnableDelay = -1;
-    //m_display.disableLCD();
+    m_display.clear();
 }
 
 void Gpu::enableLCD()

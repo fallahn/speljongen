@@ -51,6 +51,10 @@ public:
 
     void load(const std::string&);
 
+    void doImgui() const;
+    void lockDisplay();
+    void freeDisplay();
+
 private:
     std::vector<std::uint8_t> m_storage;
     std::atomic<bool> m_running;
