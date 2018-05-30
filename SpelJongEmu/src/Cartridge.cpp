@@ -8,6 +8,7 @@ Cartridge::Cartridge(std::vector<std::uint8_t>& storage)
     : AddressSpace  (storage),
     m_info          (ROM),
     m_colour        (false),
+    m_title         ("NO TITLE"),
     m_romBanks      (0),
     m_ramBanks      (0),
     m_type          (Classic)
@@ -60,11 +61,15 @@ void Cartridge::load(const std::string& path)
     m_title.clear();
     for (auto i = 0x0134; i < 0x0143; ++i)
     {
-        m_title.push_back(buf[i]);
         if (buf[i] == 0)
         {
             break;
         }
+        m_title.push_back(buf[i]);
+    }
+    if (m_title.empty())
+    {
+        m_title = "NO TITLE";
     }
 
     //m_type = buf[0x0143]; //colour or universal?

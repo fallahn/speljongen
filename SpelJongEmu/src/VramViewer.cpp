@@ -14,7 +14,7 @@ namespace
 
 VramViewer::VramViewer()
 {
-    m_imageBuffer.create(Width, Height, sf::Color::Green);
+    m_imageBuffer.create(Width, Height, sf::Color::Black);
     m_texture.loadFromImage(m_imageBuffer);
 }
 

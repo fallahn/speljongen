@@ -37,6 +37,7 @@ public:
     bool tick(); //returns false when in the middle of a an op
     
     Registers& getRegisters() { return m_registers; }
+    const Registers& getRegisters() const { return m_registers; }
     void clearState();
 
     State getState() const { return m_state; }

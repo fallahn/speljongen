@@ -9,6 +9,7 @@
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/System/Clock.hpp>
+#include <SFML/System/Sleep.hpp>
 
 Speljongen::Speljongen()
     : m_storage         (0x10000),
@@ -55,7 +56,7 @@ Speljongen::Speljongen()
 
     m_interruptManager.disableInterrupts(false);
     initRegisters(); //TODO only do this when not using boot rom
-    initRenderer();
+    updateDebug();
 
 #ifdef RUN_TESTS   
     /*m_fifoTest.testEnqueue();
@@ -104,13 +105,7 @@ void Speljongen::reset()
     {
         m_mmu.setByte(i, 0);
     }
-
-   std::array<char, 6> test = { 'r', 'e', 's', 'e', 't', '\n' };
-   for (auto c : test)
-   {
-       m_mmu.setByte(MemoryRegisters::SB, c);
-       m_mmu.setByte(MemoryRegisters::SC, 0x81);
-   }
+    m_display.clear();
 
     updateDebug();
 }
@@ -136,7 +131,7 @@ bool Speljongen::tick()
     {        
         m_requestRefresh = true;
         m_display.refresh();
-        updateDebug();
+        //updateDebug();
     }
 
     if (m_lcdDisabled && m_gpu.isLcdEnabled())
@@ -170,14 +165,28 @@ void Speljongen::load(const std::string& path)
 
 void Speljongen::doImgui() const
 {
-    ImGui::SetNextWindowSize({ 360, 340 });
+    ImGui::SetNextWindowSize({ 360.f, 340.f });
+    ImGui::SetNextWindowPos({ 356.f, 10.f });
     ImGui::Begin("VRAM");
     ImGui::Image(m_vramViewer.getTexture(), sf::Vector2f(256.f, 256.f));
     ImGui::End();
 
-    ImGui::SetNextWindowSize({ 360, 340 });
-    ImGui::Begin("Gameboy");
+    std::string title = "Gameboy - " + m_cartridge.getTitle();
+    ImGui::SetNextWindowSize({ 336.f, 340.f });
+    ImGui::SetNextWindowPos({ 10.f, 10.f });
+    ImGui::Begin(title.c_str());
     ImGui::Image(m_display.getTexture(), sf::Vector2f(320.f, 288.f));
+    ImGui::Text("Display FPS: %.2f", ImGui::GetIO().Framerate);
+    ImGui::SameLine();
+    ImGui::Text("Emulation speed: %.2f%%", m_tickTime.load());
+    ImGui::End();
+
+    ImGui::SetNextWindowSize({ 780.f, 230.f });
+    ImGui::SetNextWindowPos({ 10.f, 360.f });
+    ImGui::Begin("Inspector - F3 Step, F9 Run/Stop, Right click to load ROM");
+    m_mutex.lock();
+    ImGui::Text("%s", m_registerString.c_str());
+    m_mutex.unlock();
     ImGui::End();
 }
 
@@ -196,25 +205,30 @@ void Speljongen::freeDisplay()
 //private
 void Speljongen::threadFunc()
 {
-    sf::Clock updateClock;
-    static const float frameTime = 1.f / 60.f;
-    static float accumulator = 0.f;
     static const std::int32_t gameboyCycles = 4194304 / 60;
+    static const sf::Time frameTime = sf::milliseconds(1000 / 60);
 
+    sf::Clock tickClock;
     while (m_running)
     {
-        accumulator += updateClock.restart().asSeconds();
-        while (accumulator > frameTime)
         {
-            accumulator -= frameTime;
-
             std::int32_t tickCounter = 0;
             while (tickCounter++ < gameboyCycles && m_running)
             {
                 tick();
             }
+
+            auto duration = tickClock.restart();
+            auto remain = frameTime - duration;
+            /*if (remain.asMilliseconds() > 0)*/ sf::sleep(remain);
+
+            m_tickTime = 100.f / (duration.asSeconds() / frameTime.asSeconds());
+
+            updateVramView(); //TODO only want to do this if VRAM flagged as changed, causes significant slow down
+            updateDebug();
         }
     }
+    std::cout << "Stopped.\n";
 }
 
 void Speljongen::initRegisters()
@@ -234,40 +248,29 @@ void Speljongen::initRegisters()
     //r.setPC(0);
 }
 
-void Speljongen::initRenderer()
-{
-    m_font.loadFromFile("assets/VeraMono.ttf");
-    m_text.setFont(m_font);
-    m_text.setCharacterSize(12);
-    m_text.setString("LCtrl toggle run/step\nSpace step\n");
-
-    updateDebug();
-}
-
 void Speljongen::updateDebug()
 {
-    const auto& reg = m_cpu.getRegisters();
+    auto reg = m_cpu.getRegisters();
     std::stringstream ss;
-    ss << "LCtrl toggle run/step\nSpace step\n";
     ss << std::hex;
-    ss << "PC: 0x" << std::setfill('0') << std::setw(4) << reg.getPC();
-    ss << " : 0x" << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(reg.getPC());
-    ss << "\nCurrent op : " << (int)m_cpu.getCurrentOpcode().getOpcode() << ", " << m_cpu.getCurrentOpcode().getLabel();
-    ss << "\nSP: 0x" << std::setfill('0') << std::setw(4) << reg.getSP();
+    ss << "AF: 0x" << std::setfill('0') << std::setw(4) << reg.getAF();
     ss << "\nBC: 0x" << std::setfill('0') << std::setw(4) << reg.getBC();
     ss << "\nDE: 0x" << std::setfill('0') << std::setw(4) << reg.getDE();
     ss << "\nHL: 0x" << std::setfill('0') << std::setw(4) << reg.getHL();
-    ss << "\nA: 0x" << std::setfill('0') << std::setw(2) << (int)reg.getA();
-    ss << "\nZ: " << reg.getFlags().isSet(Flags::Z) << " C: " << reg.getFlags().isSet(Flags::C);
+    ss << "\nSP: 0x" << std::setfill('0') << std::setw(4) << reg.getSP();
+    ss << "PC: 0x" << std::setfill('0') << std::setw(4) << reg.getPC();
+    ss << " : 0x" << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(reg.getPC());
+    ss << "\nCurrent op : " << (int)m_cpu.getCurrentOpcode().getOpcode() << ", " << m_cpu.getCurrentOpcode().getLabel();
 
-    ss << "\n\nLY: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff44);
+    ss << "\n\nLCDC: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(MemoryRegisters::LCDC);
     ss << "\nSTAT: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff41);
-    ss << "\nBGP: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff47);
-    ss << "\nSerial: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff01);
+    ss << "\nLY: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff44); 
+    ss << "\nIE: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xffff);
+    ss << "\nIF: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(MemoryRegisters::IF);
 
-    m_text.setString(ss.str());
-
-    updateVramView();
+    m_mutex.lock();
+    m_registerString = ss.str();
+    m_mutex.unlock();
 }
 
 void Speljongen::updateVramView()
@@ -315,10 +318,4 @@ void Speljongen::updateVramView()
     }
 
     m_vramViewer.update();
-}
-
-void Speljongen::draw(sf::RenderTarget& rt, sf::RenderStates) const
-{
-    //rt.draw(m_display);
-    rt.draw(m_text);
 }

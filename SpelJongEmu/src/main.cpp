@@ -39,7 +39,7 @@ int main()
                 case sf::Keyboard::Escape:
                     window.close();
                     break;
-                case sf::Keyboard::LControl:
+                case sf::Keyboard::F9:
                     run = !run;
                     if (run)
                     {
@@ -61,7 +61,7 @@ int main()
                 switch (evt.key.code)
                 {
                 default: break;
-                case sf::Keyboard::Space:
+                case sf::Keyboard::F3:
                     if (!run)
                     {
                         gameboy.step();
@@ -93,8 +93,7 @@ int main()
 
         gameboy.doImgui();
 
-        window.clear(sf::Color::Blue);
-        window.draw(gameboy);
+        window.clear(sf::Color(100, 149, 237));
         gameboy.lockDisplay();
         ImGui::SFML::Render(window);
         gameboy.freeDisplay();

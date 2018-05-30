@@ -14,9 +14,6 @@
 #include "VramViewer.hpp"
 #include "Cartridge.hpp"
 
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/Font.hpp>
 #include <SFML/System/Thread.hpp>
 
 #include <atomic>
@@ -31,7 +28,7 @@
 class Timer;
 class Dma;
 class Gpu;
-class Speljongen final : public sf::Drawable
+class Speljongen final
 {
 public:
     Speljongen();
@@ -82,12 +79,13 @@ private:
     void threadFunc();
 
     VramViewer m_vramViewer;
-    sf::Text m_text;
-    sf::Font m_font;
-    void initRenderer();
     void updateDebug();
     void updateVramView();
-    void draw(sf::RenderTarget&, sf::RenderStates) const override;
+
+    mutable sf::Mutex m_mutex;
+    std::string m_registerString;
+    std::string m_flagsString;
+    std::atomic<float> m_tickTime;
 
 #ifdef RUN_TESTS
     void testTiming();
