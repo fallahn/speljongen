@@ -13,6 +13,7 @@
 #include "MemoryRegisters.hpp"
 #include "VramViewer.hpp"
 #include "Cartridge.hpp"
+#include "RamSpace.hpp"
 
 #include <SFML/System/Thread.hpp>
 
@@ -64,6 +65,11 @@ private:
     Timer m_timer;
     Ram m_oamRam;
     ShadowAddressSpace m_shadowSpace;
+
+    //ram is split in two because the upper half is 
+    //arranged slightly differently on a GBC
+    RamSpace m_lowerRamSpace;
+    RamSpace m_upperRamSpace;
 
     Dma m_dma;
     Gpu m_gpu;

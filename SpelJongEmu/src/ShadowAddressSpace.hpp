@@ -1,6 +1,6 @@
 #pragma once
 
-//implements RAM shadowing. Must be created via MMU
+//implements RAM shadowing.
 //writing to this space copies to the RAM it shadows - not the other way.
 //by default this copies the data by (0xe000 - 0xc000), the difference in
 //addresses on a gameboy.
@@ -26,13 +26,15 @@ public:
     void setByte(std::uint16_t address, std::uint8_t value) override
     {
         assert(accepts(address));
-        getStorage()[mapAddress(address)] = value;
+        setStorageValue(mapAddress(address), value);
+        setStorageValue(address, value);
     }
 
     std::uint8_t getByte(std::uint16_t address) const override
     {
         assert(accepts(address));
-        return getStorage()[mapAddress(address)];
+        //return getStorage()[mapAddress(address)];
+        return getStorageValue(address);
     }
 
 private:

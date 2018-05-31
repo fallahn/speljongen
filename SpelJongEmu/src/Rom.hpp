@@ -22,7 +22,7 @@ public:
 
     void setByte(std::uint16_t, std::uint8_t) override
     {
-        assert(false);
+        //assert(false);
     }
 
     std::uint8_t getByte(std::uint16_t address) const override

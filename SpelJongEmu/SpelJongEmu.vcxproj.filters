@@ -272,5 +272,8 @@
     <ClInclude Include="src\Rom.hpp">
       <Filter>Header Files\mmu</Filter>
     </ClInclude>
+    <ClInclude Include="src\RamSpace.hpp">
+      <Filter>Header Files\mmu</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

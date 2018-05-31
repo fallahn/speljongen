@@ -21,6 +21,8 @@ Speljongen::Speljongen()
     m_timer             (m_storage, m_interruptManager, m_speedMode),
     m_oamRam            (m_storage, 0xfe00, 0x00a0),
     m_shadowSpace       (m_storage, 0xe000, 0xc000, 0x1e00),
+    m_lowerRamSpace     (m_storage, 0xc000, 0x1000, 0x2000),
+    m_upperRamSpace     (m_storage, 0xd000, 0x1000, 0x2000),
     m_dma               (m_storage, m_speedMode),
     m_gpu               (m_storage, m_display, m_interruptManager, m_dma, m_oamRam, m_memoryRegisters, false),
     m_cartridge         (m_storage),
@@ -46,17 +48,8 @@ Speljongen::Speljongen()
     m_mmu.addAddressSpace(m_interruptManager);
     m_mmu.addAddressSpace(m_shadowSpace);
     //m_mmu.addAddressSpace(m_memoryRegisters); //mmu maps these via sub spaces, ie GPU
-
-    //TODO this is classic GB ram - colour GB is split
-    //into two blocks with the second half having a specific layout
-    //m_mmu.addAddressSpace<Ram>(0xc000, 0x2000);
-    //else cgb
-    /*
-    m_mmu.addAddressSpace<Ram>(0xc000, 0x1000);
-    //other ram and hdma
-    */
-
-    //m_mmu.addAddressSpace<Ram>(0xff80, 0x7f);
+    m_mmu.addAddressSpace(m_lowerRamSpace);
+    m_mmu.addAddressSpace(m_upperRamSpace);
 
     m_mmu.initBios(); //MUST be done after mapping is complete
 

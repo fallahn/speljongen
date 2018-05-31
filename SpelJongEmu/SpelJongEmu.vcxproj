@@ -194,6 +194,7 @@
     <ClInclude Include="src\PixelFifo.hpp" />
     <ClInclude Include="src\PixelTransferPhase.hpp" />
     <ClInclude Include="src\Ram.hpp" />
+    <ClInclude Include="src\RamSpace.hpp" />
     <ClInclude Include="src\Register.hpp" />
     <ClInclude Include="src\CpuRegisters.hpp" />
     <ClInclude Include="src\Rom.hpp" />
