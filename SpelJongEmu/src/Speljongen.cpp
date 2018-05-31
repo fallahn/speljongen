@@ -70,12 +70,7 @@ void Speljongen::stop()
 void Speljongen::reset()
 {
     m_cpu.clearState();
-
-    m_cpu.getRegisters().setPC(0x100);
-
     m_gpu.reset();
-    m_mmu.setByte(MemoryRegisters::BGP, 0xfc);
-
     m_display.clear();
 
     updateDebug();
@@ -131,10 +126,9 @@ void Speljongen::load(const std::string& path)
     m_mmu.removeCartridge();
     m_cartridge.load(path);
     std::cout << "Loaded " << m_cartridge.getTitle() << "!\n";
-
-    initMMU(/*m_cartridge.isColour()*/false);
-
     m_mmu.insertCartridge(m_cartridge);
+    initMMU(/*m_cartridge.isColour()*/false);
+    m_cpu.getRegisters().setPC(0x100);  
 }
 
 void Speljongen::doImgui() const
@@ -230,11 +224,11 @@ void Speljongen::initRegisters(bool colour)
     if (colour) {
         r.setA(0x11);
     }
-
     r.setBC(0x0013);
     r.setDE(0x00d8);
     r.setHL(0x014d);
     r.setSP(0xfffe);
+    r.setPC(0x0000);
 }
 
 void Speljongen::updateDebug()

@@ -74,7 +74,6 @@ int main()
                 if (evt.mouseButton.button == sf::Mouse::Right)
                 {
                     gameboy.stop();
-                    gameboy.reset();
                     run = false;
                     
                     //TODO check also inside window
@@ -82,6 +81,7 @@ int main()
                     nfdresult_t result = NFD_OpenDialog("gb", nullptr, &outPath);
                     if (result == NFD_OKAY)
                     {
+                        gameboy.reset();
                         gameboy.load(outPath);
                         free(outPath);
                     }

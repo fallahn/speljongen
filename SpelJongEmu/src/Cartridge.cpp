@@ -1,6 +1,7 @@
 #include "Cartridge.hpp"
 #include "Mbc1.hpp"
 #include "Rom.hpp"
+#include "BootRom.hpp"
 
 #include <iostream>
 #include <fstream>

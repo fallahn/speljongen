@@ -17,6 +17,27 @@ namespace
         0x00, 0x08, 0x11, 0x1F, 0x88, 0x89, 0x00, 0x0E, 0xDC, 0xCC, 0x6E, 0xE6, 0xDD, 0xDD, 0xD9, 0x99,
         0xBB, 0xBB, 0x67, 0x63, 0x6E, 0x0E, 0xEC, 0xCC, 0xDD, 0xDC, 0x99, 0x9F, 0xBB, 0xB9, 0x33, 0x3E
     };
+
+    const std::vector<std::uint8_t> fakeBios = 
+    {
+        0x21, //ld hl d16
+        0x04,
+        0x01,
+        0x46, //ld b, (hl)
+        0x3E, //ld a, d8
+        0xce, //first byte of logo
+        0x90, //SUB b
+        0xca, //jp z a16
+        0x0d,
+        0x00, //jumps to 0x000d if SUB was 0
+        0xc3, //jp a16
+        0x00, 0x00, //return to beginning
+        0x3e, 0x01, //reset register A
+        0x06, 0x00, //reset register B
+        0x21, 0x50, 0xff, //load hl with 'ok' address
+        0x77, //write '1' (from A) to 'ok' address
+        0xc3, 0x00, 0x01 //jp 0x0100
+    };
 }
 
 Mmu::Mmu(std::vector<std::uint8_t>& storage)
@@ -81,13 +102,20 @@ void Mmu::addAddressSpace(AddressSpace& space)
 void Mmu::initBios()
 {
     std::uint16_t address = 0;
-    for (auto b : BootRom::CLASSIC)
-    {
-        setByte(address++, b);
-    }
+    //for (auto b : BootRom::CLASSIC)
+    //{
+    //    setByte(address++, b);
+    //}
 
-    address = 0x104;
-    for (auto b : logo)
+    //address = 0x104;
+    //for (auto b : logo)
+    //{
+    //    setByte(address++, b);
+    //}
+
+    //fake bios which checks if cart loaded
+    //and halts if not
+    for (auto b : fakeBios)
     {
         setByte(address++, b);
     }
