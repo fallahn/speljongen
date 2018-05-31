@@ -68,7 +68,7 @@ void Speljongen::stop()
 }
 
 void Speljongen::reset()
-{
+{  
     m_cpu.clearState();
     m_gpu.reset();
     m_display.clear();
@@ -166,11 +166,30 @@ void Speljongen::doImgui() const
     ImGui::Text("Emulation speed: %.2f%%", m_tickTime.load());
     ImGui::End();
 
+    static std::array<bool, 100> selection = {};
     ImGui::SetNextWindowSize({ 780.f, 230.f });
     ImGui::SetNextWindowPos({ 10.f, 360.f });
-    ImGui::Begin("Inspector - F3 Step, F9 Run/Stop, Right click to load ROM", nullptr, ImGuiWindowFlags_NoCollapse);
+    ImGui::Begin("DASM - F3 Step, F9 Run/Stop, Right click to load ROM", nullptr, ImGuiWindowFlags_NoCollapse);
+    ImGui::BeginChild("Output", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, 194.f), true, ImGuiWindowFlags_HorizontalScrollbar);
+    
+    ImGui::PushStyleColor(ImGuiCol_TextSelectedBg, { 0.6f, 0.f, 0.f, 1.f });
+    for (int i = 0; i < 100; i++)
+    {
+        /*if (this is our break point or stepped to line)
+            ImGui::SetScrollHere();*/
+        //TODO red do based on selection state
+        ImGui::Text("0x%.4x", i);
+        ImGui::SameLine();
+        if (ImGui::Selectable("Line of disassembly", selection[i], ImGuiSelectableFlags_AllowDoubleClick))
+            if (ImGui::IsMouseDoubleClicked(0))
+                selection[i] = !selection[i];
+    }
+    ImGui::PopStyleColor();
 
+    ImGui::EndChild();
     ImGui::End();
+
+    //ImGui::ShowDemoWindow();
 }
 
 void Speljongen::lockDisplay()
@@ -221,7 +240,8 @@ void Speljongen::initRegisters(bool colour)
     Registers& r = m_cpu.getRegisters();
 
     r.setAF(0x01b0);
-    if (colour) {
+    if (colour) 
+    {
         r.setA(0x11);
     }
     r.setBC(0x0013);
@@ -324,12 +344,13 @@ void Speljongen::initMMU(bool colour)
 
     if (!colour)
     {
-        m_mmu.addAddressSpace(m_upperRamSpace);
+        //m_mmu.addAddressSpace(m_upperRamSpace); //this breaks test rom because upper echo is only 0x0e00 in size
 
         m_mmu.initBios(); //MUST be done after mapping is complete
     }
 
-
+    m_mmu.setByte(MemoryRegisters::IF, 0xe1);
+    m_mmu.setByte(0xfffe, 0);
     m_interruptManager.disableInterrupts(false);
     initRegisters(colour);
     updateDebug();
