@@ -33,11 +33,17 @@ Speljongen::Speljongen()
 {
 
     //maps address spaces so they are accessable through mmu
+    /*
+    This is a bit kludgy and makes the order in which the spaces
+    are added important. For example the interrupt manager must
+    be added after the GPU to make sure the correct accessor is
+    used when reading or writing the MMU
+    */
     m_mmu.addAddressSpace(m_oamRam);
-    m_mmu.addAddressSpace(m_dma);
-    m_mmu.addAddressSpace(m_interruptManager);
+    m_mmu.addAddressSpace(m_dma); 
     m_mmu.addAddressSpace(m_timer);
     m_mmu.addAddressSpace(m_gpu);
+    m_mmu.addAddressSpace(m_interruptManager);
     m_mmu.addAddressSpace(m_shadowSpace);
     //m_mmu.addAddressSpace(m_memoryRegisters); //mmu maps these via sub spaces, ie GPU
 

@@ -88,7 +88,7 @@ std::uint8_t Mbc1::getByte(std::uint16_t address) const
     }
 
     std::uint16_t ramAddress = getRamAddress(address);
-    assert(m_ram.size() > address);
+    assert(m_ram.size() > ramAddress);
     return m_ram[ramAddress];
 }
 

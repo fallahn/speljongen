@@ -48,7 +48,7 @@ void Mmu::setByte(std::uint16_t address, std::uint8_t value)
 }
 
 std::uint8_t Mmu::getByte(std::uint16_t address) const
-{
+{    
     if (m_addressSpaces[address]) return m_addressSpaces[address]->getByte(address);
     return getStorageValue(address);
 }
