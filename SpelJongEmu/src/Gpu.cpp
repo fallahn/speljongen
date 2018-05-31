@@ -81,11 +81,6 @@ std::uint8_t Gpu::getByte(std::uint16_t address) const
     }
     else
     {
-        if (address == 0xfe00)
-        {
-            int buns = 0;
-        }
-
         auto* space = getAddressSpace(address);
         return space->getByte(address);
     }

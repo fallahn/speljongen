@@ -8,7 +8,7 @@ public:
     explicit Rom(std::vector<std::uint8_t>& storage, const std::vector<char>& buf)
         : AddressSpace(storage)
     {
-        for (auto i = 0; i < buf.size() && i < 0x8000; ++i)
+        for (auto i = 0u; i < buf.size() && i < 0x8000; ++i)
         {
             storage[i] = buf[i];
         }
