@@ -178,7 +178,7 @@ void OpCodes::init()
     {
         auto& builder = regCmd(opcodes, 0x3a, "LD A,(HL-)");
         builder.copyByte("A", "(HL)");
-        builder.alu("DEC");
+        builder.aluHL("DEC");
     }
     {
         auto& builder = regCmd(opcodes, 0x37, "SCF");

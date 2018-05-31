@@ -165,6 +165,12 @@ void Speljongen::load(const std::string& path)
 
 void Speljongen::doImgui() const
 {
+    auto flags = m_cpu.getRegisters().getFlags();
+    bool flagsZ = flags.isSet(Flags::Z);
+    bool flagsC = flags.isSet(Flags::C);
+    bool flagsH = flags.isSet(Flags::H);
+    bool flagsN = flags.isSet(Flags::N);
+    
     ImGui::SetNextWindowSize({ 434.f, 340.f });
     ImGui::SetNextWindowPos({ 356.f, 10.f });
     ImGui::Begin("VRAM and register status", nullptr, ImGuiWindowFlags_NoCollapse);
@@ -173,6 +179,13 @@ void Speljongen::doImgui() const
     m_mutex.lock();
     ImGui::Text("%s", m_registerString.c_str());
     m_mutex.unlock();
+    ImGui::Checkbox("Z", &flagsZ);
+    ImGui::SameLine();
+    ImGui::Checkbox("C", &flagsC);
+    ImGui::SameLine();
+    ImGui::Checkbox("H", &flagsH);
+    ImGui::SameLine();
+    ImGui::Checkbox("N", &flagsN);
     ImGui::End();
 
     std::string title = "Gameboy - " + m_cartridge.getTitle();
