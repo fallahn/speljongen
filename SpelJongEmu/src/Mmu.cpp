@@ -4,9 +4,13 @@
 
 #include <cstring>
 #include <iostream>
+#include <random>
+#include <ctime>
 
 namespace
 {
+    std::mt19937 randEngine(static_cast<unsigned long>(std::time(nullptr)));
+
     const std::vector<std::uint8_t> logo =
     {
         0xCE, 0xED, 0x66, 0x66, 0xCC, 0x0D, 0x00, 0x0B, 0x03, 0x73, 0x00, 0x83, 0x00, 0x0C, 0x00, 0x0D,
@@ -51,6 +55,16 @@ std::uint8_t Mmu::getByte(std::uint16_t address) const
 {    
     if (m_addressSpaces[address]) return m_addressSpaces[address]->getByte(address);
     return getStorageValue(address);
+}
+
+void Mmu::reset()
+{
+    std::uniform_int_distribution<int> randDist(0, 255);
+    for (auto i = 0u; i < m_addressSpaces.size(); ++i)
+    {
+        m_addressSpaces[i] = nullptr;
+        setStorageValue(static_cast<std::uint16_t>(i), static_cast<std::uint8_t>(randDist(randEngine)));
+    }
 }
 
 void Mmu::addAddressSpace(AddressSpace& space)

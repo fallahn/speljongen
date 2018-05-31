@@ -80,7 +80,7 @@ private:
     bool m_requestRefresh;
     bool m_lcdDisabled;
 
-    void initRegisters();
+    void initRegisters(bool);
 
     void threadFunc();
 
@@ -92,6 +92,8 @@ private:
     std::string m_registerString;
     std::string m_flagsString;
     std::atomic<float> m_tickTime;
+
+    void initMMU(bool colour = false);
 
 #ifdef RUN_TESTS
     void testTiming();

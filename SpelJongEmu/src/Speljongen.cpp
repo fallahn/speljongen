@@ -33,29 +33,7 @@ Speljongen::Speljongen()
     ,m_fifoTest         (m_display)
 #endif
 {
-
-    //maps address spaces so they are accessable through mmu
-    /*
-    This is a bit kludgy and makes the order in which the spaces
-    are added important. For example the interrupt manager must
-    be added after the GPU to make sure the correct accessor is
-    used when reading or writing the MMU
-    */
-    m_mmu.addAddressSpace(m_oamRam);
-    m_mmu.addAddressSpace(m_dma); 
-    m_mmu.addAddressSpace(m_timer);
-    m_mmu.addAddressSpace(m_gpu);
-    m_mmu.addAddressSpace(m_interruptManager);
-    m_mmu.addAddressSpace(m_shadowSpace);
-    //m_mmu.addAddressSpace(m_memoryRegisters); //mmu maps these via sub spaces, ie GPU
-    m_mmu.addAddressSpace(m_lowerRamSpace);
-    m_mmu.addAddressSpace(m_upperRamSpace);
-
-    m_mmu.initBios(); //MUST be done after mapping is complete
-
-    m_interruptManager.disableInterrupts(false);
-    initRegisters(); //TODO only do this when not using boot rom
-    updateDebug();
+    initMMU(false);
 
 #ifdef RUN_TESTS   
     /*m_fifoTest.testEnqueue();
@@ -93,17 +71,11 @@ void Speljongen::reset()
 {
     m_cpu.clearState();
 
-    initRegisters();
     m_cpu.getRegisters().setPC(0x100);
 
     m_gpu.reset();
     m_mmu.setByte(MemoryRegisters::BGP, 0xfc);
 
-    //clear VRAM
-    for (std::uint16_t i = 0x8000; i < 0x9800; ++i)
-    {
-        m_mmu.setByte(i, 0);
-    }
     m_display.clear();
 
     updateDebug();
@@ -159,6 +131,9 @@ void Speljongen::load(const std::string& path)
     m_mmu.removeCartridge();
     m_cartridge.load(path);
     std::cout << "Loaded " << m_cartridge.getTitle() << "!\n";
+
+    initMMU(/*m_cartridge.isColour()*/false);
+
     m_mmu.insertCartridge(m_cartridge);
 }
 
@@ -247,21 +222,19 @@ void Speljongen::threadFunc()
     std::cout << "Stopped.\n";
 }
 
-void Speljongen::initRegisters()
+void Speljongen::initRegisters(bool colour)
 {
     Registers& r = m_cpu.getRegisters();
 
     r.setAF(0x01b0);
-    /*if (colour) {
+    if (colour) {
         r.setA(0x11);
-    }*/
+    }
 
     r.setBC(0x0013);
     r.setDE(0x00d8);
     r.setHL(0x014d);
     r.setSP(0xfffe);
-    //r.setPC(0x0100);
-    //r.setPC(0);
 }
 
 void Speljongen::updateDebug()
@@ -334,4 +307,36 @@ void Speljongen::updateVramView()
     }
 
     m_vramViewer.update();
+}
+
+void Speljongen::initMMU(bool colour)
+{
+
+    //maps address spaces so they are accessable through mmu
+    /*
+    This is a bit kludgy and makes the order in which the spaces
+    are added important. For example the interrupt manager must
+    be added after the GPU to make sure the correct accessor is
+    used when reading or writing the MMU
+    */
+    m_mmu.addAddressSpace(m_oamRam);
+    m_mmu.addAddressSpace(m_dma);
+    m_mmu.addAddressSpace(m_timer);
+    m_mmu.addAddressSpace(m_gpu);
+    m_mmu.addAddressSpace(m_interruptManager);
+    m_mmu.addAddressSpace(m_shadowSpace);
+    //m_mmu.addAddressSpace(m_memoryRegisters); //mmu maps these via sub spaces, ie GPU
+    m_mmu.addAddressSpace(m_lowerRamSpace);
+
+    if (!colour)
+    {
+        m_mmu.addAddressSpace(m_upperRamSpace);
+
+        m_mmu.initBios(); //MUST be done after mapping is complete
+    }
+
+
+    m_interruptManager.disableInterrupts(false);
+    initRegisters(colour);
+    updateDebug();
 }

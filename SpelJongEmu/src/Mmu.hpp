@@ -17,6 +17,7 @@ public:
     void setByte(std::uint16_t address, std::uint8_t value) override;
     std::uint8_t getByte(std::uint16_t address) const override;
 
+    void reset();
     void addAddressSpace(AddressSpace&);
 
     void initBios();
