@@ -20,6 +20,8 @@ public:
 
     const std::string& getTitle() const { return m_title; }
 
+    const std::string& getInfo() const { return m_infoStr; }
+
     enum Type
     {
         Universal = 0x80,
@@ -57,6 +59,7 @@ private:
 
     bool m_colour;
     std::string m_title;
+    std::string m_infoStr;
     std::int32_t m_romBanks;
     std::int32_t m_ramBanks;
     Type m_type;

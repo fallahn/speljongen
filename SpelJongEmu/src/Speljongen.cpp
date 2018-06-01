@@ -151,12 +151,24 @@ void Speljongen::doImgui() const
     
     ImGui::SetNextWindowSize({ 434.f, 340.f });
     ImGui::SetNextWindowPos({ 356.f, 10.f });
-    ImGui::Begin("VRAM and register status", nullptr, ImGuiWindowFlags_NoCollapse);
-    ImGui::Image(m_vramViewer.getTexture(), sf::Vector2f(256.f, 256.f)); 
+    ImGui::Begin("Gpu and register status", nullptr, ImGuiWindowFlags_NoCollapse);
+    ImGui::BeginChild("Video", ImVec2(276.f, 280.f), false/*, ImGuiWindowFlags_HorizontalScrollbar*/);
+    if (ImGui::CollapsingHeader("VRAM", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        ImGui::Image(m_vramViewer.getTexture(), sf::Vector2f(256.f, 256.f));
+    }
+    if (ImGui::CollapsingHeader("OAM Data", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        ImGui::Text("%s", "OAM Data");
+    }
+    ImGui::EndChild();
     ImGui::SameLine();
+    ImGui::BeginChild("Registers", ImVec2(154.f, 280.f), false, ImGuiWindowFlags_HorizontalScrollbar);
     m_mutex.lock();
     ImGui::Text("%s", m_registerString.c_str());
     m_mutex.unlock();
+    ImGui::Text("%s", m_cartridge.getInfo().c_str());
+    ImGui::EndChild();
 
     ImGui::Checkbox("Z", &flagsZ);
     ImGui::SameLine();
@@ -165,6 +177,8 @@ void Speljongen::doImgui() const
     ImGui::Checkbox("H", &flagsH);
     ImGui::SameLine();
     ImGui::Checkbox("N", &flagsN);
+    ImGui::SameLine();
+    ImGui::Text("%s", "        Stopped");
     ImGui::End();
 
     std::string title = "Gameboy - " + m_cartridge.getTitle();
@@ -207,6 +221,13 @@ void Speljongen::doImgui() const
     }
     ImGui::PopStyleColor();
 
+    ImGui::EndChild();
+    ImGui::SameLine();
+    ImGui::BeginChild("Control", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, 194.f), true/*, ImGuiWindowFlags_HorizontalScrollbar*/);
+    ImGui::Button("Load");
+    ImGui::Button("Run (F9)");
+    ImGui::Button("Step (F3)");
+    ImGui::Button("Reset");
     ImGui::EndChild();
     ImGui::End();
 

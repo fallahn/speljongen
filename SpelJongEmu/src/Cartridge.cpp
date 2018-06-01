@@ -11,6 +11,7 @@ Cartridge::Cartridge(std::vector<std::uint8_t>& storage)
     m_info          (ROM),
     m_colour        (false),
     m_title         ("NO TITLE"),
+    m_infoStr       ("\nNo cartridge loaded"),
     m_romBanks      (0),
     m_ramBanks      (0),
     m_type          (Classic)
@@ -59,6 +60,8 @@ void Cartridge::load(const std::string& path)
     file.read(buf.data(), length);
     file.close();
 
+    m_infoStr = "\nCartridge Info:\n";
+
     //grab title
     m_title.clear();
     for (auto i = 0x0134; i < 0x0143; ++i)
@@ -74,9 +77,24 @@ void Cartridge::load(const std::string& path)
         m_title = "NO TITLE";
     }
 
-    //m_type = buf[0x0143]; //colour or universal?
+    auto b = static_cast<std::uint8_t>(buf[0x0143]);
+    switch (b) //colour or universal?
+    {
+    default:
+        m_type = Type::Classic;
+        m_infoStr += "Compat: Classic\n";
+        break;
+    case 0x80:
+        m_type = Type::Universal;
+        m_infoStr += "Compat: Universal\n";
+        break;
+    case 0xc0:
+        m_type = Type::Colour;
+        m_infoStr += "Compat: Colour Gameboy\n";
+        break;
+    }
 
-    m_romBanks = buf[0x0148];
+    m_romBanks = static_cast<std::uint8_t>(buf[0x0148]);
     switch (m_romBanks)
     {
     default:
@@ -95,7 +113,9 @@ void Cartridge::load(const std::string& path)
     case 0x54: m_romBanks = 96; break;
     }
 
-    m_ramBanks = buf[0x0149];
+    m_infoStr += "ROM Banks: " + std::to_string(m_romBanks) + "\n";
+
+    m_ramBanks = static_cast<std::uint8_t>(buf[0x0149]);
     switch (m_ramBanks)
     {
     default:
@@ -103,7 +123,7 @@ void Cartridge::load(const std::string& path)
         break;
     case 0:
     case 1:
-        //break;
+        break;
     case 2: m_ramBanks = 1;
         break;
     case 3:
@@ -114,10 +134,13 @@ void Cartridge::load(const std::string& path)
         break;
     }
 
-    m_info = static_cast<Info>(buf[0x0147]);
+    m_infoStr += "RAM Banks: " + std::to_string(m_ramBanks) + "\n";
+
+    m_info = static_cast<Info>(static_cast<std::uint8_t>(buf[0x0147]));
     if (m_info >= ROM_MBC1 && m_info <= ROM_MBC1_RAM_BATTERY)
     {
         m_mbc = std::make_unique<Mbc1>(getStorage(), buf, m_romBanks, m_ramBanks);
+        m_infoStr += "Type: MBC1\n";
     }
     else
     {
@@ -125,6 +148,11 @@ void Cartridge::load(const std::string& path)
         if (m_info > 0)
         {
             std::cout << "WARNING incorrect MBC type loaded for cartridge\n";
+            m_infoStr += "MBC type unknown!\n";
+        }
+        else
+        {
+            m_infoStr += "MBC Type: ROM\n";
         }
     }
 }
