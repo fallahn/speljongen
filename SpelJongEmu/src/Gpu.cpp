@@ -44,15 +44,21 @@ Ram& Gpu::getVRam1() { return m_videoRam1; }
 
 bool Gpu::accepts(std::uint16_t address) const
 {
-    return getAddressSpace(address) != nullptr;
+    return m_videoRam0.accepts(address) || m_oamRam.accepts(address) || m_registers.accepts(address);/*m_dma.accepts() || m_lcdc.accepts ||*/ 
 }
 
 void Gpu::setByte(std::uint16_t address, std::uint8_t value)
 {
     assert(accepts(address));
+
+
     if (address == MemoryRegisters::STAT)
     {
         setStat(value);
+    }
+    else if (address == MemoryRegisters::DMA)
+    {
+        m_dma.setByte(address, value);
     }
     else
     {
@@ -79,10 +85,15 @@ std::uint8_t Gpu::getByte(std::uint16_t address) const
     {
         return m_colour ? 0xfe : 0xff;
     }
+    if (address == MemoryRegisters::DMA)
+    {
+        return m_dma.getByte(MemoryRegisters::DMA);
+    }
+
     else
     {
         auto* space = getAddressSpace(address);
-        return space->getByte(address);
+        if(space) return space->getByte(address);
     }
     return 0xff;
 }
@@ -193,7 +204,7 @@ bool Gpu::isLcdEnabled() const { return m_lcdEnabled; }
 
 //private
 AddressSpace* Gpu::getAddressSpace(std::uint16_t address) const
-{
+{    
     if (m_videoRam0.accepts(address))
     {
         if (m_colour && (m_registers.getByte(MemoryRegisters::VBK) & 1) == 1)

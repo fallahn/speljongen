@@ -82,7 +82,10 @@ bool PixelTransferPhase::tick()
             for (auto i = 0u; i < m_sprites.size(); ++i)
             {
                 auto& sprite = m_sprites[i];
-                if (sprite.getAddress() == 0) continue;
+                if (sprite.getAddress() == 0)
+                {
+                    continue;
+                }
 
                 if (m_x == 0 && sprite.getX() < 8)
                 {
