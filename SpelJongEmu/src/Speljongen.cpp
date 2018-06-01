@@ -163,7 +163,7 @@ void Speljongen::doImgui() const
     ImGui::Image(m_display.getTexture(), sf::Vector2f(320.f, 288.f));
     ImGui::Text("Display FPS: %.2f", ImGui::GetIO().Framerate);
     ImGui::SameLine();
-    ImGui::Text("Emulation speed: %.2f%%", m_tickTime.load());
+    ImGui::Text("  Emulation speed: %.2f%%", m_tickTime.load());
     ImGui::End();
 
     static std::array<bool, 100> selection = {};
@@ -210,6 +210,10 @@ void Speljongen::threadFunc()
     static const std::int32_t gameboyCycles = 4194304 / 60;
     static const sf::Time frameTime = sf::milliseconds(1000 / 60);
 
+    auto activeCycles = gameboyCycles;
+    std::int32_t maxUpdates = 3;
+    float frameSkip = 1.f;
+
     sf::Clock tickClock;
     sf::Time accumulator;
 
@@ -217,19 +221,28 @@ void Speljongen::threadFunc()
     {
         auto duration = tickClock.restart();
         accumulator += duration;
-        while(accumulator > frameTime)
+        maxUpdates = 8;
+        while(accumulator > frameTime && maxUpdates--)
         {
             std::int32_t tickCounter = 0;
-            while (tickCounter++ < gameboyCycles && m_running)
+            while (tickCounter++ < activeCycles && m_running)
             {
                 tick();
             }
 
-            m_tickTime = 100.f / (accumulator.asSeconds() / frameTime.asSeconds());
+            m_tickTime = (100.f / (accumulator.asSeconds() / frameTime.asSeconds())) * frameSkip;
 
             accumulator -= frameTime;
             updateVramView(); //TODO only want to do this if VRAM flagged as changed, causes significant slow down
             updateDebug();
+
+            if (maxUpdates == 0)
+            {
+                std::cout << "Warning slow emulation - enabling frame skip\n";
+                activeCycles /= 2;
+                frameSkip /= 2.f;
+                accumulator = sf::Time();
+            }
         }
     }
     std::cout << "Stopped.\n";
