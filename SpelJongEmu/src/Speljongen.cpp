@@ -11,6 +11,11 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Sleep.hpp>
 
+namespace
+{
+    ImVec2 ButtonSize(80.f, 20.f);
+}
+
 Speljongen::Speljongen()
     : m_storage         (0x10000),
     m_mmu               (m_storage),
@@ -152,16 +157,34 @@ void Speljongen::doImgui() const
     ImGui::SetNextWindowSize({ 434.f, 340.f });
     ImGui::SetNextWindowPos({ 356.f, 10.f });
     ImGui::Begin("Gpu and register status", nullptr, ImGuiWindowFlags_NoCollapse);
-    ImGui::BeginChild("Video", ImVec2(276.f, 280.f), false/*, ImGuiWindowFlags_HorizontalScrollbar*/);
-    if (ImGui::CollapsingHeader("VRAM", ImGuiTreeNodeFlags_DefaultOpen))
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, { 0.129f, 0.192f, 0.349f, 1.f });
+    
+    ImGui::BeginChild("Video", ImVec2(276.f, 280.f), false);
+    if (ImGui::CollapsingHeader("VRAM"))
     {
+        //ImGui::Pad
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, { 1.f, 0.f });
         ImGui::Image(m_vramViewer.getTexture(), sf::Vector2f(256.f, 256.f));
+        ImGui::PopStyleVar();
     }
     if (ImGui::CollapsingHeader("OAM Data", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        ImGui::Text("%s", "OAM Data");
+        std::uint16_t address = 0xfe00;
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.f , 0.f });
+        ImGui::Columns(4);
+        for (auto i = 0; i < 40; ++i)
+        {
+            if(ImGui::GetColumnIndex() == 0) ImGui::Separator();
+            ImGui::Text("%x", m_mmu.getByte(address++));
+            ImGui::Text("%x", m_mmu.getByte(address++));
+            ImGui::Text("%x", m_mmu.getByte(address++));
+            ImGui::Text("%x", m_mmu.getByte(address++));
+            ImGui::NextColumn();
+        }
+        ImGui::PopStyleVar();
     }
     ImGui::EndChild();
+    ImGui::PopStyleColor();
     ImGui::SameLine();
     ImGui::BeginChild("Registers", ImVec2(154.f, 280.f), false, ImGuiWindowFlags_HorizontalScrollbar);
     m_mutex.lock();
@@ -178,7 +201,7 @@ void Speljongen::doImgui() const
     ImGui::SameLine();
     ImGui::Checkbox("N", &flagsN);
     ImGui::SameLine();
-    ImGui::Text("%s", "        Stopped");
+    ImGui::Text("%s", m_running ? "        Running" : "        Stopped");
     ImGui::End();
 
     std::string title = "Gameboy - " + m_cartridge.getTitle();
@@ -223,11 +246,14 @@ void Speljongen::doImgui() const
 
     ImGui::EndChild();
     ImGui::SameLine();
-    ImGui::BeginChild("Control", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, 194.f), true/*, ImGuiWindowFlags_HorizontalScrollbar*/);
-    ImGui::Button("Load");
-    ImGui::Button("Run (F9)");
-    ImGui::Button("Step (F3)");
-    ImGui::Button("Reset");
+    ImGui::BeginChild("Control", ImVec2((ImGui::GetWindowContentRegionWidth() * 0.5f) - 8.f, 194.f), true/*, ImGuiWindowFlags_HorizontalScrollbar*/);
+    ImGui::Button("Load", ButtonSize);
+    ImGui::SameLine();
+    ImGui::Button(m_running ? "Stop (F9)" : "Run (F9)", ButtonSize);
+    ImGui::SameLine();
+    ImGui::Button("Step (F3)", ButtonSize);
+    ImGui::SameLine();
+    ImGui::Button("Reset", ButtonSize);
     ImGui::EndChild();
     ImGui::End();
 

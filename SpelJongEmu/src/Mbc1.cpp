@@ -67,9 +67,16 @@ void Mbc1::setByte(std::uint16_t address, std::uint8_t value)
     }
     else if (address >= 0xa000 && address < 0xc000 && m_writeEnabled)
     {
-        std::uint16_t ramAddress = getRamAddress(address);
-        assert(m_ram.size() > ramAddress);
-        m_ram[ramAddress] = value;
+        if (m_ramBanks)
+        {
+            std::uint16_t ramAddress = getRamAddress(address);
+            assert(m_ram.size() > ramAddress);
+            m_ram[ramAddress] = value;
+        }
+        else
+        {
+            setStorageValue(address, value);
+        }
     }
 }
 
@@ -87,9 +94,13 @@ std::uint8_t Mbc1::getByte(std::uint16_t address) const
         return getRomByte(getRomBankForForty(), address - 0x4000);
     }
 
-    std::uint16_t ramAddress = getRamAddress(address);
-    assert(m_ram.size() > ramAddress);
-    return m_ram[ramAddress];
+    if (m_ramBanks)
+    {
+        std::uint16_t ramAddress = getRamAddress(address);
+        assert(m_ram.size() > ramAddress);
+        return m_ram[ramAddress];
+    }
+    return getStorageValue(address);
 }
 
 //private
