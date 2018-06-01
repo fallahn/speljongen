@@ -132,6 +132,9 @@
     <ClCompile Include="src\imgui\imgui-SFML.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="src\Disassembler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\InterruptManager.hpp">
@@ -274,6 +277,9 @@
     </ClInclude>
     <ClInclude Include="src\RamSpace.hpp">
       <Filter>Header Files\mmu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Disassembler.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

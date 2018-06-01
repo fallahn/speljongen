@@ -35,6 +35,8 @@ Speljongen::Speljongen()
 {
     initMMU(false);
 
+    m_disassembler.disassemble(m_mmu);
+
 #ifdef RUN_TESTS   
     /*m_fifoTest.testEnqueue();
     m_fifoTest.testDequeue();
@@ -65,6 +67,8 @@ void Speljongen::stop()
     m_running = false;
     std::cout << "Stopping, please wait...\n";
     m_thread.wait();
+    m_disassembler.disassemble(m_mmu, 0xc000, 0xfe00);
+    m_disassembler.disassemble(m_mmu, 0xff80, 0xffff);
 }
 
 void Speljongen::reset()
@@ -117,6 +121,8 @@ void Speljongen::step()
 {
     while (!tick()) {}
     updateDebug();
+
+    m_disassembler.disassemble(m_mmu);
 }
 
 void Speljongen::load(const std::string& path)
@@ -124,11 +130,15 @@ void Speljongen::load(const std::string& path)
     reset();    
     
     m_mmu.removeCartridge();
+
     m_cartridge.load(path);
-    std::cout << "Loaded " << m_cartridge.getTitle() << "!\n";
+    std::cout << "Loaded " << m_cartridge.getTitle() << "!\n";   
+    
     m_mmu.insertCartridge(m_cartridge);
     initMMU(/*m_cartridge.isColour()*/false);
-    m_cpu.getRegisters().setPC(0x100);  
+    m_cpu.getRegisters().setPC(0x100);
+
+    m_disassembler.disassemble(m_mmu, 0, 0x7fff);
 }
 
 void Speljongen::doImgui() const
@@ -142,11 +152,12 @@ void Speljongen::doImgui() const
     ImGui::SetNextWindowSize({ 434.f, 340.f });
     ImGui::SetNextWindowPos({ 356.f, 10.f });
     ImGui::Begin("VRAM and register status", nullptr, ImGuiWindowFlags_NoCollapse);
-    ImGui::Image(m_vramViewer.getTexture(), sf::Vector2f(256.f, 256.f));
+    ImGui::Image(m_vramViewer.getTexture(), sf::Vector2f(256.f, 256.f)); 
     ImGui::SameLine();
     m_mutex.lock();
     ImGui::Text("%s", m_registerString.c_str());
     m_mutex.unlock();
+
     ImGui::Checkbox("Z", &flagsZ);
     ImGui::SameLine();
     ImGui::Checkbox("C", &flagsC);
@@ -166,23 +177,33 @@ void Speljongen::doImgui() const
     ImGui::Text("  Emulation speed: %.2f%%", m_tickTime.load());
     ImGui::End();
 
-    static std::array<bool, 100> selection = {};
+    static std::array<bool, 0xffff> selection = {};
     ImGui::SetNextWindowSize({ 780.f, 230.f });
     ImGui::SetNextWindowPos({ 10.f, 360.f });
     ImGui::Begin("DASM - F3 Step, F9 Run/Stop, Right click to load ROM", nullptr, ImGuiWindowFlags_NoCollapse);
     ImGui::BeginChild("Output", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, 194.f), true, ImGuiWindowFlags_HorizontalScrollbar);
     
+    /*auto pc = m_cpu.getRegisters().getPC();
+    int start = std::max(0, pc - 50);
+    int end = std::min(0xffff, pc + 49);*/
     ImGui::PushStyleColor(ImGuiCol_TextSelectedBg, { 0.6f, 0.f, 0.f, 1.f });
     for (int i = 0; i < 100; i++)
     {
         /*if (this is our break point or stepped to line)
             ImGui::SetScrollHere();*/
-        //TODO red do based on selection state
-        ImGui::Text("0x%.4x", i);
-        ImGui::SameLine();
-        if (ImGui::Selectable("Line of disassembly", selection[i], ImGuiSelectableFlags_AllowDoubleClick))
-            if (ImGui::IsMouseDoubleClicked(0))
-                selection[i] = !selection[i];
+        //TODO red dot based on selection state
+        /*ImGui::Text("0x%.4x", i);
+        ImGui::SameLine();*/
+        if (!m_disassembler[i].empty())
+        {
+            if (ImGui::Selectable(m_disassembler[i].c_str(), selection[i], ImGuiSelectableFlags_AllowDoubleClick))
+            {
+                if (ImGui::IsMouseDoubleClicked(0))
+                {
+                    selection[i] = !selection[i];
+                }
+            }
+        }
     }
     ImGui::PopStyleColor();
 

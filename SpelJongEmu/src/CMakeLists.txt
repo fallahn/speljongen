@@ -7,6 +7,7 @@ set(PROJECT_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/Cartridge.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ColourPalette.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Cpu.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/Disassembler.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Display.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Fetcher.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Gpu.cpp

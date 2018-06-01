@@ -14,6 +14,7 @@
 #include "VramViewer.hpp"
 #include "Cartridge.hpp"
 #include "RamSpace.hpp"
+#include "Disassembler.hpp"
 
 #include <SFML/System/Thread.hpp>
 
@@ -73,6 +74,8 @@ private:
 
     Dma m_dma;
     Gpu m_gpu;
+
+    Disassembler m_disassembler;
 
     Cartridge m_cartridge;
     sf::Thread m_thread;
