@@ -24,7 +24,8 @@ Gpu::Gpu(std::vector<std::uint8_t>& storage, Display& display, InterruptManager&
     m_lcdEnabled        (true),
     m_lcdEnableDelay    (0),
     m_ticksInLine       (0),
-    m_currentMode       (Mode::OamSearch)
+    m_currentMode       (Mode::OamSearch),
+    m_vramUpdated       (true)
 {
 
 }
@@ -56,6 +57,7 @@ void Gpu::setByte(std::uint16_t address, std::uint8_t value)
     default:
         if (m_videoRam0.accepts(address))
         {
+            m_vramUpdated = true;
             if (m_colour && (m_registers.getByte(MemoryRegisters::VBK) & 1) == 1)
             {
                 m_videoRam1.setByte(address, value);
@@ -65,9 +67,12 @@ void Gpu::setByte(std::uint16_t address, std::uint8_t value)
             return;
         }
 
-        if (m_oamRam.accepts(address) && !m_dma.isOamBlocked())
+        if (m_oamRam.accepts(address))
         {
-            m_oamRam.setByte(address, value);
+            if (!m_dma.isOamBlocked())
+            {
+                m_oamRam.setByte(address, value);
+            }
             return;
         }
         
@@ -255,6 +260,16 @@ ColourPalette& Gpu::getBgPalette() { return m_bgPalette; }
 Gpu::Mode Gpu::getMode() const { return m_currentMode; }
 
 bool Gpu::isLcdEnabled() const { return m_lcdEnabled; }
+
+bool Gpu::vramUpdated() const
+{
+    if (m_vramUpdated)
+    {
+        m_vramUpdated = false;
+        return true;
+    }
+    return false;
+}
 
 //private
 void Gpu::requestLcdInterrupt(std::uint8_t bit)

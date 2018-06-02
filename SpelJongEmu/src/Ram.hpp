@@ -25,7 +25,7 @@ public:
         {
             //set storage to local
             m_ownStorage.resize(m_end); //it's a bit of a waste, but meh
-            m_useInternal = true; //TODO map this via MMU so that corect data is returned at requested address
+            m_useInternal = true;
         }
     }
 
@@ -45,14 +45,11 @@ public:
             return;
         }
         getStorage()[address] = value;
-        //if (!ownStorage && value > 0) std::cout << "Wrote to: " << address << ": " << (int)value << "\n";
-        //if (ownStorage && value > 0) wasWritten = true;
     }
 
     std::uint8_t getByte(std::uint16_t address) const override
     {
         assert(accepts(address));
-        //if (!ownStorage /*&& wasWritten*/&& getStorage()[address] > 0) std::cout << "Read from: " << address << ": " << (int)getStorage()[address] << "\n";
         if (m_useInternal)
         {
             return m_ownStorage[address];

@@ -22,7 +22,11 @@ public:
         return address == 0xff46;
     }
 
-    std::uint8_t getByte(std::uint16_t) const override { return 0; }
+    std::uint8_t getByte(std::uint16_t address) const override 
+    { 
+        assert(accepts(address));
+        return getStorageValue(address);
+    }
 
     void setByte(std::uint16_t address, std::uint8_t value) override
     {
@@ -42,7 +46,7 @@ public:
     {
         if (m_inProgress)
         {
-            if (++m_ticks >= 648 / m_speedMode.getSpeedMode())
+            if (++m_ticks >= (648 / m_speedMode.getSpeedMode()))
             {
                 m_inProgress = false;
                 m_restarted = false;

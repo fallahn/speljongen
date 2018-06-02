@@ -139,7 +139,7 @@ void Speljongen::step()
     updateDebug();
     updateVramView();
 
-    m_disassembler.disassemble(m_mmu);
+    //m_disassembler.disassemble(m_mmu); //slow as all balls in debug mode
 }
 
 void Speljongen::load(const std::string& path)
@@ -429,7 +429,8 @@ void Speljongen::updateDebug()
 
 void Speljongen::updateVramView()
 {
-    //TODO only want to do this if VRAM flagged as changed, causes significant slow down
+    //only want to do this if VRAM flagged as changed, causes significant slow down
+    if (!m_gpu.vramUpdated()) return;
     
     std::uint16_t address = 0x8000;
 

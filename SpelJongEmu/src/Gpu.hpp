@@ -40,6 +40,8 @@ public:
     Mode getMode() const;
     bool isLcdEnabled() const;
 
+    bool vramUpdated() const;
+
 private:
     Display & m_display;
     InterruptManager& m_interruptManager;
@@ -65,6 +67,8 @@ private:
     std::int16_t m_lcdEnableDelay;
     std::uint16_t m_ticksInLine;
     Mode m_currentMode;
+
+    mutable bool m_vramUpdated;
 
     void requestLcdInterrupt(std::uint8_t);
     void requestLycEqualsLyInterrupt(); //can you tell this was ported from java?

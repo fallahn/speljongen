@@ -27,7 +27,7 @@
 #include "Lcdc.hpp"
 #endif
 
-//#define USE_THREADING //launches emulation in own thread if defined
+#define USE_THREADING //launches emulation in own thread if defined
 
 class Timer;
 class Dma;
