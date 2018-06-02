@@ -175,10 +175,31 @@ void Speljongen::doImgui() const
         for (auto i = 0; i < 40; ++i)
         {
             if(ImGui::GetColumnIndex() == 0) ImGui::Separator();
-            ImGui::Text("%x", m_mmu.getByte(address++));
-            ImGui::Text("%x", m_mmu.getByte(address++));
-            ImGui::Text("%x", m_mmu.getByte(address++));
-            ImGui::Text("%x", m_mmu.getByte(address++));
+            ImGui::Text("%.2x", m_mmu.getByte(address++));
+            ImGui::SameLine();
+            ImGui::Text("%.2x", m_mmu.getByte(address++));
+            auto tileID = m_mmu.getByte(address++);
+            ImGui::Text("%.2x", tileID);
+            ImGui::SameLine();
+            auto flags = m_mmu.getByte(address++);
+            ImGui::Text("%.2x", flags);
+
+            auto x = tileID % 16;
+            auto y = tileID / 16;
+            sf::FloatRect rect(8.f * x, 8.f * y, 8.f, 8.f);
+            if (flags & (1 << 6))//y flip
+            {
+                rect.top += 8.f;
+                rect.height = -rect.height;
+            }
+            if (flags & (1 << 5)) //x flip
+            {
+                rect.left += 8.f;
+                rect.width = -rect.width;
+            }
+
+            ImGui::Image(m_vramViewer.getTexture(), rect);
+
             ImGui::NextColumn();
         }
         ImGui::PopStyleVar();
