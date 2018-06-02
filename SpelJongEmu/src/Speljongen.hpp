@@ -27,6 +27,8 @@
 #include "Lcdc.hpp"
 #endif
 
+//#define USE_THREADING //launches emulation in own thread if defined
+
 class Timer;
 class Dma;
 class Gpu;
@@ -44,8 +46,9 @@ public:
     void start();
     void stop();
     void reset();
-
-    bool tick();
+#ifndef USE_THREADING
+    void update();
+#endif 
     void step();
 
     void load(const std::string&);
@@ -55,6 +58,8 @@ public:
     void freeDisplay();
 
 private:
+
+    
     std::vector<std::uint8_t> m_storage;
     std::atomic<bool> m_running;
     Mmu m_mmu;
@@ -75,14 +80,17 @@ private:
     Disassembler m_disassembler;
 
     Cartridge m_cartridge;
+#ifdef USE_THREADING
     sf::Thread m_thread;
-
+    void threadFunc();
+#endif
     bool m_requestRefresh;
     bool m_lcdDisabled;
 
     void initRegisters(bool);
 
-    void threadFunc();
+    bool tick();
+
 
     VramViewer m_vramViewer;
     void updateDebug();

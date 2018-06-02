@@ -14,6 +14,18 @@
 namespace
 {
     ImVec2 ButtonSize(80.f, 20.f);
+
+    //------------------------------
+    static const std::int32_t gameboyCycles = 4194304 / 60;
+    static const sf::Time frameTime = sf::milliseconds(1000 / 60);
+
+    auto activeCycles = gameboyCycles;
+    std::int32_t maxUpdates = 3;
+    float frameSkip = 1.f;
+
+    sf::Clock tickClock;
+    sf::Time accumulator;
+    //------------------------------
 }
 
 Speljongen::Speljongen()
@@ -28,7 +40,9 @@ Speljongen::Speljongen()
     m_upperRamSpace     (m_storage, 0xd000, 0x1000, 0x2000),
     m_gpu               (m_storage, m_display, m_interruptManager, m_speedMode, false),
     m_cartridge         (m_storage),
+#ifdef USE_THREADING
     m_thread            (&Speljongen::threadFunc, this),
+#endif
     m_requestRefresh    (false),
     m_lcdDisabled       (false)
 #ifdef RUN_TESTS
@@ -60,15 +74,21 @@ Speljongen::~Speljongen()
 //public
 void Speljongen::start()
 {
-    m_running = true;
+#ifndef USE_THREADING
+    tickClock.restart();
+#else
     m_thread.launch();
+#endif
+    m_running = true;
 }
 
 void Speljongen::stop()
 {
     m_running = false;
+#ifdef USE_THREADING
     std::cout << "Stopping, please wait...\n";
     m_thread.wait();
+#endif
     m_disassembler.disassemble(m_mmu, 0xc000, 0xfe00);
     m_disassembler.disassemble(m_mmu, 0xff80, 0xffff);
 }
@@ -82,46 +102,42 @@ void Speljongen::reset()
     updateDebug();
 }
 
-bool Speljongen::tick()
+#ifndef USE_THREADING
+void Speljongen::update()
 {
-#ifdef RUN_TESTS
-    return true;
-#endif
-    
-    m_timer.tick();
-    auto ret = m_cpu.tick();
-
-    auto gpuMode = m_gpu.tick();
-    if (!m_lcdDisabled && !m_gpu.isLcdEnabled())
+    auto duration = tickClock.restart();
+    accumulator += duration;
+    maxUpdates = 8;
+    while (accumulator > frameTime && maxUpdates--)
     {
-        m_lcdDisabled = true;
-        m_display.refresh();
-        //hdma
-    }
-    else if (gpuMode == Gpu::Mode::VBlank)
-    {        
-        m_requestRefresh = true;
-        m_display.refresh();
-        //updateDebug();
-    }
+        std::int32_t tickCounter = 0;
+        while (tickCounter++ < activeCycles && m_running)
+        {
+            tick();
+        }
 
-    if (m_lcdDisabled && m_gpu.isLcdEnabled())
-    {
-        m_lcdDisabled = false;
-        //TODO hdma
-    }
-    else if (m_requestRefresh && gpuMode == Gpu::Mode::OamSearch)
-    {
-        m_requestRefresh = false;
-    }
+        m_tickTime = (100.f / (accumulator.asSeconds() / frameTime.asSeconds())) * frameSkip;
 
-    return ret;
+        accumulator -= frameTime;
+        updateVramView();
+        updateDebug();
+
+        if (maxUpdates == 0)
+        {
+            std::cout << "Warning slow emulation - enabling frame skip\n";
+            activeCycles /= 2;
+            frameSkip /= 2.f;
+            accumulator = sf::Time();
+        }
+    }
 }
+#endif
 
 void Speljongen::step()
 {
     while (!tick()) {}
     updateDebug();
+    updateVramView();
 
     m_disassembler.disassemble(m_mmu);
 }
@@ -290,17 +306,45 @@ void Speljongen::freeDisplay()
 }
 
 //private
+bool Speljongen::tick()
+{
+#ifdef RUN_TESTS
+    return true;
+#endif
+
+    m_timer.tick();
+    auto ret = m_cpu.tick();
+
+    auto gpuMode = m_gpu.tick();
+    if (!m_lcdDisabled && !m_gpu.isLcdEnabled())
+    {
+        m_lcdDisabled = true;
+        m_display.refresh();
+        //hdma
+    }
+    else if (gpuMode == Gpu::Mode::VBlank)
+    {
+        m_requestRefresh = true;
+        m_display.refresh();
+    }
+
+    if (m_lcdDisabled && m_gpu.isLcdEnabled())
+    {
+        m_lcdDisabled = false;
+        //TODO hdma
+    }
+    else if (m_requestRefresh && gpuMode == Gpu::Mode::OamSearch)
+    {
+        m_requestRefresh = false;
+    }
+
+    return ret;
+}
+
+#ifdef USE_THREADING
 void Speljongen::threadFunc()
 {
-    static const std::int32_t gameboyCycles = 4194304 / 60;
-    static const sf::Time frameTime = sf::milliseconds(1000 / 60);
-
-    auto activeCycles = gameboyCycles;
-    std::int32_t maxUpdates = 3;
-    float frameSkip = 1.f;
-
-    sf::Clock tickClock;
-    sf::Time accumulator;
+    tickClock.restart();
 
     while (m_running)
     {
@@ -318,7 +362,7 @@ void Speljongen::threadFunc()
             m_tickTime = (100.f / (accumulator.asSeconds() / frameTime.asSeconds())) * frameSkip;
 
             accumulator -= frameTime;
-            updateVramView(); //TODO only want to do this if VRAM flagged as changed, causes significant slow down
+            updateVramView();
             updateDebug();
 
             if (maxUpdates == 0)
@@ -332,6 +376,7 @@ void Speljongen::threadFunc()
     }
     std::cout << "Stopped.\n";
 }
+#endif
 
 void Speljongen::initRegisters(bool colour)
 {
@@ -384,6 +429,8 @@ void Speljongen::updateDebug()
 
 void Speljongen::updateVramView()
 {
+    //TODO only want to do this if VRAM flagged as changed, causes significant slow down
+    
     std::uint16_t address = 0x8000;
 
     for (auto gridY = 0; gridY < 16; ++gridY)

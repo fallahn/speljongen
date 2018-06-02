@@ -10,7 +10,7 @@
 #endif
 
 int main()
-{   
+{
     Speljongen gameboy;
     bool run = false;
 
@@ -88,6 +88,13 @@ int main()
                 }
             }
         }
+
+#ifndef USE_THREADING
+        if (run)
+        {
+            gameboy.update();
+        }
+#endif
 
         ImGui::SFML::Update(window, imguiClock.restart());
 
