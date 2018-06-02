@@ -55,7 +55,7 @@ bool Mmu::accepts(std::uint16_t) const
 }
 
 void Mmu::setByte(std::uint16_t address, std::uint8_t value)
-{     
+{         
     if (m_addressSpaces[address])
     {
         m_addressSpaces[address]->setByte(address, value);

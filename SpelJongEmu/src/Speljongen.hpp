@@ -59,12 +59,10 @@ private:
     std::atomic<bool> m_running;
     Mmu m_mmu;
     SpeedMode m_speedMode;
-    MemoryRegisters m_memoryRegisters;
     InterruptManager m_interruptManager;
     Display m_display;
     Cpu m_cpu;
     Timer m_timer;
-    Ram m_oamRam;
     ShadowAddressSpace m_shadowSpace;
 
     //ram is split in two because the upper half is 
@@ -72,7 +70,6 @@ private:
     RamSpace m_lowerRamSpace;
     RamSpace m_upperRamSpace;
 
-    Dma m_dma;
     Gpu m_gpu;
 
     Disassembler m_disassembler;

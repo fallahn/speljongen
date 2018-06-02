@@ -5,21 +5,21 @@
 
 #include <iostream>
 
-Gpu::Gpu(std::vector<std::uint8_t>& storage, Display& display, InterruptManager& ir, Dma& dma, Ram& oamRam, MemoryRegisters& registers, bool colour)
+Gpu::Gpu(std::vector<std::uint8_t>& storage, Display& display, InterruptManager& ir, SpeedMode& sm, bool colour)
     : AddressSpace      (storage),
     m_display           (display),
     m_interruptManager  (ir),
-    m_dma               (dma),
-    m_oamRam            (oamRam),
+    m_dma               (storage, sm),
+    m_oamRam            (storage, 0xfe00, 0x00a0),
     m_colour            (colour),
     m_videoRam0         (storage, 0x8000, 0x2000, false),
     m_videoRam1         (storage, 0x8000, 0x2000, false),
     m_lcdc              (storage),
     m_bgPalette         (storage, 0xff68),
     m_oamPalette        (storage, 0xff6a),
-    m_registers         (registers),
-    m_oamSearchPhase    (oamRam, m_lcdc, m_registers),
-    m_transferPhase     (m_videoRam0, m_videoRam1, oamRam, display, m_lcdc, m_registers, colour),
+    m_registers         (storage),
+    m_oamSearchPhase    (m_oamRam, m_lcdc, m_registers),
+    m_transferPhase     (m_videoRam0, m_videoRam1, m_oamRam, display, m_lcdc, m_registers, colour),
     m_currentPhase      (&m_oamSearchPhase),
     m_lcdEnabled        (true),
     m_lcdEnableDelay    (0),
@@ -100,6 +100,8 @@ std::uint8_t Gpu::getByte(std::uint16_t address) const
 
 Gpu::Mode Gpu::tick()
 {
+    m_dma.tick();
+
     if (!m_lcdEnabled)
     {
         if (m_lcdEnableDelay != -1)

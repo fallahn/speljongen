@@ -8,10 +8,11 @@
 #include "ColourPalette.hpp"
 #include "MemoryRegisters.hpp"
 #include "Lcdc.hpp"
+#include "Dma.hpp"
 
 class Display;
 class InterruptManager;
-class Dma;
+class SpeedMode;
 
 class Gpu final : public AddressSpace
 {
@@ -21,7 +22,7 @@ public:
         HBlank, VBlank, OamSearch, PixelTransfer, None //order is important!
     };
 
-    Gpu(std::vector<std::uint8_t>&, Display&, InterruptManager&, Dma&, Ram&, MemoryRegisters&, bool);
+    Gpu(std::vector<std::uint8_t>&, Display&, InterruptManager&, SpeedMode&, bool);
 
     void reset();
 
@@ -42,8 +43,8 @@ public:
 private:
     Display & m_display;
     InterruptManager& m_interruptManager;
-    Dma& m_dma;
-    Ram& m_oamRam;
+    Dma m_dma;
+    Ram m_oamRam;
     bool m_colour;
 
     Ram m_videoRam0;
@@ -52,7 +53,7 @@ private:
     ColourPalette m_bgPalette;
     ColourPalette m_oamPalette;
 
-    MemoryRegisters& m_registers;
+    MemoryRegisters m_registers;
 
     HBlankPhase m_hblankPhase;
     VBlankPhase m_vblankPhase;
