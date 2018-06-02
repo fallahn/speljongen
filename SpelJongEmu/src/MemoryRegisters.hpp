@@ -7,7 +7,7 @@
 class MemoryRegisters final : public AddressSpace
 {
 public:
-    MemoryRegisters(std::vector<std::uint8_t>& storage);
+    MemoryRegisters(std::vector<std::uint8_t>& storage, std::uint16_t start, std::uint16_t end);
     
     bool accepts(std::uint16_t address) const override;
 
@@ -75,4 +75,6 @@ private:
     };
 
     std::vector<ReadFlags> m_readFlags;
+    std::uint16_t m_start;
+    std::uint16_t m_end;
 };

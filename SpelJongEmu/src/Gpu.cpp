@@ -17,7 +17,7 @@ Gpu::Gpu(std::vector<std::uint8_t>& storage, Display& display, InterruptManager&
     m_lcdc              (storage),
     m_bgPalette         (storage, 0xff68),
     m_oamPalette        (storage, 0xff6a),
-    m_registers         (storage),
+    m_registers         (storage, MemoryRegisters::STAT, MemoryRegisters::VBK),
     m_oamSearchPhase    (m_oamRam, m_lcdc, m_registers),
     m_transferPhase     (m_videoRam0, m_videoRam1, m_oamRam, display, m_lcdc, m_registers, colour),
     m_currentPhase      (&m_oamSearchPhase),
@@ -44,58 +44,110 @@ Ram& Gpu::getVRam1() { return m_videoRam1; }
 
 bool Gpu::accepts(std::uint16_t address) const
 {
-    return m_videoRam0.accepts(address) || m_oamRam.accepts(address) || m_registers.accepts(address);/*m_dma.accepts() || m_lcdc.accepts ||*/ 
+    return m_videoRam0.accepts(address) || m_oamRam.accepts(address) || m_registers.accepts(address) //covers DMA and LCDC
+        || (m_colour && (m_bgPalette.accepts(address) || m_oamPalette.accepts(address))); 
 }
 
 void Gpu::setByte(std::uint16_t address, std::uint8_t value)
 {
     assert(accepts(address));
-
-
-    if (address == MemoryRegisters::STAT)
+    switch (address)
     {
+    default:
+        if (m_videoRam0.accepts(address))
+        {
+            if (m_colour && (m_registers.getByte(MemoryRegisters::VBK) & 1) == 1)
+            {
+                m_videoRam1.setByte(address, value);
+                return;
+            }
+            m_videoRam0.setByte(address, value);
+            return;
+        }
+
+        if (m_oamRam.accepts(address) && !m_dma.isOamBlocked())
+        {
+            m_oamRam.setByte(address, value);
+            return;
+        }
+        
+        if (m_registers.accepts(address))
+        {
+            m_registers.setByte(address, value);
+            return;
+        }
+
+        if (m_colour)
+        {
+            if (m_bgPalette.accepts(address))
+            {
+                m_bgPalette.setByte(address, value);
+                return;
+            }
+            if (m_oamPalette.accepts(address))
+            {
+                m_oamPalette.setByte(address, value);
+                return;
+            }
+        }
+
+        break;
+    case MemoryRegisters::STAT:
         setStat(value);
-    }
-    else if (address == MemoryRegisters::DMA)
-    {
+        return;
+    case MemoryRegisters::DMA:
         m_dma.setByte(address, value);
-    }
-    else
-    {
-        auto* space = getAddressSpace(address);
-        if (space == &m_lcdc)
-        {
-            setLcdc(value);
-        }
-        else
-        {
-            space->setByte(address, value);
-        }
+        return;
+    case MemoryRegisters::LCDC:
+        setLcdc(value);
+        return;
     }
 }
 
 std::uint8_t Gpu::getByte(std::uint16_t address) const
 {
     assert(accepts(address));
-    if (address == MemoryRegisters::STAT)
+    switch (address)
     {
-        return getStat();
-    }
-    if (address == MemoryRegisters::VBK)
-    {
-        return m_colour ? 0xfe : 0xff;
-    }
-    if (address == MemoryRegisters::DMA)
-    {
-        return m_dma.getByte(MemoryRegisters::DMA);
-    }
+    default:
+        if (m_videoRam0.accepts(address))
+        {
+            if (m_colour && (m_registers.getByte(MemoryRegisters::VBK) & 1) == 1)
+            {
+                return m_videoRam1.getByte(address);
+            }
+            return m_videoRam0.getByte(address);
+        }
 
-    else
-    {
-        auto* space = getAddressSpace(address);
-        if(space) return space->getByte(address);
+        if (m_oamRam.accepts(address) && !m_dma.isOamBlocked())
+        {
+            return m_oamRam.getByte(address);
+        }
+
+        if (m_registers.accepts(address))
+        {
+            return m_registers.getByte(address);
+        }
+
+        if (m_colour)
+        {
+            if (m_bgPalette.accepts(address))
+            {
+                return m_bgPalette.getByte(address);
+            }
+            if (m_oamPalette.accepts(address))
+            {
+                return m_oamPalette.getByte(address);
+            }
+        }
+        return 0xff;
+    case MemoryRegisters::STAT:
+        return getStat();
+    case MemoryRegisters::VBK:
+        return m_colour ? 0xfe : 0xff;
+    case MemoryRegisters::DMA:
+        return m_dma.getByte(address);
     }
-    return 0xff;
 }
 
 Gpu::Mode Gpu::tick()
@@ -205,48 +257,6 @@ Gpu::Mode Gpu::getMode() const { return m_currentMode; }
 bool Gpu::isLcdEnabled() const { return m_lcdEnabled; }
 
 //private
-AddressSpace* Gpu::getAddressSpace(std::uint16_t address) const
-{    
-    if (m_videoRam0.accepts(address))
-    {
-        if (m_colour && (m_registers.getByte(MemoryRegisters::VBK) & 1) == 1)
-        {
-            //eww. FFS
-            return static_cast<AddressSpace*>(const_cast<Ram*>(&m_videoRam1));
-        }
-        return static_cast<AddressSpace*>(const_cast<Ram*>(&m_videoRam0));
-    }
-
-    if (m_oamRam.accepts(address) && !m_dma.isOamBlocked())
-    {
-        return static_cast<AddressSpace*>(const_cast<Ram*>(&m_oamRam));
-    }
-
-    if (m_lcdc.accepts(address))
-    {
-        return static_cast<AddressSpace*>(const_cast<Lcdc*>(&m_lcdc));
-    }
-
-    if (m_registers.accepts(address))
-    {
-        return static_cast<AddressSpace*>(const_cast<MemoryRegisters*>(&m_registers));
-    }
-
-    if (m_colour)
-    {
-        if (m_bgPalette.accepts(address))
-        {
-            return static_cast<AddressSpace*>(const_cast<ColourPalette*>(&m_bgPalette));
-        }
-
-        if (m_oamPalette.accepts(address))
-        {
-            return static_cast<AddressSpace*>(const_cast<ColourPalette*>(&m_oamPalette));
-        }
-    }
-    return nullptr;
-}
-
 void Gpu::requestLcdInterrupt(std::uint8_t bit)
 {
     if ((m_registers.getByte(MemoryRegisters::STAT) & (1 << bit)) != 0)

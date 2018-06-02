@@ -2,12 +2,14 @@
 
 namespace
 {
-    const std::uint16_t RegistersStart = 0xff00;
-    const std::uint16_t RegistersEnd = 0xff50;
+    //const std::uint16_t RegistersStart = 0xff00;
+    //const std::uint16_t RegistersEnd = 0xff50;
 }
 
-MemoryRegisters::MemoryRegisters(std::vector<std::uint8_t>& storage)
-    : AddressSpace(storage)
+MemoryRegisters::MemoryRegisters(std::vector<std::uint8_t>& storage, std::uint16_t start, std::uint16_t end)
+    : AddressSpace  (storage),
+    m_start         (start),
+    m_end           (end)
 {
     for (auto i = 0; i < 0x4c; ++i)
     {
@@ -27,26 +29,26 @@ MemoryRegisters::MemoryRegisters(std::vector<std::uint8_t>& storage)
 //public
 bool MemoryRegisters::accepts(std::uint16_t address) const
 {
-    return address >= RegistersStart && address < RegistersEnd;
+    return address >= m_start && address < m_end;
 }
 
 void MemoryRegisters::setByte(std::uint16_t address, std::uint8_t value)
 {
-    //assert(accepts(address) && (m_readFlags[address - RegistersStart] & Write));
+    assert(accepts(address)); //&& (m_readFlags[address - RegistersStart] & Write));
 
     setStorageValue(address, value);
 }
 
 std::uint8_t MemoryRegisters::getByte(std::uint16_t address) const
 {
-    //assert(accepts(address) && (m_readFlags[address - RegistersStart] & Read));
+    assert(accepts(address)); //&& (m_readFlags[address - RegistersStart] & Read));
 
     return getStorageValue(address);
 }
 
 std::uint8_t MemoryRegisters::preIncrement(std::uint16_t address)
 {
-    //assert(accepts(address) && (m_readFlags[address - RegistersStart] & Write));
+    assert(accepts(address)); //&& (m_readFlags[address - RegistersStart] & Write));
 
     std::uint8_t value = getStorageValue(address);
     value++;
@@ -56,7 +58,7 @@ std::uint8_t MemoryRegisters::preIncrement(std::uint16_t address)
 
 void MemoryRegisters::reset()
 {
-    for (auto i = RegistersStart; i < RegistersEnd; ++i)
+    for (auto i = m_start; i < m_end; ++i)
     {
         setStorageValue(i, 0);
     }

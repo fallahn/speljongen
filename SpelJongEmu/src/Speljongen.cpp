@@ -439,9 +439,7 @@ void Speljongen::initMMU(bool colour)
     be added after the GPU to make sure the correct accessor is
     used when reading or writing the MMU
     */
-    
-    //m_mmu.addAddressSpace(m_oamRam);
-    //m_mmu.addAddressSpace(m_dma);
+
     m_mmu.addAddressSpace(m_timer);
     m_mmu.addAddressSpace(m_gpu);  
     m_mmu.addAddressSpace(m_interruptManager);

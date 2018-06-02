@@ -66,7 +66,6 @@ private:
     std::uint16_t m_ticksInLine;
     Mode m_currentMode;
 
-    AddressSpace* getAddressSpace(std::uint16_t) const;
     void requestLcdInterrupt(std::uint8_t);
     void requestLycEqualsLyInterrupt(); //can you tell this was ported from java?
     std::uint8_t getStat() const;
