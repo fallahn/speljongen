@@ -9,6 +9,8 @@ class MemoryRegisters final : public AddressSpace
 public:
     MemoryRegisters(std::vector<std::uint8_t>& storage, std::uint16_t start, std::uint16_t end);
     
+    std::string getLabel() const { return "Memory Registers"; }
+
     bool accepts(std::uint16_t address) const override;
 
     void setByte(std::uint16_t address, uint8_t value) override;

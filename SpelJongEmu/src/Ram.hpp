@@ -29,7 +29,7 @@ public:
         }
     }
 
-    Type type() const override { return AddressSpace::Type::Ram; }
+    std::string getLabel() const override { return "RAM"; }
 
     bool accepts(std::uint16_t address) const override
     {

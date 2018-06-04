@@ -15,7 +15,7 @@ public:
         setStorageValue(0xff46, 0);
     }
 
-    AddressSpace::Type type() const override { return AddressSpace::Type::Dma; }
+    std::string getLabel() const override { return "DMA"; }
 
     bool accepts(std::uint16_t address) const override
     {

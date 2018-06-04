@@ -135,6 +135,9 @@
     <ClCompile Include="src\Disassembler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hdma.cpp">
+      <Filter>Source Files\mmu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\InterruptManager.hpp">
@@ -280,6 +283,15 @@
     </ClInclude>
     <ClInclude Include="src\Disassembler.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ColourRam.hpp">
+      <Filter>Header Files\mmu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ColourRegisters.hpp">
+      <Filter>Header Files\mmu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hdma.hpp">
+      <Filter>Header Files\mmu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

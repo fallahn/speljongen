@@ -9,6 +9,8 @@ class Timer final : public AddressSpace
 public:
     Timer(std::vector<std::uint8_t>&, InterruptManager&, const SpeedMode&);
 
+    std::string getLabel() const override { return "Timer"; }
+
     void tick();
     bool accepts(std::uint16_t) const override;
     void setByte(std::uint16_t, std::uint8_t) override;

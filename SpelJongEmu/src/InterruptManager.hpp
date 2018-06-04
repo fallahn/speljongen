@@ -32,7 +32,7 @@ public:
 
     InterruptManager(std::vector<std::uint8_t>&, bool isColour);
 
-    AddressSpace::Type type() const override { return AddressSpace::Type::Interrupt; }
+    std::string getLabel() const override { return "Interrupt Manager"; }
 
     void enableInterrupts(bool useDelay);
 

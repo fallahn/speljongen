@@ -20,6 +20,8 @@ public:
 
     void clear();
 
+    std::string getLabel() const override { return "Colour Palette"; }
+
 private:
     std::array<Palette, 8u>  m_palettes; //TODO these need to be mapped to storage
     std::uint16_t m_indexAddress;

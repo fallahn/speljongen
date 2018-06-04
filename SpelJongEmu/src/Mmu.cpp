@@ -6,6 +6,8 @@
 #include <iostream>
 #include <random>
 #include <ctime>
+#include <iomanip>
+#include <string>
 
 namespace
 {
@@ -94,6 +96,12 @@ void Mmu::addAddressSpace(AddressSpace& space)
     {
         if (space.accepts(i))
         {
+            if (m_addressSpaces[i] != nullptr)
+            {
+                std::cout << "Warning, overwrote previously mapped address space " << m_addressSpaces[i]->getLabel() << " at "
+                    << std::hex << std::setfill('0') << std::setw(4) << i << " with " << space.getLabel() << "\n";
+            }
+
             m_addressSpaces[i] = &space;
         }
     }

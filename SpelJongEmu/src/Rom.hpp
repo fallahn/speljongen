@@ -14,6 +14,8 @@ public:
         }
     }
 
+    std::string getLabel() const override { return "ROM"; }
+
     bool accepts(std::uint16_t address) const override
     {
         return (address < 0x8000) ||

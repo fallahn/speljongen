@@ -10,6 +10,8 @@ class Cartridge final : public AddressSpace
 public:
     explicit Cartridge(std::vector<std::uint8_t>&);
 
+    std::string getLabel() const override { return "Cartridge"; }
+
     bool accepts(std::uint16_t) const override;
 
     void setByte(std::uint16_t, std::uint8_t) override;
@@ -21,6 +23,8 @@ public:
     const std::string& getTitle() const { return m_title; }
 
     const std::string& getInfo() const { return m_infoStr; }
+
+    const bool isColour() const { return m_colour; }
 
     enum Type
     {

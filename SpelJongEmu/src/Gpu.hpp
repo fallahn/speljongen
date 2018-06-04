@@ -29,6 +29,8 @@ public:
     Ram& getVRam0();
     Ram& getVRam1();
 
+    std::string getLabel() const override { return "GPU"; }
+
     bool accepts(std::uint16_t) const override;
     void setByte(std::uint16_t, std::uint8_t) override;
     std::uint8_t getByte(std::uint16_t) const override;

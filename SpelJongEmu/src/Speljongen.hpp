@@ -15,6 +15,8 @@
 #include "Cartridge.hpp"
 #include "RamSpace.hpp"
 #include "Disassembler.hpp"
+#include "ColourRam.hpp"
+#include "ColourRegisters.hpp"
 
 #include <SFML/System/Thread.hpp>
 
@@ -73,7 +75,9 @@ private:
     //ram is split in two because the upper half is 
     //arranged slightly differently on a GBC
     RamSpace m_lowerRamSpace;
-    RamSpace m_upperRamSpace;
+    ColourRam m_colourRam;
+    ColourRegisters m_colourRegisters;
+    //RamSpace m_upperRamSpace;
 
     Gpu m_gpu;
 

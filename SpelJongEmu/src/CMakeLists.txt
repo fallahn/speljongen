@@ -11,6 +11,7 @@ set(PROJECT_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/Display.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Fetcher.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Gpu.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/Hdma.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/InterruptManager.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/MemoryRegisters.cpp

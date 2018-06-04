@@ -37,7 +37,8 @@ Speljongen::Speljongen()
     m_timer             (m_storage, m_interruptManager, m_speedMode),
     m_shadowSpace       (m_storage, 0xe000, 0xc000, 0x1e00),
     m_lowerRamSpace     (m_storage, 0xc000, 0x1000, 0x2000),
-    m_upperRamSpace     (m_storage, 0xd000, 0x1000, 0x2000),
+    m_colourRam         (m_storage),
+    m_colourRegisters   (m_storage),
     m_gpu               (m_storage, m_display, m_interruptManager, m_speedMode, false),
     m_cartridge         (m_storage),
 #ifdef USE_THREADING
@@ -152,7 +153,7 @@ void Speljongen::load(const std::string& path)
     std::cout << "Loaded " << m_cartridge.getTitle() << "!\n";   
     
     m_mmu.insertCartridge(m_cartridge);
-    initMMU(/*m_cartridge.isColour()*/false);
+    initMMU(m_cartridge.isColour());
     m_cpu.getRegisters().setPC(0x100);
 
     m_disassembler.disassemble(m_mmu, 0, 0x7fff);
@@ -316,6 +317,11 @@ bool Speljongen::tick()
     auto ret = m_cpu.tick();
 
     auto gpuMode = m_gpu.tick();
+    if (gpuMode != Gpu::Mode::None)
+    {
+        //update hdma
+    }
+
     if (!m_lcdDisabled && !m_gpu.isLcdEnabled())
     {
         m_lcdDisabled = true;
@@ -479,6 +485,8 @@ void Speljongen::updateVramView()
 
 void Speljongen::initMMU(bool colour)
 {
+    m_mmu.reset();
+    //TODO disable colour on gpu/interrupts/sound
 
     //maps address spaces so they are accessable through mmu
     /*
@@ -494,12 +502,20 @@ void Speljongen::initMMU(bool colour)
     m_mmu.addAddressSpace(m_shadowSpace);
     m_mmu.addAddressSpace(m_lowerRamSpace);
 
-    if (!colour)
+    if(colour)
     {
-        //m_mmu.addAddressSpace(m_upperRamSpace); //this breaks test rom because upper echo is only 0x0e00 in size
+        //TODO check for overlaps
+        //add speed mode to mmu
+        m_mmu.addAddressSpace(m_speedMode);
+        //add hdma
+        //add GBC ram
+        m_mmu.addAddressSpace(m_colourRam);
+        m_mmu.addAddressSpace(m_colourRegisters);
+        m_colourRegisters.reset();
 
-        m_mmu.initBios(); //MUST be done after mapping is complete
+        //TODO enable colour mode on gpu, interrupt manager and sound output
     }
+    m_mmu.initBios(); //MUST be done after mapping is complete
 
     initRegisters(colour);
     updateDebug();

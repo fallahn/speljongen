@@ -7,6 +7,8 @@ class Mbc1 final : public AddressSpace
 public: 
     Mbc1(std::vector<std::uint8_t>&, const std::vector<char>&, std::int32_t, std::int32_t);
 
+    std::string getLabel() const override { return "MBC 1"; }
+
     bool accepts(std::uint16_t) const override;
 
     void setByte(std::uint16_t, std::uint8_t) override;

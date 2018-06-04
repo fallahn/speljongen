@@ -16,6 +16,8 @@ public:
         assert(m_startAddress < m_endAddress);
     }
 
+    std::string getLabel() const override { return "Shadowed RAM"; }
+
     bool accepts(std::uint16_t address) const override
     {
         return (address >= m_startAddress && address < m_endAddress);

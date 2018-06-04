@@ -10,6 +10,8 @@ public:
 
     Lcdc(std::vector<std::uint8_t>& storage) : AddressSpace(storage) { set(0x91); }
 
+    std::string getLabel() const override { return "LCDC"; }
+
     bool isBgAndWindowDisplay() const { return (get() & 0x01) != 0; }
     bool isObjDisplay() const { return (get() & 0x02) != 0; }
     std::uint8_t getSpriteHeight() const { return ((get() & 0x04) == 0) ? 8 : 16; }

@@ -83,14 +83,17 @@ void Cartridge::load(const std::string& path)
     default:
         m_type = Type::Classic;
         m_infoStr += "Compat: Classic\n";
+        m_colour = false;
         break;
     case 0x80:
         m_type = Type::Universal;
         m_infoStr += "Compat: Universal\n";
+        m_colour = true;
         break;
     case 0xc0:
         m_type = Type::Colour;
         m_infoStr += "Compat: Colour Gameboy\n";
+        m_colour = true;
         break;
     }
 

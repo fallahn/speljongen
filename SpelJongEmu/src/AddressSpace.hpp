@@ -7,22 +7,12 @@
 class AddressSpace
 {
 public:
-    enum class Type
-    {
-        VOID = -1,
-        Ram,
-        Rom,
-        Timer,
-        Dma,
-        ShadowSpace,
-        Interrupt
-    };
 
     AddressSpace(std::vector<std::uint8_t>& storage) :m_storage(storage) {}
 
     virtual ~AddressSpace() = default;
 
-    virtual Type type() const { return Type::VOID; }
+    virtual std::string getLabel() const { return "Label Missing"; }
 
     virtual bool accepts(std::uint16_t address) const = 0;
 

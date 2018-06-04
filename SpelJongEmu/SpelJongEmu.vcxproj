@@ -136,6 +136,7 @@
     <ClCompile Include="src\Display.cpp" />
     <ClCompile Include="src\Fetcher.cpp" />
     <ClCompile Include="src\Gpu.cpp" />
+    <ClCompile Include="src\Hdma.cpp" />
     <ClCompile Include="src\imgui\imgui-SFML.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp" />
     <ClCompile Include="src\imgui\imgui_demo.cpp" />
@@ -167,6 +168,8 @@
     <ClInclude Include="src\Cartridge.hpp" />
     <ClInclude Include="src\ClassicPixelFifo.hpp" />
     <ClInclude Include="src\ColourPalette.hpp" />
+    <ClInclude Include="src\ColourRam.hpp" />
+    <ClInclude Include="src\ColourRegisters.hpp" />
     <ClInclude Include="src\Cpu.hpp" />
     <ClInclude Include="src\Disassembler.hpp" />
     <ClInclude Include="src\Display.hpp" />
@@ -174,6 +177,7 @@
     <ClInclude Include="src\Fetcher.hpp" />
     <ClInclude Include="src\Gpu.hpp" />
     <ClInclude Include="src\GpuPhase.hpp" />
+    <ClInclude Include="src\Hdma.hpp" />
     <ClInclude Include="src\imgui\imconfig-SFML.h" />
     <ClInclude Include="src\imgui\imconfig.h" />
     <ClInclude Include="src\imgui\imgui-SFML.h" />
