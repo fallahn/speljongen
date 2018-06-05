@@ -101,6 +101,9 @@ void Speljongen::reset()
     m_gpu.reset();
     m_display.clear();
 
+    activeCycles = gameboyCycles;
+    frameSkip = 1.f;;
+
     updateDebug();
 }
 
@@ -152,9 +155,9 @@ void Speljongen::load(const std::string& path)
 
     m_cartridge.load(path);
     std::cout << "Loaded " << m_cartridge.getTitle() << "!\n";   
+     
+    m_mmu.insertCartridge(m_cartridge); 
     initMMU(m_cartridge.isColour());
-    
-    m_mmu.insertCartridge(m_cartridge);  
     m_cpu.getRegisters().setPC(0x100);
 
     m_disassembler.disassemble(m_mmu, 0, 0x7fff);
@@ -487,8 +490,8 @@ void Speljongen::updateVramView()
 void Speljongen::initMMU(bool colour)
 {
     //TODO disable colour on sound
-    m_interruptManager.enableColour(false);
-    m_gpu.enableColour(false);
+    m_interruptManager.enableColour(colour);
+    m_gpu.enableColour(colour);
 
     //maps address spaces so they are accessable through mmu
     /*
@@ -497,7 +500,8 @@ void Speljongen::initMMU(bool colour)
     be added after the GPU to make sure the correct accessor is
     used when reading or writing the MMU
     */
-
+    m_mmu.addAddressSpace(m_gpu); //add this last to make sure any colour palette registers are added
+    m_mmu.addAddressSpace(m_interruptManager);
     m_mmu.addAddressSpace(m_timer);   
     m_mmu.addAddressSpace(m_shadowSpace);
     m_mmu.addAddressSpace(m_lowerRamSpace);
@@ -514,11 +518,10 @@ void Speljongen::initMMU(bool colour)
         m_colourRegisters.reset();
 
         //TODO enable colour mode on sound output
-        m_interruptManager.enableColour(true);
-        m_gpu.enableColour(true);
+        //m_interruptManager.enableColour(true);
+        //m_gpu.enableColour(true);
     }
-    m_mmu.addAddressSpace(m_gpu); //add this last to make sure any colour palette registers are added
-    m_mmu.addAddressSpace(m_interruptManager);
+
     m_mmu.initBios(); //MUST be done after mapping is complete
 
     initRegisters(colour);

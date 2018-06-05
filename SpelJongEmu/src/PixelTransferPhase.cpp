@@ -16,15 +16,7 @@ PixelTransferPhase::PixelTransferPhase(Ram& vram0, Ram& vram1, Ram& oam, Display
     m_window        (false),
     m_sprites       ({})
 {
-    //if (colour)
-    //{
-    //    //TODO create colour fifo
-    //    assert(!colour); //not yet implemented!
-    //}
-    //else
-    {
-        m_fifo = std::make_unique<ClassicPixelFifo>(display, lcdc, registers);
-    }
+   m_fifo = std::make_unique<ClassicPixelFifo>(display, lcdc, registers);
     m_fetcher = std::make_unique<Fetcher>(vram0, vram1, oam, lcdc, registers);
 }
 
@@ -137,6 +129,7 @@ void PixelTransferPhase::enableColour(bool enable)
     }
     m_colour = enable;
     m_fetcher->enableColour(enable, m_fifo.get());
+    m_fetcher->disableFetching();
 }
 
 //private

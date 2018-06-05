@@ -36,7 +36,6 @@ void Display::putColourPixel(std::uint16_t value)
     sf::Uint8 r(value & 0x1f);
     sf::Uint8 g((value >> 5) & 0x1f);
     sf::Uint8 b((value >> 10) & 0x1f);
-    //std::cout << value << "\n";
     setPixel({ sf::Uint8(r * 8), sf::Uint8(g * 8), sf::Uint8(b * 8) });
 }
 
