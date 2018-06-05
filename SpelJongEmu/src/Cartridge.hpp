@@ -24,7 +24,7 @@ public:
 
     const std::string& getInfo() const { return m_infoStr; }
 
-    const bool isColour() const { return m_colour; }
+    bool isColour() const { return m_colour; }
 
     enum Type
     {

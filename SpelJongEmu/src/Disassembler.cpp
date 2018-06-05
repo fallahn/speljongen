@@ -17,7 +17,7 @@ void Disassembler::disassemble(const AddressSpace& addressSpace, std::uint16_t s
 {
     std::uint16_t address = start;
     
-    while (addressSpace.accepts(address) && address < 0xff4c)
+    while (addressSpace.accepts(address) && address < 0xff4c && address < end)
     {      
         auto byte = addressSpace.getByte(address);
         
