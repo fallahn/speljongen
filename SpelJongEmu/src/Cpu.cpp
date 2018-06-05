@@ -7,6 +7,11 @@
 #include <iostream>
 #include <iomanip>
 
+namespace
+{
+    Registers lastState;
+}
+
 Cpu::Cpu(AddressSpace& addressSpace, InterruptManager& interruptManager, SpeedMode& speedMode, Display& display)
     : m_addressSpace        (addressSpace),
     m_interruptManager      (interruptManager),
@@ -36,6 +41,7 @@ bool Cpu::tick()
 {
     m_clockCycle = (m_clockCycle + 1) % (4 / m_speedMode.getSpeedMode());
     if (m_clockCycle != 0) return false;
+
 
     if(m_state & OPCODE_HALTED_STOPPED)
     {
@@ -83,6 +89,12 @@ bool Cpu::tick()
             m_opcodeOne = m_addressSpace.getByte(pc);
             //thingCounter++;
             //m_logFile << std::hex << /*std::setfill('0') << std::setw(2) <<*/ pc << " " << (int)m_registers.getA() << "\n";
+            
+            /*if (pc == 0xff7b)
+            {
+                int buns = 0;
+            }
+            lastState = m_registers;*/
 
             accessedMemory = true;
             if (m_opcodeOne == 0xcb) //jumps to extended ops
@@ -272,7 +284,7 @@ void Cpu::handleInterrupt()
 
     case State::IRQ_PUSH_2:
         m_registers.decrementSP();
-        m_addressSpace.setByte(m_registers.getSP(), static_cast<std::uint8_t>(m_registers.getSP() & 0x00ff));
+        m_addressSpace.setByte(m_registers.getSP(), static_cast<std::uint8_t>(m_registers.getPC() & 0x00ff));
         m_state = State::IRQ_JUMP;
 
         break;
