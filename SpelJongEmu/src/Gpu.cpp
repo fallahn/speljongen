@@ -5,13 +5,13 @@
 
 #include <iostream>
 
-Gpu::Gpu(std::vector<std::uint8_t>& storage, Display& display, InterruptManager& ir, SpeedMode& sm, bool colour)
+Gpu::Gpu(std::vector<std::uint8_t>& storage, Display& display, InterruptManager& ir, SpeedMode& sm)
     : AddressSpace      (storage),
     m_display           (display),
     m_interruptManager  (ir),
     m_dma               (storage, sm),
     m_oamRam            (storage, 0xfe00, 0x00a0),
-    m_colour            (colour),
+    m_colour            (false),
     m_videoRam0         (storage, 0x8000, 0x2000, false),
     m_videoRam1         (storage, 0x8000, 0x2000, false),
     m_lcdc              (storage),
@@ -19,7 +19,7 @@ Gpu::Gpu(std::vector<std::uint8_t>& storage, Display& display, InterruptManager&
     m_oamPalette        (storage, 0xff6a),
     m_registers         (storage, MemoryRegisters::STAT, MemoryRegisters::VBK),
     m_oamSearchPhase    (m_oamRam, m_lcdc, m_registers),
-    m_transferPhase     (m_videoRam0, m_videoRam1, m_oamRam, display, m_lcdc, m_registers, colour),
+    m_transferPhase     (m_videoRam0, m_videoRam1, m_oamRam, display, m_lcdc, m_registers, m_bgPalette, m_oamPalette),
     m_currentPhase      (&m_oamSearchPhase),
     m_lcdEnabled        (true),
     m_lcdEnableDelay    (0),
@@ -269,6 +269,12 @@ bool Gpu::vramUpdated() const
         return true;
     }
     return false;
+}
+
+void Gpu::enableColour(bool enable)
+{
+    m_transferPhase.enableColour(enable);
+    m_colour = enable;
 }
 
 //private

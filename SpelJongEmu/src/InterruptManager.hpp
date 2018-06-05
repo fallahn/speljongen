@@ -30,7 +30,9 @@ class InterruptManager final : public AddressSpace
 {
 public:
 
-    InterruptManager(std::vector<std::uint8_t>&, bool isColour);
+    explicit InterruptManager(std::vector<std::uint8_t>&);
+
+    void enableColour(bool colour) { m_isColour = colour; }
 
     std::string getLabel() const override { return "Interrupt Manager"; }
 

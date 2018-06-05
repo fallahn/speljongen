@@ -10,14 +10,14 @@ namespace
     const TileAttributes EmptyTileAttribs;
 }
 
-Fetcher::Fetcher(PixelFifo& fifo, Ram& ram0, Ram& ram1, Ram& oam, Lcdc& lcdc, MemoryRegisters& registers, bool colour)
-    : m_fifo            (fifo),
+Fetcher::Fetcher(Ram& ram0, Ram& ram1, Ram& oam, Lcdc& lcdc, MemoryRegisters& registers)
+    : m_fifo            (nullptr),
     m_videoRam0         (ram0),
     m_videoRam1         (ram1),
     m_oamRam            (oam),
     m_lcdc              (lcdc),
     m_registers         (registers),
-    m_colour            (colour),
+    m_colour            (false),
     m_state             (ReadTileID),
     m_fetchingDisabled  (false),
     m_mapAddress        (0),
@@ -54,7 +54,7 @@ void Fetcher::startFetching(std::uint16_t mapAddress, std::uint16_t tileDataAddr
     m_xOffset = xOffset;
     m_tileIDSigned = tileIDSigned;
     m_tileLine = tileLine;
-    m_fifo.clear();
+    m_fifo->clear();
 
     m_state = ReadTileID;
     m_tileID = 0;
@@ -81,9 +81,9 @@ void Fetcher::tick()
 {
     if (m_fetchingDisabled && m_state == ReadTileID)
     {
-        if (m_fifo.length() <= 8)
+        if (m_fifo->length() <= 8)
         {
-            m_fifo.enqueue8Pixels(EmptyPixelLine, m_tileAttributes);
+            m_fifo->enqueue8Pixels(EmptyPixelLine, m_tileAttributes);
         }
         return;
     }
@@ -122,9 +122,9 @@ void Fetcher::tick()
         m_state = Push;
         break;
     case Push:
-        if (m_fifo.length() <= 8)
+        if (m_fifo->length() <= 8)
         {
-            m_fifo.enqueue8Pixels(zip(m_tileData1, m_tileData2, m_tileAttributes.isXFlip()), m_tileAttributes);
+            m_fifo->enqueue8Pixels(zip(m_tileData1, m_tileData2, m_tileAttributes.isXFlip()), m_tileAttributes);
             m_xOffset = (m_xOffset + 1) % 0x20;
             m_state = ReadTileID;
         }
@@ -153,7 +153,7 @@ void Fetcher::tick()
         m_state = PushSprite;
         break;
     case PushSprite:
-        m_fifo.setOverlay(zip(m_tileData1, m_tileData2, m_spriteAttributes.isXFlip()), m_spriteOffset, m_spriteAttributes, m_spriteOamIndex);
+        m_fifo->setOverlay(zip(m_tileData1, m_tileData2, m_spriteAttributes.isXFlip()), m_spriteOffset, m_spriteAttributes, m_spriteOamIndex);
         m_state = ReadTileID;
         break;
     }

@@ -13,6 +13,7 @@ public:
     Display();
     //pixel values are 0 - 3 in classic mode
     void putPixel(std::uint8_t);
+    void putColourPixel(std::uint16_t);
     void refresh();
     void clear(bool powerOn = false);
 
@@ -29,4 +30,6 @@ private:
     sf::Uint32 m_pixelIndex;
 
     sf::Mutex m_mutex;
+
+    void setPixel(sf::Color);
 };

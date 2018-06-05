@@ -86,7 +86,8 @@ void Mmu::reset()
     for (auto i = 0u; i < m_addressSpaces.size(); ++i)
     {
         m_addressSpaces[i] = nullptr;
-        setStorageValue(static_cast<std::uint16_t>(i), static_cast<std::uint8_t>(randDist(randEngine)));
+        //setStorageValue(static_cast<std::uint16_t>(i), static_cast<std::uint8_t>(randDist(randEngine)));
+        setStorageValue(i, 0);
     }
 }
 
@@ -94,7 +95,7 @@ void Mmu::addAddressSpace(AddressSpace& space)
 {
     for (auto i = 0u; i < m_addressSpaces.size(); ++i)
     {
-        if (space.accepts(i))
+        if (space.accepts(i) && m_addressSpaces[i] != &space)
         {
             if (m_addressSpaces[i] != nullptr)
             {

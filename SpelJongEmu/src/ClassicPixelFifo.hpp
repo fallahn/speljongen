@@ -6,9 +6,6 @@ Implements the pixel queue for the original gameboy
 
 #include "PixelFifo.hpp"
 #include "MemoryRegisters.hpp"
-#include "IndexedQueue.hpp"
-
-using PixelQueue = IndexedQueue<std::uint8_t, 16u>;
 
 class Display;
 class Lcdc;

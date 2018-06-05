@@ -28,11 +28,16 @@ Display::Display()
 //public
 void Display::putPixel(std::uint8_t px)
 {
-    assert(m_pixelIndex < MaxPixels);
-    auto x = m_pixelIndex % Width;
-    auto y = m_pixelIndex / Width;
-    m_imageBuffer.setPixel(x , y, colours[px]);
-    m_pixelIndex = (m_pixelIndex + 1) % MaxPixels;
+    setPixel(colours[px]);
+}
+
+void Display::putColourPixel(std::uint16_t value)
+{
+    sf::Uint8 r(value & 0x1f);
+    sf::Uint8 g((value >> 5) & 0x1f);
+    sf::Uint8 b((value >> 10) & 0x1f);
+
+    setPixel({ sf::Uint8(r * 8), sf::Uint8(g * 8), sf::Uint8(b * 8) });
 }
 
 void Display::refresh()
@@ -51,3 +56,11 @@ void Display::clear(bool powerOn)
 }
 
 //private
+void Display::setPixel(sf::Color colour)
+{
+    assert(m_pixelIndex < MaxPixels);
+    auto x = m_pixelIndex % Width;
+    auto y = m_pixelIndex / Width;
+    m_imageBuffer.setPixel(x, y, colour);
+    m_pixelIndex = (m_pixelIndex + 1) % MaxPixels;
+}

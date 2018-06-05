@@ -22,7 +22,7 @@ public:
         HBlank, VBlank, OamSearch, PixelTransfer, None //order is important!
     };
 
-    Gpu(std::vector<std::uint8_t>&, Display&, InterruptManager&, SpeedMode&, bool);
+    Gpu(std::vector<std::uint8_t>&, Display&, InterruptManager&, SpeedMode&);
 
     void reset();
 
@@ -43,6 +43,8 @@ public:
     bool isLcdEnabled() const;
 
     bool vramUpdated() const;
+
+    void enableColour(bool enable);
 
 private:
     Display & m_display;

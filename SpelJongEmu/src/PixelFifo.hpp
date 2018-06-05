@@ -1,8 +1,12 @@
 #pragma once
 
+#include "IndexedQueue.hpp"
+
 #include <cstdint>
 #include <cstddef>
 #include <array>
+
+using PixelQueue = IndexedQueue<std::uint8_t, 16u>;
 
 class TileAttributes;
 class PixelFifo

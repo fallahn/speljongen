@@ -1,8 +1,8 @@
 #include "InterruptManager.hpp"
 
-InterruptManager::InterruptManager(std::vector<std::uint8_t>&storage, bool isColour)
+InterruptManager::InterruptManager(std::vector<std::uint8_t>&storage)
     : AddressSpace              (storage),
-    m_isColour                  (isColour),
+    m_isColour                  (false),
     m_ime                       (false),
     m_interruptFlag             (0xe1),
     m_interruptEnabled          (0),

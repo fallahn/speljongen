@@ -12,23 +12,27 @@
 class Ram;
 class Display;
 class Lcdc;
+class ColourPalette;
 
 class PixelTransferPhase final : public GpuPhase
 {
 public:
-    PixelTransferPhase(Ram&, Ram&, Ram&, Display&, Lcdc&, MemoryRegisters&, bool);
+    PixelTransferPhase(Ram&, Ram&, Ram&, Display&, Lcdc&, MemoryRegisters&, ColourPalette&, ColourPalette&);
 
     void start(std::array<SpritePosition, 10> sprites);
 
     bool tick() override;
 
+    void enableColour(bool);
+
 private:
     Display & m_display;
     Lcdc& m_lcdc;
     MemoryRegisters& m_registers;
+    ColourPalette& m_bgPalette;
+    ColourPalette& m_spritePalette;
     bool m_colour;
 
-    //Fetcher m_fetcher;
     std::uint16_t m_droppedPixels;
     std::uint8_t m_x;
     bool m_window;

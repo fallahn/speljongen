@@ -131,6 +131,7 @@
     <ClCompile Include="src\Cartridge.cpp" />
     <ClCompile Include="src\ClassicPixelFifo.cpp" />
     <ClCompile Include="src\ColourPalette.cpp" />
+    <ClCompile Include="src\ColourPixelFifo.cpp" />
     <ClCompile Include="src\Cpu.cpp" />
     <ClCompile Include="src\Disassembler.cpp" />
     <ClCompile Include="src\Display.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="src\Cartridge.hpp" />
     <ClInclude Include="src\ClassicPixelFifo.hpp" />
     <ClInclude Include="src\ColourPalette.hpp" />
+    <ClInclude Include="src\ColourPixelFifo.hpp" />
     <ClInclude Include="src\ColourRam.hpp" />
     <ClInclude Include="src\ColourRegisters.hpp" />
     <ClInclude Include="src\Cpu.hpp" />

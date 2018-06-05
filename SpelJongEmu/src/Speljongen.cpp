@@ -32,14 +32,15 @@ Speljongen::Speljongen()
     : m_storage         (0x10000),
     m_mmu               (m_storage),
     m_speedMode         (m_storage),
-    m_interruptManager  (m_storage, false),
+    m_interruptManager  (m_storage),
     m_cpu               (m_mmu, m_interruptManager, m_speedMode, m_display),
     m_timer             (m_storage, m_interruptManager, m_speedMode),
     m_shadowSpace       (m_storage, 0xe000, 0xc000, 0x1e00),
     m_lowerRamSpace     (m_storage, 0xc000, 0x1000, 0x2000),
     m_colourRam         (m_storage),
     m_colourRegisters   (m_storage),
-    m_gpu               (m_storage, m_display, m_interruptManager, m_speedMode, false),
+    m_hdma              (m_storage, m_mmu),
+    m_gpu               (m_storage, m_display, m_interruptManager, m_speedMode),
     m_cartridge         (m_storage),
 #ifdef USE_THREADING
     m_thread            (&Speljongen::threadFunc, this),
@@ -146,14 +147,14 @@ void Speljongen::step()
 void Speljongen::load(const std::string& path)
 {
     reset();    
-    
-    m_mmu.removeCartridge();
+    m_mmu.reset();
+    //m_mmu.removeCartridge();
 
     m_cartridge.load(path);
     std::cout << "Loaded " << m_cartridge.getTitle() << "!\n";   
-    
-    m_mmu.insertCartridge(m_cartridge);
     initMMU(m_cartridge.isColour());
+    
+    m_mmu.insertCartridge(m_cartridge);  
     m_cpu.getRegisters().setPC(0x100);
 
     m_disassembler.disassemble(m_mmu, 0, 0x7fff);
@@ -485,8 +486,9 @@ void Speljongen::updateVramView()
 
 void Speljongen::initMMU(bool colour)
 {
-    m_mmu.reset();
-    //TODO disable colour on gpu/interrupts/sound
+    //TODO disable colour on sound
+    m_interruptManager.enableColour(false);
+    m_gpu.enableColour(false);
 
     //maps address spaces so they are accessable through mmu
     /*
@@ -504,16 +506,18 @@ void Speljongen::initMMU(bool colour)
 
     if(colour)
     {
-        //TODO check for overlaps
         //add speed mode to mmu
         m_mmu.addAddressSpace(m_speedMode);
         //add hdma
+        m_mmu.addAddressSpace(m_hdma);
         //add GBC ram
         m_mmu.addAddressSpace(m_colourRam);
         m_mmu.addAddressSpace(m_colourRegisters);
         m_colourRegisters.reset();
 
-        //TODO enable colour mode on gpu, interrupt manager and sound output
+        //TODO enable colour mode on sound output
+        m_interruptManager.enableColour(true);
+        m_gpu.enableColour(true);
     }
     m_mmu.initBios(); //MUST be done after mapping is complete
 

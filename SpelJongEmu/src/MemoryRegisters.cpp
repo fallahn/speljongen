@@ -29,7 +29,7 @@ MemoryRegisters::MemoryRegisters(std::vector<std::uint8_t>& storage, std::uint16
 //public
 bool MemoryRegisters::accepts(std::uint16_t address) const
 {
-    return address >= m_start && address < m_end;
+    return address >= m_start && address <= m_end;
 }
 
 void MemoryRegisters::setByte(std::uint16_t address, std::uint8_t value)

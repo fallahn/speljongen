@@ -1,28 +1,31 @@
 #include "PixelTransferPhase.hpp"
 #include "Lcdc.hpp"
 #include "ClassicPixelFifo.hpp"
+#include "ColourPixelFifo.hpp"
 
-PixelTransferPhase::PixelTransferPhase(Ram& vram0, Ram& vram1, Ram& oam, Display& display, Lcdc& lcdc, MemoryRegisters& registers, bool colour)
+PixelTransferPhase::PixelTransferPhase(Ram& vram0, Ram& vram1, Ram& oam, Display& display, Lcdc& lcdc, MemoryRegisters& registers, ColourPalette& bgPalette, ColourPalette& oamPalette)
     : m_display     (display),
     m_lcdc          (lcdc),
     m_registers     (registers),
-    m_colour        (colour),
+    m_bgPalette     (bgPalette),
+    m_spritePalette (oamPalette),
+    m_colour        (false),
     //m_fetcher(),
     m_droppedPixels (0),
     m_x             (0),
     m_window        (false),
     m_sprites       ({})
 {
-    if (colour)
-    {
-        //TODO create colour fifo
-        assert(!colour); //not yet implemented!
-    }
-    else
+    //if (colour)
+    //{
+    //    //TODO create colour fifo
+    //    assert(!colour); //not yet implemented!
+    //}
+    //else
     {
         m_fifo = std::make_unique<ClassicPixelFifo>(display, lcdc, registers);
     }
-    m_fetcher = std::make_unique<Fetcher>(*m_fifo, vram0, vram1, oam, lcdc, registers, colour);
+    m_fetcher = std::make_unique<Fetcher>(vram0, vram1, oam, lcdc, registers);
 }
 
 //public
@@ -120,6 +123,20 @@ bool PixelTransferPhase::tick()
         return false;
     }
     return true;
+}
+
+void PixelTransferPhase::enableColour(bool enable)
+{
+    if (enable)
+    {
+        m_fifo = std::make_unique<ColourPixelFifo>(m_lcdc, m_display, m_bgPalette, m_spritePalette);
+    }
+    else
+    {
+        m_fifo = std::make_unique<ClassicPixelFifo>(m_display, m_lcdc, m_registers);
+    }
+    m_colour = enable;
+    m_fetcher->enableColour(enable, m_fifo.get());
 }
 
 //private

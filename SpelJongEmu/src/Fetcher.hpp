@@ -16,7 +16,7 @@ class Lcdc;
 class Fetcher final
 {
 public:
-    Fetcher(PixelFifo&, Ram&, Ram&, Ram&, Lcdc&, MemoryRegisters&, bool);
+    Fetcher(Ram&, Ram&, Ram&, Lcdc&, MemoryRegisters&);
 
     void init();
     void startFetching(std::uint16_t, std::uint16_t, std::uint8_t, bool, std::uint8_t);
@@ -29,8 +29,10 @@ public:
     PixelLine zip(std::uint8_t, std::uint8_t, bool);
     static PixelLine zip(std::uint8_t, std::uint8_t, bool, PixelLine&);
 
+    void enableColour(bool enable, PixelFifo* fifo) { m_colour = enable; m_fifo = fifo; }
+
 private:
-    PixelFifo& m_fifo;
+    PixelFifo* m_fifo;
     Ram& m_videoRam0;
     Ram& m_videoRam1;
     Ram& m_oamRam;

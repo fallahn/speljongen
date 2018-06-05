@@ -42,7 +42,7 @@ private:
     bool m_hblankTransfer;
     bool m_lcdEnabled;
 
-    std::size_t m_length;
+    std::uint8_t m_length;
     std::uint16_t m_src;
     std::uint16_t m_dst;
     std::int32_t m_tick;
