@@ -498,9 +498,7 @@ void Speljongen::initMMU(bool colour)
     used when reading or writing the MMU
     */
 
-    m_mmu.addAddressSpace(m_timer);
-    m_mmu.addAddressSpace(m_gpu);  
-    m_mmu.addAddressSpace(m_interruptManager);
+    m_mmu.addAddressSpace(m_timer);   
     m_mmu.addAddressSpace(m_shadowSpace);
     m_mmu.addAddressSpace(m_lowerRamSpace);
 
@@ -519,6 +517,8 @@ void Speljongen::initMMU(bool colour)
         m_interruptManager.enableColour(true);
         m_gpu.enableColour(true);
     }
+    m_mmu.addAddressSpace(m_gpu); //add this last to make sure any colour palette registers are added
+    m_mmu.addAddressSpace(m_interruptManager);
     m_mmu.initBios(); //MUST be done after mapping is complete
 
     initRegisters(colour);

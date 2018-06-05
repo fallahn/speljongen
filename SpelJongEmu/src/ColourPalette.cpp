@@ -7,7 +7,7 @@ ColourPalette::ColourPalette(std::vector<std::uint8_t>& storage, std::uint16_t o
     //m_index             (0),
     m_autoIncrement     (false)
 {
-
+    clear();
 }
 
 //public
@@ -72,9 +72,10 @@ void ColourPalette::clear()
 {
     for (auto& palette : m_palettes)
     {
-        for (auto& p : palette)
+        /*for (auto& p : palette)
         {
             p = 0x7fff;
-        }
+        }*/
+        palette = { 0x0000, 0x7c00, 0x03e0, 0x7fff };
     }
 }
