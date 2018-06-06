@@ -88,9 +88,9 @@ bool Cpu::tick()
             clearState();
             m_opcodeOne = m_addressSpace.getByte(pc);
             //thingCounter++;
-            //m_logFile << std::hex << /*std::setfill('0') << std::setw(2) <<*/ pc << " " << (int)m_registers.getA() << "\n";
+            //m_logFile << std::hex << /*std::setfill('0') << std::setw(2) <<*/ pc << " " << (int)m_addressSpace.getByte(m_registers.getSP()) << "\n";
             
-            /*if (pc == 0xff7b)
+            /*if (pc == 0x52f7)
             {
                 int buns = 0;
             }

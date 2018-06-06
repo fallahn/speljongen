@@ -57,6 +57,8 @@ void ClassicPixelFifo::setOverlay(const std::array<std::uint8_t, 8u>& pixelLine,
     bool priority = attribs.isPriority();
     std::uint8_t overlayPalette = m_memoryRegisters.getByte(attribs.getClassicPalette());
 
+    //std::cout << std::hex << (int)overlayPalette << "\n";
+
     for (auto j = offset; j < pixelLine.size(); ++j)
     {
         auto p = pixelLine[j];
@@ -92,5 +94,6 @@ void ClassicPixelFifo::clear()
 std::uint8_t ClassicPixelFifo::getColour(std::uint8_t palette, std::uint8_t index) const
 {
     //if (index > 0) std::cout << "Palette index: " << (int)index << "\n";
+    //std::cout << std::hex << (int)palette << "\n";
     return (palette >> (index * 2)) & 0b11;
 }

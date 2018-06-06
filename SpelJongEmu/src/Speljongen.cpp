@@ -436,6 +436,7 @@ void Speljongen::updateDebug()
     ss << "\nDE: 0x" << std::setfill('0') << std::setw(4) << reg.getDE();
     ss << "\nHL: 0x" << std::setfill('0') << std::setw(4) << reg.getHL();
     ss << "\nSP: 0x" << std::setfill('0') << std::setw(4) << reg.getSP();
+    ss << " : 0x" << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(reg.getSP());
     ss << "\nPC: 0x" << std::setfill('0') << std::setw(4) << reg.getPC();
     ss << " : 0x" << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(reg.getPC());
     ss << "\n" << (int)m_cpu.getCurrentOpcode().getOpcode() << ", " << m_cpu.getCurrentOpcode().getLabel();
