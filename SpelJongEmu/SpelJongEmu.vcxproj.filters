@@ -144,6 +144,9 @@
     <ClCompile Include="src\Controller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Mbc5.cpp">
+      <Filter>Source Files\mmu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\InterruptManager.hpp">
@@ -304,6 +307,9 @@
     </ClInclude>
     <ClInclude Include="src\Controller.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mbc5.hpp">
+      <Filter>Header Files\mmu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -146,6 +146,7 @@
     <ClCompile Include="src\InterruptManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Mbc1.cpp" />
+    <ClCompile Include="src\Mbc5.cpp" />
     <ClCompile Include="src\MemoryRegisters.cpp" />
     <ClCompile Include="src\Mmu.cpp" />
     <ClCompile Include="src\nfd\nfd_common.c" />
@@ -194,6 +195,7 @@
     <ClInclude Include="src\InterruptManager.hpp" />
     <ClInclude Include="src\Lcdc.hpp" />
     <ClInclude Include="src\Mbc1.hpp" />
+    <ClInclude Include="src\Mbc5.hpp" />
     <ClInclude Include="src\MemoryRegisters.hpp" />
     <ClInclude Include="src\Mmu.hpp" />
     <ClInclude Include="src\OamSearchPhase.hpp" />

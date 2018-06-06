@@ -26,6 +26,9 @@ public:
     void enableColour(bool);
 
 private:
+    Ram& m_vram0;
+    Ram& m_vram1;
+    Ram& m_oam;
     Display & m_display;
     Lcdc& m_lcdc;
     MemoryRegisters& m_registers;

@@ -31,12 +31,14 @@ namespace
 	            |          |
 	Bit3 ------Down-------Start----
 	
+    Bits are normally high and go low when button is pressed
+
 	*/
 }
 
 Controller::Controller(InterruptManager& im, Mmu& mmu)
-    : m_inputMask		(0),
-	m_lastMask			(0),
+    : m_inputMask		(0xff),
+	m_lastMask			(0xff),
 	m_interruptManager	(im),
     m_mmu				(mmu)
 {
@@ -46,7 +48,7 @@ Controller::Controller(InterruptManager& im, Mmu& mmu)
 //public
 void Controller::handleEvent(const sf::Event& evt)
 {
-    if (evt.type == sf::Event::KeyPressed)
+    if (evt.type == sf::Event::KeyReleased)
     {
         switch(evt.key.code)
         {
@@ -77,7 +79,7 @@ void Controller::handleEvent(const sf::Event& evt)
                 break;
         }
 	}
-    else if (evt.type == sf::Event::KeyReleased)
+    else if (evt.type == sf::Event::KeyPressed)
     {
         switch (evt.key.code)
         {

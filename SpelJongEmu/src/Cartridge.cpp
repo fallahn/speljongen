@@ -1,5 +1,6 @@
 #include "Cartridge.hpp"
 #include "Mbc1.hpp"
+#include "Mbc5.hpp"
 #include "Rom.hpp"
 #include "BootRom.hpp"
 
@@ -144,6 +145,11 @@ void Cartridge::load(const std::string& path)
     {
         m_mbc = std::make_unique<Mbc1>(getStorage(), buf, m_romBanks, m_ramBanks);
         m_infoStr += "Type: MBC1\n";
+    }
+    else if(m_info >= ROM_MBC5 && m_info <= ROM_MBC5_RUMBLE_SRAM_BATTERY)
+    {
+        m_mbc = std::make_unique<Mbc5>(getStorage(), buf, m_romBanks, m_ramBanks);
+        m_infoStr += "Type: MBC5\n";
     }
     else
     {

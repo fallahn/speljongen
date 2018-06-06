@@ -4,13 +4,15 @@
 #include "ColourPixelFifo.hpp"
 
 PixelTransferPhase::PixelTransferPhase(Ram& vram0, Ram& vram1, Ram& oam, Display& display, Lcdc& lcdc, MemoryRegisters& registers, ColourPalette& bgPalette, ColourPalette& oamPalette)
-    : m_display     (display),
+    : m_vram0       (vram0),
+    m_vram1         (vram1),
+    m_oam           (oam),
+    m_display       (display),
     m_lcdc          (lcdc),
     m_registers     (registers),
     m_bgPalette     (bgPalette),
     m_spritePalette (oamPalette),
     m_colour        (false),
-    //m_fetcher(),
     m_droppedPixels (0),
     m_x             (0),
     m_window        (false),
@@ -128,8 +130,9 @@ void PixelTransferPhase::enableColour(bool enable)
         m_fifo = std::make_unique<ClassicPixelFifo>(m_display, m_lcdc, m_registers);
     }
     m_colour = enable;
+    m_fetcher = std::make_unique<Fetcher>(m_vram0, m_vram1, m_oam, m_lcdc, m_registers);
     m_fetcher->enableColour(enable, m_fifo.get());
-    m_fetcher->disableFetching();
+    //m_fetcher->disableFetching();
 }
 
 //private

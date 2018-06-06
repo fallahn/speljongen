@@ -1,10 +1,6 @@
 #pragma once
 
 //creates an address space used as RAM.
-//requires storage to be set by MMU
-
-//TODO when writing to RAM 0c000 - 0dfff the data
-//should be shadowed by + 0x2000
 
 #include "AddressSpace.hpp"
 
