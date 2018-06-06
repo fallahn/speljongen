@@ -10,6 +10,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Sleep.hpp>
+#include <SFML/Window/Event.hpp>
 
 namespace
 {
@@ -33,6 +34,7 @@ Speljongen::Speljongen()
     m_mmu               (m_storage),
     m_speedMode         (m_storage),
     m_interruptManager  (m_storage),
+    m_controller        (m_interruptManager, m_mmu),
     m_cpu               (m_mmu, m_interruptManager, m_speedMode, m_display),
     m_timer             (m_storage, m_interruptManager, m_speedMode),
     m_shadowSpace       (m_storage, 0xe000, 0xc000, 0x1e00),
@@ -74,6 +76,11 @@ Speljongen::~Speljongen()
 }
 
 //public
+void Speljongen::handleEvent(const sf::Event& evt)
+{
+    m_controller.handleEvent(evt);
+}
+
 void Speljongen::start()
 {
 #ifndef USE_THREADING
@@ -99,6 +106,7 @@ void Speljongen::reset()
 {  
     m_cpu.clearState();
     m_gpu.reset();
+    m_mmu.reset();
     m_display.clear();
 
     activeCycles = gameboyCycles;
@@ -150,7 +158,7 @@ void Speljongen::step()
 void Speljongen::load(const std::string& path)
 {
     reset();    
-    m_mmu.reset();
+    
     //m_mmu.removeCartridge();
 
     m_cartridge.load(path);
@@ -318,19 +326,29 @@ bool Speljongen::tick()
 #endif
 
     m_timer.tick();
-    auto ret = m_cpu.tick();
-
+    m_controller.tick();
+    auto ret = false;
+    
+    if (m_hdma.transferInProgress())
+    {
+        m_hdma.tick();
+    }
+    else
+    {
+        ret = m_cpu.tick();
+    }
     auto gpuMode = m_gpu.tick();
     if (gpuMode != Gpu::Mode::None)
     {
         //update hdma
+        m_hdma.gpuUpdate(gpuMode);
     }
 
     if (!m_lcdDisabled && !m_gpu.isLcdEnabled())
     {
         m_lcdDisabled = true;
         m_display.refresh();
-        //hdma
+        m_hdma.onLcdSwitch(false);
     }
     else if (gpuMode == Gpu::Mode::VBlank)
     {
@@ -341,7 +359,7 @@ bool Speljongen::tick()
     if (m_lcdDisabled && m_gpu.isLcdEnabled())
     {
         m_lcdDisabled = false;
-        //TODO hdma
+        m_hdma.onLcdSwitch(true);
     }
     else if (m_requestRefresh && gpuMode == Gpu::Mode::OamSearch)
     {

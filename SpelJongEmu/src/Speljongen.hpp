@@ -18,6 +18,7 @@
 #include "ColourRam.hpp"
 #include "ColourRegisters.hpp"
 #include "Hdma.hpp"
+#include "Controller.hpp"
 
 #include <SFML/System/Thread.hpp>
 
@@ -32,6 +33,11 @@
 
 #define USE_THREADING //launches emulation in own thread if defined
 
+namespace sf
+{
+    class Event;
+}
+
 class Timer;
 class Dma;
 class Gpu;
@@ -45,6 +51,8 @@ public:
     Speljongen(Speljongen&&) = delete;
     Speljongen& operator = (const Speljongen&) = delete;
     Speljongen& operator = (Speljongen&&) = delete;
+
+    void handleEvent(const sf::Event&);
 
     void start();
     void stop();
@@ -68,6 +76,7 @@ private:
     Mmu m_mmu;
     SpeedMode m_speedMode;
     InterruptManager m_interruptManager;
+    Controller m_controller;
     Display m_display;
     Cpu m_cpu;
     Timer m_timer;

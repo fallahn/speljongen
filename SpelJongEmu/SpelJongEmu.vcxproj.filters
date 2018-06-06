@@ -141,6 +141,9 @@
     <ClCompile Include="src\ColourPixelFifo.cpp">
       <Filter>Source Files\gpu</Filter>
     </ClCompile>
+    <ClCompile Include="src\Controller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\InterruptManager.hpp">
@@ -298,6 +301,9 @@
     </ClInclude>
     <ClInclude Include="src\ColourPixelFifo.hpp">
       <Filter>Header Files\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Controller.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

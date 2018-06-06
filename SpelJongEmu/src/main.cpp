@@ -78,7 +78,7 @@ int main()
                     
                     //TODO check also inside window
                     nfdchar_t *outPath = nullptr;
-                    nfdresult_t result = NFD_OpenDialog("gb", nullptr, &outPath);
+                    nfdresult_t result = NFD_OpenDialog("gb,gbc", nullptr, &outPath);
                     if (result == NFD_OKAY)
                     {
                         gameboy.reset();
@@ -87,6 +87,7 @@ int main()
                     }
                 }
             }
+            gameboy.handleEvent(evt);
         }
 
 #ifndef USE_THREADING

@@ -16,7 +16,7 @@ PixelTransferPhase::PixelTransferPhase(Ram& vram0, Ram& vram1, Ram& oam, Display
     m_window        (false),
     m_sprites       ({})
 {
-   m_fifo = std::make_unique<ClassicPixelFifo>(display, lcdc, registers);
+    m_fifo = std::make_unique<ClassicPixelFifo>(display, lcdc, registers);
     m_fetcher = std::make_unique<Fetcher>(vram0, vram1, oam, lcdc, registers);
 }
 
