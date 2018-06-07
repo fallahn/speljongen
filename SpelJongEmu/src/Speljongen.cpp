@@ -52,7 +52,9 @@ Speljongen::Speljongen()
     m_thread            (&Speljongen::threadFunc, this),
 #endif
     m_requestRefresh    (false),
-    m_lcdDisabled       (false)
+    m_lcdDisabled       (false),
+    m_vramViewer        (m_mmu),
+    m_tickTime          (0.f)
 #ifdef RUN_TESTS
     ,m_fifoTest         (m_display)
 #endif

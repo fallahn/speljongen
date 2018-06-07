@@ -112,7 +112,6 @@ private:
     ColourRam m_colourRam;
     ColourRegisters m_colourRegisters;
     Hdma m_hdma;
-    //RamSpace m_upperRamSpace;
 
     Gpu m_gpu;
 

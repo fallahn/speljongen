@@ -1,4 +1,6 @@
 #include "VramViewer.hpp"
+#include "Mmu.hpp"
+#include "MemoryRegisters.hpp"
 
 #include <SFML/System/Lock.hpp>
 
@@ -8,19 +10,23 @@ namespace
     const sf::Uint32 Height = 128;
     const std::array<sf::Color, 4u> colours =
     {
-        sf::Color(155, 188, 15), sf::Color(139, 172, 15), sf::Color(48, 98, 48), sf::Color(15, 56, 15)
+        sf::Color(255, 255, 255), sf::Color(77, 77, 77), sf::Color(38, 38, 38), sf::Color(0, 0, 0)
     };
 }
 
-VramViewer::VramViewer()
+VramViewer::VramViewer(const Mmu& mmu)
+    : m_mmu(mmu)
 {
     m_imageBuffer.create(Width, Height, sf::Color::Black);
     m_texture.loadFromImage(m_imageBuffer);
 }
 
 //public
-void VramViewer::setPixel(sf::Uint32 x, sf::Uint32 y, std::uint8_t colour)
+void VramViewer::setPixel(sf::Uint32 x, sf::Uint32 y, std::uint8_t idx)
 {
+    auto palette = m_mmu.getByte(MemoryRegisters::BGP);
+    std::uint8_t colour = (palette >> (idx * 2)) & 0b11;
+
     m_imageBuffer.setPixel(x, y, colours[colour]);
 }
 

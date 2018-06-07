@@ -31,10 +31,11 @@ SOFTWARE.
 
 #include <array>
 
+class Mmu;
 class VramViewer final
 {
 public:
-    VramViewer();
+    explicit VramViewer(const Mmu&);
 
     void setPixel(sf::Uint32, sf::Uint32, std::uint8_t);
 
@@ -48,6 +49,7 @@ public:
 private:
     sf::Image m_imageBuffer;
     sf::Texture m_texture;
+    const Mmu& m_mmu;
 
     sf::Mutex m_mutex;
 };
