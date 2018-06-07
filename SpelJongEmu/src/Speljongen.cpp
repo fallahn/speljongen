@@ -18,7 +18,7 @@ namespace
 {
     ImVec2 ButtonSize(80.f, 20.f);
     MemoryEditor memEditor;
-    bool breakPoints[0x10000];
+    std::array<bool, 0x10000> breakPoints = {};
 
     //------------------------------
     static const std::int32_t gameboyCycles = 4194304 / 60;
@@ -60,7 +60,7 @@ Speljongen::Speljongen()
     initMMU(false);
 
     m_disassembler.disassemble(m_mmu);
-    memEditor.BreakPoints = breakPoints;
+    memEditor.BreakPoints = breakPoints.data();
 
 #ifdef RUN_TESTS   
     /*m_fifoTest.testEnqueue();
@@ -303,7 +303,6 @@ void Speljongen::doImgui()
     ImGui::Text("  Emulation speed: %.2f%%", m_tickTime.load());
     ImGui::End();
 
-    static std::array<bool, 0xffff> selection = {};
     ImGui::SetNextWindowSize({ 780.f, 230.f });
     ImGui::SetNextWindowPos({ 10.f, 360.f });
     ImGui::Begin("DASM - F3 Step, F9 Run/Stop, Right click to load ROM", nullptr, ImGuiWindowFlags_NoCollapse);

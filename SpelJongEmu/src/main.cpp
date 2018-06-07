@@ -12,7 +12,6 @@
 int main()
 {
     Speljongen gameboy;
-    bool run = false;
 
     sf::RenderWindow window;
     window.create({ 800, 600 }, "Speljongen", sf::Style::Close | sf::Style::Titlebar);
