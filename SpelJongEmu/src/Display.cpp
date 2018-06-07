@@ -15,6 +15,7 @@ namespace
     const std::array<sf::Color, 4u> colours = 
     {
         sf::Color(155, 188, 15), sf::Color(139, 172, 15), sf::Color(48, 98, 48), sf::Color(15, 56, 15)
+        //sf::Color(230, 249, 218), sf::Color(153, 200, 134), sf::Color(67, 121, 105), sf::Color(5, 31, 42)
     };
 }
 
