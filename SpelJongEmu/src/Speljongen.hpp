@@ -88,7 +88,7 @@ public:
 
     void load(const std::string&);
 
-    void doImgui() const;
+    void doImgui();
     void lockDisplay();
     void freeDisplay();
 
@@ -141,6 +141,8 @@ private:
     std::atomic<float> m_tickTime;
 
     void initMMU(bool colour = false);
+
+    void browseFile();
 
 #ifdef RUN_TESTS
     void testTiming();

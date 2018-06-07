@@ -15,7 +15,7 @@ int main()
     bool run = false;
 
     sf::RenderWindow window;
-    window.create({ 800, 600 }, "Speljongen: STOPPED", sf::Style::Close | sf::Style::Titlebar);
+    window.create({ 800, 600 }, "Speljongen", sf::Style::Close | sf::Style::Titlebar);
     window.setVerticalSyncEnabled(true);
 
     ImGui::SFML::Init(window);
@@ -39,62 +39,15 @@ int main()
                 case sf::Keyboard::Escape:
                     window.close();
                     break;
-                case sf::Keyboard::F9:
-                    run = !run;
-                    if (run)
-                    {
-                        gameboy.start();
-                        window.setTitle("Speljongen: STARTED");
-                    }
-                    else
-                    {
-                        window.setTitle("Speljongen: STOPPING...");
-                        gameboy.stop();
-                        window.setTitle("Speljongen: STOPPED");
-                    }
-                    break;
                 default: break;
-                }
-            }
-            else if (evt.type == sf::Event::KeyPressed)
-            {
-                switch (evt.key.code)
-                {
-                default: break;
-                case sf::Keyboard::F3:
-                    if (!run)
-                    {
-                        gameboy.step();
-                    }
-                    break;
-                }
-            }
-            else if (evt.type == sf::Event::MouseButtonReleased)
-            {
-                if (evt.mouseButton.button == sf::Mouse::Right)
-                {
-                    gameboy.stop();
-                    run = false;
-                    
-                    //TODO check also inside window
-                    nfdchar_t *outPath = nullptr;
-                    nfdresult_t result = NFD_OpenDialog("gb,gbc", nullptr, &outPath);
-                    if (result == NFD_OKAY)
-                    {
-                        gameboy.reset();
-                        gameboy.load(outPath);
-                        free(outPath);
-                    }
                 }
             }
             gameboy.handleEvent(evt);
         }
 
 #ifndef USE_THREADING
-        if (run)
-        {
-            gameboy.update();
-        }
+
+        gameboy.update();
 #endif
 
         ImGui::SFML::Update(window, imguiClock.restart());

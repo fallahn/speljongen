@@ -1,6 +1,7 @@
 #include "Speljongen.hpp"
 #include "imgui/imgui.h"
 #include "imgui/imgui-SFML.h"
+#include "nfd/nfd.h"
 
 #include <sstream>
 #include <iomanip>
@@ -79,6 +80,45 @@ Speljongen::~Speljongen()
 void Speljongen::handleEvent(const sf::Event& evt)
 {
     m_controller.handleEvent(evt);
+
+
+    if (evt.type == sf::Event::KeyReleased)
+    {
+        switch (evt.key.code)
+        {
+        case sf::Keyboard::F9:
+            if (!m_running)
+            {
+                start();
+            }
+            else
+            {
+                stop();
+            }
+            break;
+        default: break;
+        }
+    }
+    else if (evt.type == sf::Event::KeyPressed)
+    {
+        switch (evt.key.code)
+        {
+        default: break;
+        case sf::Keyboard::F3:
+            if (!m_running)
+            {
+                step();
+            }
+            break;
+        }
+    }
+    else if (evt.type == sf::Event::MouseButtonReleased)
+    {
+        if (evt.mouseButton.button == sf::Mouse::Right)
+        {
+            browseFile();
+        }
+    }
 }
 
 void Speljongen::start()
@@ -110,7 +150,7 @@ void Speljongen::reset()
     m_display.clear();
 
     activeCycles = gameboyCycles;
-    frameSkip = 1.f;;
+    frameSkip = 1.f;
 
     updateDebug();
 }
@@ -171,7 +211,7 @@ void Speljongen::load(const std::string& path)
     m_disassembler.disassemble(m_mmu, 0, 0x7fff);
 }
 
-void Speljongen::doImgui() const
+void Speljongen::doImgui()
 {
     auto flags = m_cpu.getRegisters().getFlags();
     bool flagsZ = flags.isSet(Flags::Z);
@@ -293,13 +333,25 @@ void Speljongen::doImgui() const
     ImGui::EndChild();
     ImGui::SameLine();
     ImGui::BeginChild("Control", ImVec2((ImGui::GetWindowContentRegionWidth() * 0.5f) - 8.f, 194.f), true/*, ImGuiWindowFlags_HorizontalScrollbar*/);
-    ImGui::Button("Load", ButtonSize);
+    if (ImGui::Button("Load", ButtonSize) && !m_running)
+    {
+        browseFile();
+    }
     ImGui::SameLine();
-    ImGui::Button(m_running ? "Stop (F9)" : "Run (F9)", ButtonSize);
+    if (ImGui::Button(m_running ? "Stop (F9)" : "Run (F9)", ButtonSize))
+    {
+        m_running ? stop() : start();
+    }
     ImGui::SameLine();
-    ImGui::Button("Step (F3)", ButtonSize);
+    if (ImGui::Button("Step (F3)", ButtonSize) && !m_running)
+    {
+        step();
+    }
     ImGui::SameLine();
-    ImGui::Button("Reset", ButtonSize);
+    if (ImGui::Button("Reset", ButtonSize) && !m_running)
+    {
+        reset();
+    }
     ImGui::EndChild();
     ImGui::End();
 
@@ -545,4 +597,19 @@ void Speljongen::initMMU(bool colour)
 
     initRegisters(colour);
     updateDebug();
+}
+
+void Speljongen::browseFile()
+{
+    stop();
+
+    //TODO check also inside window
+    nfdchar_t *outPath = nullptr;
+    nfdresult_t result = NFD_OpenDialog("gb,gbc", nullptr, &outPath);
+    if (result == NFD_OKAY)
+    {
+        reset();
+        load(outPath);
+        free(outPath);
+    }
 }
