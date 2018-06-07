@@ -1,6 +1,7 @@
 #include "Mbc5.hpp"
 
 #include <algorithm>
+#include <iostream>
 
 Mbc5::Mbc5(std::vector<std::uint8_t>& storage, const std::vector<char>& cartData, std::int32_t romBanks, std::int32_t ramBanks)
     : AddressSpace      (storage),
@@ -42,12 +43,15 @@ void Mbc5::setByte(std::uint16_t address, std::uint8_t value)
     if (address >= 0x2000 && address < 0x3000)
     {
         m_selectedRomBank = (m_selectedRomBank & 0x100) | value;
+        //std::cout << "ROM bank set to: " << m_selectedRomBank << "\n";
         return;
     }
 
     if (address >= 0x3000 && address < 0x4000)
     {
-        m_selectedRomBank = (m_selectedRomBank & 0x0ff) | ((value & 1) << 8);
+        std::int32_t val = value;
+        m_selectedRomBank = (m_selectedRomBank & 0x0ff) | ((val & 1) << 8);
+        //std::cout << "ROM bank set to: " << m_selectedRomBank << "\n";
         return;
     }
 

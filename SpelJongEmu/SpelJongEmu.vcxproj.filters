@@ -311,5 +311,8 @@
     <ClInclude Include="src\Mbc5.hpp">
       <Filter>Header Files\mmu</Filter>
     </ClInclude>
+    <ClInclude Include="src\imgui\imgui_memory_editor.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

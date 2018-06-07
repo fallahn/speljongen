@@ -25,7 +25,6 @@ bool Hdma::accepts(std::uint16_t address) const
 void Hdma::setByte(std::uint16_t address, std::uint8_t value)
 {
     assert(accepts(address));
-    setStorageValue(address, value);
     if (address == HDMA5)
     {
         if (m_inProgress && (address & (1 << 7)) == 0)
@@ -36,7 +35,9 @@ void Hdma::setByte(std::uint16_t address, std::uint8_t value)
         {
             startTransfer(value);
         }
+        return; //skip setting hdma5
     }
+    setStorageValue(address, value);
 }
 
 std::uint8_t Hdma::getByte(std::uint16_t address) const
@@ -61,7 +62,6 @@ void Hdma::tick()
     {
         m_mmu.setByte(m_dst + i, m_mmu.getByte(m_src + i));
     }
-
     m_src += 0x10;
     m_dst += 0x10;
 
@@ -108,6 +108,8 @@ void Hdma::startTransfer(std::uint8_t reg)
 
     m_src &= 0xfff0;
     m_dst = (m_dst & 0x1fff) | 0x8000;
+
+    m_inProgress = true;
 }
 
 void Hdma::stopTransfer()

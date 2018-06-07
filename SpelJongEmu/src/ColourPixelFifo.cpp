@@ -41,7 +41,7 @@ void ColourPixelFifo::enqueue8Pixels(const std::array<std::uint8_t, 8u>& pixels,
 
 void ColourPixelFifo::setOverlay(const std::array<std::uint8_t, 8>& pixelLine, std::uint16_t offset, const TileAttributes& flags, std::uint16_t oamIndex)
 {
-    for (auto j = 0u; j < pixelLine.size(); ++j)
+    for (auto j = offset; j < pixelLine.size(); ++j)
     {
         auto p = pixelLine[j];
         if (p == 0)

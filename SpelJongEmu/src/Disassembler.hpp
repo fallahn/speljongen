@@ -34,10 +34,14 @@ public:
     Disassembler();
 
     void disassemble(const AddressSpace&, uint16_t start = 0, std::uint16_t end = 0xffff);
+    void updateRawView(const AddressSpace&, uint16_t start = 0, std::uint16_t end = 0xffff);
+    std::vector<std::uint8_t>& getRawView() { return m_rawView; }
+    std::vector<std::string>& getLabels() { return m_disassembly; }
 
     const std::string& operator [](std::size_t i) const { return m_disassembly[i]; }
 
 private:
 
     std::vector<std::string> m_disassembly;
+    std::vector<std::uint8_t> m_rawView;
 };

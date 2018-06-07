@@ -1,6 +1,7 @@
 #include "Speljongen.hpp"
 #include "imgui/imgui.h"
 #include "imgui/imgui-SFML.h"
+#include "imgui/imgui_memory_editor.h"
 #include "nfd/nfd.h"
 
 #include <sstream>
@@ -16,6 +17,8 @@
 namespace
 {
     ImVec2 ButtonSize(80.f, 20.f);
+    MemoryEditor memEditor;
+    bool breakPoints[0x10000];
 
     //------------------------------
     static const std::int32_t gameboyCycles = 4194304 / 60;
@@ -57,6 +60,7 @@ Speljongen::Speljongen()
     initMMU(false);
 
     m_disassembler.disassemble(m_mmu);
+    memEditor.BreakPoints = breakPoints;
 
 #ifdef RUN_TESTS   
     /*m_fifoTest.testEnqueue();
@@ -140,6 +144,7 @@ void Speljongen::stop()
 #endif
     m_disassembler.disassemble(m_mmu, 0xc000, 0xfe00);
     m_disassembler.disassemble(m_mmu, 0xff80, 0xffff);
+    //m_disassembler.updateRawView(m_mmu);
 }
 
 void Speljongen::reset()
@@ -199,8 +204,6 @@ void Speljongen::load(const std::string& path)
 {
     reset();    
     
-    //m_mmu.removeCartridge();
-
     m_cartridge.load(path);
     std::cout << "Loaded " << m_cartridge.getTitle() << "!\n";   
      
@@ -209,6 +212,7 @@ void Speljongen::load(const std::string& path)
     m_cpu.getRegisters().setPC(0x100);
 
     m_disassembler.disassemble(m_mmu, 0, 0x7fff);
+    //m_disassembler.updateRawView(m_mmu);
 }
 
 void Speljongen::doImgui()
@@ -227,7 +231,6 @@ void Speljongen::doImgui()
     ImGui::BeginChild("Video", ImVec2(276.f, 280.f), false);
     if (ImGui::CollapsingHeader("VRAM"))
     {
-        //ImGui::Pad
         ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, { 1.f, 0.f });
         ImGui::Image(m_vramViewer.getTexture(), sf::Vector2f(256.f, 256.f));
         ImGui::PopStyleVar();
@@ -305,31 +308,7 @@ void Speljongen::doImgui()
     ImGui::SetNextWindowPos({ 10.f, 360.f });
     ImGui::Begin("DASM - F3 Step, F9 Run/Stop, Right click to load ROM", nullptr, ImGuiWindowFlags_NoCollapse);
     ImGui::BeginChild("Output", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, 194.f), true, ImGuiWindowFlags_HorizontalScrollbar);
-    
-    /*auto pc = m_cpu.getRegisters().getPC();
-    int start = std::max(0, pc - 50);
-    int end = std::min(0xffff, pc + 49);*/
-    ImGui::PushStyleColor(ImGuiCol_TextSelectedBg, { 0.6f, 0.f, 0.f, 1.f });
-    for (int i = 0; i < 100; i++)
-    {
-        /*if (this is our break point or stepped to line)
-            ImGui::SetScrollHere();*/
-        //TODO red dot based on selection state
-        /*ImGui::Text("0x%.4x", i);
-        ImGui::SameLine();*/
-        if (!m_disassembler[i].empty())
-        {
-            if (ImGui::Selectable(m_disassembler[i].c_str(), selection[i], ImGuiSelectableFlags_AllowDoubleClick))
-            {
-                if (ImGui::IsMouseDoubleClicked(0))
-                {
-                    selection[i] = !selection[i];
-                }
-            }
-        }
-    }
-    ImGui::PopStyleColor();
-
+    memEditor.DrawContents(m_disassembler.getRawView().data(), m_disassembler.getRawView().size(), 0, &m_disassembler.getLabels());
     ImGui::EndChild();
     ImGui::SameLine();
     ImGui::BeginChild("Control", ImVec2((ImGui::GetWindowContentRegionWidth() * 0.5f) - 8.f, 194.f), true/*, ImGuiWindowFlags_HorizontalScrollbar*/);
@@ -587,14 +566,27 @@ void Speljongen::initMMU(bool colour)
         m_mmu.addAddressSpace(m_colourRam);
         m_mmu.addAddressSpace(m_colourRegisters);
         m_colourRegisters.reset();
-
-        //TODO enable colour mode on sound output
-        //m_interruptManager.enableColour(true);
-        //m_gpu.enableColour(true);
     }
 
     m_mmu.initBios(); //MUST be done after mapping is complete
 
+    //reset all registers
+    m_mmu.setByte(MemoryRegisters::TIMA, 0);
+    m_mmu.setByte(MemoryRegisters::TMA, 0);
+    m_mmu.setByte(MemoryRegisters::TAC, 0);
+    //TODO audio registers
+    m_mmu.setByte(MemoryRegisters::LCDC, 0x91);
+    m_mmu.setByte(MemoryRegisters::SCY, 0);
+    m_mmu.setByte(MemoryRegisters::SCX, 0);
+    m_mmu.setByte(MemoryRegisters::LYC, 0);
+    m_mmu.setByte(MemoryRegisters::LY, 0);
+    m_mmu.setByte(MemoryRegisters::BGP, 0xfc);
+    m_mmu.setByte(MemoryRegisters::OBP0, 0xff);
+    m_mmu.setByte(MemoryRegisters::OBP1, 0xff);
+    m_mmu.setByte(MemoryRegisters::WY, 0);
+    m_mmu.setByte(MemoryRegisters::WX, 0);
+    m_mmu.setByte(0xffff, 0);
+        
     initRegisters(colour);
     updateDebug();
 }

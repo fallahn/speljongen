@@ -7,7 +7,8 @@
 #include <iostream>
 
 Disassembler::Disassembler()
-    : m_disassembly(0x10000)
+    : m_disassembly(0x10000),
+    m_rawView(0x10000)
 {
 
 }
@@ -20,16 +21,17 @@ void Disassembler::disassemble(const AddressSpace& addressSpace, std::uint16_t s
     while (addressSpace.accepts(address) && address < 0xff4c && address < end)
     {      
         auto byte = addressSpace.getByte(address);
+        m_disassembly[address].clear();
         
         OpCode currentOp;
         if (byte == 0xCB)
         {
             //ext command
-            std::stringstream ss;
+            /*std::stringstream ss;
             ss << "0x" << std::hex << std::setfill('0') << std::setw(4);
             ss << address << ": 0xCB";
             m_disassembly[address] = ss.str();
-            address++;
+            address++;*/
             byte = addressSpace.getByte(address);
             currentOp = OpCodes::ExtCommands[byte];
         }
@@ -38,21 +40,32 @@ void Disassembler::disassemble(const AddressSpace& addressSpace, std::uint16_t s
             currentOp = OpCodes::Commands[byte];
         }
 
-        std::stringstream ss;
-        ss << "0x" << std::hex << std::setfill('0') << std::setw(4) << address << ": " << currentOp.getLabel();
+        /*std::stringstream ss;
+        ss << "0x" << std::hex << std::setfill('0') << std::setw(4) << address << ": " << currentOp.getLabel();*/
 
         //TODO we need to decode the op to fetch the correct params
         auto len = currentOp.getOperandLength();
         
-        m_disassembly[address++] = ss.str();
+        m_disassembly[address++] = currentOp.getLabel();// ss.str();
 
         //fill in spaces where operands live
         for (auto i = 0u; i < len; ++i)
         {
-            std::stringstream ss2;
+            /*std::stringstream ss2;
             ss2 << "0x" << std::hex << std::setfill('0') << std::setw(4) << address << ": ";
             ss2 << "0x" << std::setfill('0') << std::setw(2) << (int)addressSpace.getByte(address);
-            m_disassembly[address++] = ss2.str();
+            m_disassembly[address++] = ss2.str();*/
+            address++;
         }        
+    }
+
+    updateRawView(addressSpace, start, end);
+}
+
+void Disassembler::updateRawView(const AddressSpace& addressSpace, uint16_t start, std::uint16_t end)
+{
+    for (auto i = start; i < end; ++i)
+    {
+        m_rawView[i] = addressSpace.getByte(i);
     }
 }
