@@ -11,11 +11,16 @@
 
 int main()
 {
+#ifdef __LINUX__
+    XInitThreads();
+#endif    
+
     Speljongen gameboy;
 
     sf::RenderWindow window;
     window.create({ 800, 600 }, "Speljongen", sf::Style::Close | sf::Style::Titlebar);
     window.setVerticalSyncEnabled(true);
+
 
     ImGui::SFML::Init(window);
 

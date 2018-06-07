@@ -93,8 +93,6 @@ public:
     void freeDisplay();
 
 private:
-
-    
     std::vector<std::uint8_t> m_storage;
     std::atomic<bool> m_running;
     Mmu m_mmu;

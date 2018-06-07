@@ -35,6 +35,7 @@ namespace
 
 Speljongen::Speljongen()
     : m_storage         (0x10000),
+    m_running           (false),
     m_mmu               (m_storage),
     m_speedMode         (m_storage),
     m_interruptManager  (m_storage),
