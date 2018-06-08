@@ -138,7 +138,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
     static bool show_app_constrained_resize = false;
     static bool show_app_simple_overlay = false;
     static bool show_app_window_titles = false;
-    static bool show_app_custom_rendering = false;
+    static bool show_app_custom_rendering = true;
     static bool show_app_style_editor = false;
 
     static bool show_app_metrics = false;

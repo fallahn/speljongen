@@ -80,7 +80,7 @@ struct MemoryEditor
         OptGreyOutZeroes = false;
         OptMidRowsCount = 8;
         OptAddrDigitsCount = 0;
-        HighlightColor = IM_COL32(255, 255, 255, 40);
+        HighlightColor = IM_COL32(255, 55, 0, 40);
         ReadFn = NULL;
         WriteFn = NULL;
         HighlightFn = NULL;
@@ -225,10 +225,12 @@ struct MemoryEditor
             size_t addr = (size_t)(line_i * Rows);
             if (BreakPoints)
             {
+                ImGui::PushStyleColor(ImGuiCol_CheckMark, { 0.9f, 0.1f, 0.12f, 1.f });
                 ImGui::PushID((int)addr);
                 ImGui::Checkbox(" ", &BreakPoints[addr]);
                 ImGui::SameLine();
                 ImGui::PopID();
+                ImGui::PopStyleColor();
             }
 
             ImGui::Text("%0*" _PRISizeT ": ", s.AddrDigitsCount, base_display_addr + addr);
@@ -245,14 +247,14 @@ struct MemoryEditor
                 if ((addr >= HighlightMin && addr < HighlightMax) || (HighlightFn && HighlightFn(mem_data, addr)))
                 {
                     ImVec2 pos = ImGui::GetCursorScreenPos();
-                    float highlight_width = s.GlyphWidth * 2;
-                    bool is_next_byte_highlighted =  (addr + 1 < mem_size) && ((HighlightMax != (size_t)-1 && addr + 1 < HighlightMax) || (HighlightFn && HighlightFn(mem_data, addr + 1)));
+                    float highlight_width = s.GlyphWidth * 40;
+                    /*bool is_next_byte_highlighted =  (addr + 1 < mem_size) && ((HighlightMax != (size_t)-1 && addr + 1 < HighlightMax) || (HighlightFn && HighlightFn(mem_data, addr + 1)));
                     if (is_next_byte_highlighted || (n + 1 == Rows))
                     {
                         highlight_width = s.HexCellWidth;
                         if (OptMidRowsCount > 0 && n > 0 && (n + 1) < Rows && ((n + 1) % OptMidRowsCount) == 0)
                             highlight_width += s.SpacingBetweenMidRows;
-                    }
+                    }*/
                     draw_list->AddRectFilled(pos, ImVec2(pos.x + highlight_width, pos.y + s.LineHeight), HighlightColor);
                 }
 
@@ -345,11 +347,11 @@ struct MemoryEditor
                 }
             }
 
-            //place opcode label if it exists
-            if (labels && addr < labels->size())
+            //place opcode label if it exists (loop incremented addr)
+            if (labels && (addr - 1) < labels->size())
             {
                 ImGui::SameLine();
-                ImGui::Text("%s", labels->at(addr).c_str());
+                ImGui::Text("%s", labels->at(addr - 1).c_str());
             }
 
             if (OptShowAscii)
@@ -396,7 +398,7 @@ struct MemoryEditor
         ImGui::Separator();
 
         // Options menu
-        if (ImGui::Button("Options"))
+        /*if (ImGui::Button("Options"))
             ImGui::OpenPopup("context");
         if (ImGui::BeginPopup("context"))
         {
@@ -411,6 +413,8 @@ struct MemoryEditor
 
         ImGui::SameLine();
         ImGui::Text("Range %0*" _PRISizeT "..%0*" _PRISizeT, s.AddrDigitsCount, base_display_addr, s.AddrDigitsCount, base_display_addr + mem_size - 1);
+        ImGui::SameLine();*/
+        ImGui::Text("%s", "Goto: ");
         ImGui::SameLine();
         ImGui::PushItemWidth((s.AddrDigitsCount + 1) * s.GlyphWidth + style.FramePadding.x * 2.0f);
         if (ImGui::InputText("##addr", AddrInputBuf, 32, ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_EnterReturnsTrue))
@@ -418,8 +422,9 @@ struct MemoryEditor
             size_t goto_addr;
             if (sscanf(AddrInputBuf, "%" _PRISizeT, &goto_addr) == 1)
             {
-                GotoAddr = goto_addr - base_display_addr;
-                HighlightMin = HighlightMax = (size_t)-1;
+                /*GotoAddr = goto_addr - base_display_addr;
+                HighlightMin = HighlightMax = (size_t)-1;*/
+                GotoAddrAndHighlight(goto_addr, goto_addr + 1);
             }
         }
         ImGui::PopItemWidth();

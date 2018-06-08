@@ -148,6 +148,8 @@ void Speljongen::stop()
     m_disassembler.disassemble(m_mmu, 0xc000, 0xfe00);
     m_disassembler.disassemble(m_mmu, 0xff80, 0xffff);
     //m_disassembler.updateRawView(m_mmu);
+    //memEditor.GotoAddr = m_cpu.getRegisters().getPC();
+    memEditor.GotoAddrAndHighlight(m_cpu.getRegisters().getPC(), m_cpu.getRegisters().getPC() +1);
 }
 
 void Speljongen::reset()
@@ -200,7 +202,10 @@ void Speljongen::step()
     updateDebug();
     updateVramView();
 
-    //m_disassembler.disassemble(m_mmu); //slow as all balls in debug mode
+    auto pc = m_cpu.getRegisters().getPC();
+    memEditor.GotoAddrAndHighlight(pc, pc + 1);
+
+    m_disassembler.disassemble(m_mmu, (pc > 5) ? pc - 5 : 0, (pc < 0xffff - 5) ? pc + 5 : 0xffff); //slow as all balls in debug mode
 }
 
 void Speljongen::load(const std::string& path)
@@ -216,6 +221,7 @@ void Speljongen::load(const std::string& path)
 
     m_disassembler.disassemble(m_mmu, 0, 0x7fff);
     //m_disassembler.updateRawView(m_mmu);
+    memEditor.GotoAddrAndHighlight(0x100, 0x101);
 }
 
 void Speljongen::doImgui()
@@ -418,6 +424,13 @@ void Speljongen::threadFunc()
             while (tickCounter++ < activeCycles && m_running)
             {
                 tick();
+                if (breakPoints[m_cpu.getRegisters().getPC()])
+                {
+                    //stop();
+                    //TODO we can actually stop the thread from within itself
+                    //instead we want to pause the emulation and update the
+                    //DASM - but make sure to do it ONLY ONCE
+                }
             }
 
             m_tickTime = (100.f / (accumulator.asSeconds() / frameTime.asSeconds())) * frameSkip;

@@ -16,23 +16,24 @@ Disassembler::Disassembler()
 //public
 void Disassembler::disassemble(const AddressSpace& addressSpace, std::uint16_t start, std::uint16_t end)
 {
+    //TODO this isn't strictly correct - we need to make sure start is actually
+    //the address of an opcode and not an operand, otherwise labels are misinterpreted.
+    //could probably add a first pass function which marks all the addresses with ops/operands
+    //although this won't work for RAM locations...
+
     std::uint16_t address = start;
     
     while (addressSpace.accepts(address) && address < 0xff4c && address < end)
     {      
         auto byte = addressSpace.getByte(address);
-        m_disassembly[address].clear();
         
+        std::size_t len = 0;
+
         OpCode currentOp;
         if (byte == 0xCB)
         {
-            //ext command
-            /*std::stringstream ss;
-            ss << "0x" << std::hex << std::setfill('0') << std::setw(4);
-            ss << address << ": 0xCB";
-            m_disassembly[address] = ss.str();
-            address++;*/
-            byte = addressSpace.getByte(address);
+            byte = addressSpace.getByte(address + 1);
+            len++;
             currentOp = OpCodes::ExtCommands[byte];
         }
         else
@@ -40,22 +41,14 @@ void Disassembler::disassemble(const AddressSpace& addressSpace, std::uint16_t s
             currentOp = OpCodes::Commands[byte];
         }
 
-        /*std::stringstream ss;
-        ss << "0x" << std::hex << std::setfill('0') << std::setw(4) << address << ": " << currentOp.getLabel();*/
-
         //TODO we need to decode the op to fetch the correct params
-        auto len = currentOp.getOperandLength();
+        m_disassembly[address++] = currentOp.getLabel();
+        len += currentOp.getOperandLength(); 
         
-        m_disassembly[address++] = currentOp.getLabel();// ss.str();
-
         //fill in spaces where operands live
         for (auto i = 0u; i < len; ++i)
         {
-            /*std::stringstream ss2;
-            ss2 << "0x" << std::hex << std::setfill('0') << std::setw(4) << address << ": ";
-            ss2 << "0x" << std::setfill('0') << std::setw(2) << (int)addressSpace.getByte(address);
-            m_disassembly[address++] = ss2.str();*/
-            address++;
+            m_disassembly[address++].clear();
         }        
     }
 
