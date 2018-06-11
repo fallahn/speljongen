@@ -11,18 +11,17 @@
 
 int main()
 {
-#ifdef __LINUX__
+#if defined __LINUX__ && defined USE_THREADING
     XInitThreads();
 #endif    
-
-    Speljongen gameboy;
 
     sf::RenderWindow window;
     window.create({ 800, 600 }, "Speljongen", sf::Style::Close | sf::Style::Titlebar);
     window.setVerticalSyncEnabled(true);
 
-
     ImGui::SFML::Init(window);
+
+    Speljongen gameboy;
 
     sf::Clock imguiClock;
     while (window.isOpen())
@@ -50,10 +49,10 @@ int main()
         }
 
 #ifndef USE_THREADING
-
         gameboy.update();
+#else
+        gameboy.updateDebugger();
 #endif
-
         ImGui::SFML::Update(window, imguiClock.restart());
 
         gameboy.doImgui();

@@ -32,7 +32,9 @@ void VramViewer::setPixel(sf::Uint32 x, sf::Uint32 y, std::uint8_t idx)
 
 void VramViewer::update()
 {
+#ifdef USE_THREADING
     sf::Lock lock(m_mutex);
+#endif
     m_texture.update(m_imageBuffer);
 }
 

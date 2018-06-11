@@ -44,14 +44,17 @@ void Display::putColourPixel(std::uint16_t value)
 void Display::refresh()
 {
     m_pixelIndex = 0;
-
+#ifdef USE_THREADING
     sf::Lock lock(m_mutex);
+#endif
     m_texture.update(m_imageBuffer);   
 }
 
 void Display::clear(bool powerOn)
 {
+#ifdef USE_THREADING
     sf::Lock lock(m_mutex);
+#endif
     m_imageBuffer.create(Width, Height, powerOn ? colours[0] : colours[3]);
     m_texture.update(m_imageBuffer);
 }

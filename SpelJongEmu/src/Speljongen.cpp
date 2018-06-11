@@ -21,14 +21,15 @@ namespace
     std::array<bool, 0x10000> breakPoints = {};
 
     //------------------------------
-    static const std::int32_t gameboyCycles = 4194304 / 60;
-    static const sf::Time frameTime = sf::milliseconds(1000 / 60);
+    const std::int32_t gameboyCycles = 4194304 / 60;
+    const sf::Time frameTime = sf::milliseconds(1000 / 60);
 
     auto activeCycles = gameboyCycles;
     std::int32_t maxUpdates = 3;
     float frameSkip = 1.f;
 
     sf::Clock tickClock;
+    sf::Clock skipClock;
     sf::Time accumulator;
     //------------------------------
 }
@@ -64,6 +65,7 @@ Speljongen::Speljongen()
 
     m_disassembler.disassemble(m_mmu);
     memEditor.BreakPoints = breakPoints.data();
+    tickClock.restart();
 
 #ifdef RUN_TESTS   
     /*m_fifoTest.testEnqueue();
@@ -128,6 +130,15 @@ void Speljongen::handleEvent(const sf::Event& evt)
     }
 }
 
+void Speljongen::updateDebugger()
+{
+    if (m_running
+        && breakPoints[m_cpu.getRegisters().getPC()])
+    {
+        stop();
+    }
+}
+
 void Speljongen::start()
 {
 #ifndef USE_THREADING
@@ -173,13 +184,16 @@ void Speljongen::update()
     maxUpdates = 8;
     while (accumulator > frameTime && maxUpdates--)
     {
+        skipClock.restart();
+
         std::int32_t tickCounter = 0;
         while (tickCounter++ < activeCycles && m_running)
         {
             tick();
         }
 
-        m_tickTime = (100.f / (accumulator.asSeconds() / frameTime.asSeconds())) * frameSkip;
+        auto skipTime = skipClock.getElapsedTime();
+        m_tickTime = 100.f * (frameTime.asSeconds() / std::max(frameTime.asSeconds(), skipTime.asSeconds()));
 
         accumulator -= frameTime;
         updateVramView();
@@ -192,6 +206,14 @@ void Speljongen::update()
             frameSkip /= 2.f;
             accumulator = sf::Time();
         }
+        else if (frameSkip < 1)
+        {
+            std::cout << "Reducing frame skip...\n";
+            activeCycles = gameboyCycles;
+            frameSkip = 1.f;
+        }
+
+        updateDebugger();
     }
 }
 #endif
@@ -424,13 +446,6 @@ void Speljongen::threadFunc()
             while (tickCounter++ < activeCycles && m_running)
             {
                 tick();
-                if (breakPoints[m_cpu.getRegisters().getPC()])
-                {
-                    //stop();
-                    //TODO we can actually stop the thread from within itself
-                    //instead we want to pause the emulation and update the
-                    //DASM - but make sure to do it ONLY ONCE
-                }
             }
 
             m_tickTime = (100.f / (accumulator.asSeconds() / frameTime.asSeconds())) * frameSkip;

@@ -55,7 +55,7 @@ SOFTWARE.
 #include "Lcdc.hpp"
 #endif
 
-#define USE_THREADING //launches emulation in own thread if defined
+//#define USE_THREADING //launches emulation in own thread if defined
 
 namespace sf
 {
@@ -77,6 +77,7 @@ public:
     Speljongen& operator = (Speljongen&&) = delete;
 
     void handleEvent(const sf::Event&);
+    void updateDebugger();
 
     void start();
     void stop();
