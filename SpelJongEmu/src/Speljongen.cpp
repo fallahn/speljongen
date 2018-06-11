@@ -31,6 +31,7 @@ namespace
     sf::Clock tickClock;
     sf::Clock skipClock;
     sf::Time accumulator;
+    std::size_t goodFrames = 0;
     //------------------------------
 }
 
@@ -193,7 +194,7 @@ void Speljongen::update()
         }
 
         auto skipTime = skipClock.getElapsedTime();
-        m_tickTime = 100.f * (frameTime.asSeconds() / std::max(frameTime.asSeconds(), skipTime.asSeconds()));
+        m_tickTime = (100.f * (frameTime.asSeconds() / std::max(frameTime.asSeconds(), skipTime.asSeconds()))) * frameSkip;
 
         accumulator -= frameTime;
         updateVramView();
@@ -205,12 +206,18 @@ void Speljongen::update()
             activeCycles /= 2;
             frameSkip /= 2.f;
             accumulator = sf::Time();
+            goodFrames = 0;
         }
-        else if (frameSkip < 1)
+        else if (maxUpdates == 7 && goodFrames < 10)
         {
-            std::cout << "Reducing frame skip...\n";
-            activeCycles = gameboyCycles;
-            frameSkip = 1.f;
+            goodFrames++;
+            if (goodFrames == 10)
+            {
+                std::cout << "Reducing frame skip...\n";
+                activeCycles = std::min(gameboyCycles, activeCycles * 2);
+                frameSkip = std::min(1.f, frameSkip * 2.f);
+                accumulator = sf::Time();
+            }
         }
 
         updateDebugger();
@@ -263,7 +270,7 @@ void Speljongen::doImgui()
     if (ImGui::CollapsingHeader("VRAM"))
     {
         ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, { 1.f, 0.f });
-        ImGui::Image(m_vramViewer.getTexture(), sf::Vector2f(256.f, 256.f));
+        ImGui::Image(m_vramViewer.getTexture(), sf::Vector2f(256.f, 384.f));
         ImGui::PopStyleVar();
     }
     if (ImGui::CollapsingHeader("OAM Data", ImGuiTreeNodeFlags_DefaultOpen))
@@ -524,7 +531,7 @@ void Speljongen::updateVramView()
     
     std::uint16_t address = 0x8000;
 
-    for (auto gridY = 0; gridY < 16; ++gridY)
+    for (auto gridY = 0; gridY < 24; ++gridY)
     {
         for (auto gridX = 0; gridX < 16; ++gridX)
         {
@@ -550,8 +557,8 @@ void Speljongen::updateVramView()
                     0,   2,   3,   3,   3,   3,   2,   0
                 */
 
-                auto byte0 = m_mmu.getByte(address++);
-                auto byte1 = m_mmu.getByte(address++);
+                auto byte0 = m_gpu.getVRam0().getByte(address++);
+                auto byte1 = m_gpu.getVRam0().getByte(address++);
 
                 for (auto i = 7; i >= 0; --i)
                 {
@@ -563,7 +570,7 @@ void Speljongen::updateVramView()
             }
         }
     }
-
+    //std::cout << std::hex << address << "\n";
     m_vramViewer.update();
 }
 

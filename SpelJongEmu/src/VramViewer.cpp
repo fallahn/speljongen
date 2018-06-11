@@ -7,7 +7,7 @@
 namespace
 {
     const sf::Uint32 Width = 128;
-    const sf::Uint32 Height = 128;
+    const sf::Uint32 Height = 192;
     const std::array<sf::Color, 4u> colours =
     {
         sf::Color(255, 255, 255), sf::Color(77, 77, 77), sf::Color(38, 38, 38), sf::Color(0, 0, 0)

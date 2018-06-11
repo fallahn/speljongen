@@ -19,7 +19,7 @@ Fetcher::Fetcher(Ram& ram0, Ram& ram1, Ram& oam, Lcdc& lcdc, MemoryRegisters& re
     m_registers         (registers),
     m_colour            (false),
     m_state             (ReadTileID),
-    m_fetchingDisabled  (false),
+    m_fetchingDisabled  (true),
     m_mapAddress        (0),
     m_xOffset           (0),
     m_tileDataAddress   (0),

@@ -7,8 +7,8 @@
 #include <iostream>
 
 Disassembler::Disassembler()
-    : m_disassembly(0x10000),
-    m_rawView(0x10000)
+    : m_disassembly (0x10000),
+    m_rawView       (0x10000)
 {
 
 }
