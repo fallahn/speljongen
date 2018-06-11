@@ -147,6 +147,9 @@
     <ClCompile Include="src\Mbc5.cpp">
       <Filter>Source Files\mmu</Filter>
     </ClCompile>
+    <ClCompile Include="src\Mbc3.cpp">
+      <Filter>Source Files\mmu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\InterruptManager.hpp">
@@ -313,6 +316,9 @@
     </ClInclude>
     <ClInclude Include="src\imgui\imgui_memory_editor.h">
       <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mbc3.hpp">
+      <Filter>Header Files\mmu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
