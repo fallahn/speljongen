@@ -65,6 +65,8 @@ public:
     const Registers& getRegisters() const { return m_registers; }
     void clearState();
 
+    void reset();
+
     State getState() const { return m_state; }
     OpCode& getCurrentOpcode() { return m_currentOpcode; }
     const OpCode& getCurrentOpcode() const { return m_currentOpcode; }

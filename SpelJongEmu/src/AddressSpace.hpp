@@ -29,6 +29,7 @@ SOFTWARE.
 #include <vector>
 #include <cassert>
 #include <string>
+#include <iostream>
 
 class AddressSpace
 {
@@ -59,7 +60,10 @@ protected:
 
     std::uint8_t getStorageValue(std::uint16_t address) const { return m_storage[address]; }
 
-    void setStorageValue(std::uint16_t address, std::uint8_t value) { m_storage[address] = value; }
+    void setStorageValue(std::uint16_t address, std::uint8_t value) 
+    {
+        m_storage[address] = value; 
+    }
 private:
     std::vector<std::uint8_t>& m_storage;
 };

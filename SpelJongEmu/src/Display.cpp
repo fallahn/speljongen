@@ -38,6 +38,15 @@ void Display::putColourPixel(std::uint16_t value)
     sf::Uint8 r(value & 0x1f);
     sf::Uint8 g((value >> 5) & 0x1f);
     sf::Uint8 b((value >> 10) & 0x1f);
+
+    /*float r(value & 0x1f);
+    float g((value >> 5) & 0x1f);
+    float b((value >> 10) & 0x1f);*/
+    //scale from 6 bit to 8 bits per channel
+    /*r = (r / 31.f) * 255.f;
+    g = (g / 31.f) * 255.f;
+    b = (b / 31.f) * 255.f;*/
+
     setPixel({ sf::Uint8(r * 8), sf::Uint8(g * 8), sf::Uint8(b * 8) });
 }
 

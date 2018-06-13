@@ -67,11 +67,12 @@ namespace BitUtil
 
     static inline std::int8_t toSigned(std::uint8_t byte)
     {
-        if ((byte & (1 << 7)) == 0)
+        /*if ((byte & (1 << 7)) == 0)
         {
             return byte;
         }
 
-        return byte - 0x100;
+        return byte - 0x100;*/
+        return static_cast<std::uint8_t>(byte);
     }
 }

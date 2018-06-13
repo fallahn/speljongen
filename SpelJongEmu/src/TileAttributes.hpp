@@ -54,7 +54,7 @@ public:
 
     std::uint8_t getBank() const { return (m_value & (1 << 3)) == 0 ? 0 : 1; }
 
-    std::uint8_t getColourPaletteIndex() const { return m_value & 0x07; }
+    std::uint8_t getColourPaletteIndex() const { return (m_value & 0x07); }
 
 private:
     std::uint8_t m_value;

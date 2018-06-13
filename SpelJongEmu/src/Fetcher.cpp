@@ -103,6 +103,7 @@ void Fetcher::tick()
     default: break;
     case ReadTileID:
         m_tileID = m_videoRam0.getByte(m_mapAddress + m_xOffset);
+        
         if (m_colour)
         {
             m_tileAttributes = TileAttributes::valueOf(m_videoRam1.getByte(m_mapAddress + m_xOffset));
@@ -207,7 +208,7 @@ std::uint8_t Fetcher::getTileData(std::uint8_t tileID, std::uint8_t tileLine, st
     std::int32_t address = 0;
     if (isSigned)
     {
-        address = tileAddress + BitUtil::toSigned(tileID) * 0x10;
+        address = tileAddress + static_cast<std::int8_t>(tileID) * 0x10;
     }
     else
     {

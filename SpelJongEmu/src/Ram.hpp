@@ -58,7 +58,7 @@ public:
     }
 
     void setByte(std::uint16_t address, std::uint8_t value) override
-    {
+    {       
         assert(accepts(address));
         if (m_useInternal)
         {
@@ -76,6 +76,14 @@ public:
             return m_ownStorage[address];
         }
         return getStorage()[address];
+    }
+
+    void clear()
+    {
+        if (m_useInternal)
+        {
+            for (auto& c : m_ownStorage) c = 0;
+        }
     }
 
 private:

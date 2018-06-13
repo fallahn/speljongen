@@ -159,14 +159,14 @@ void Speljongen::stop()
 #endif
     m_disassembler.disassemble(m_mmu, 0xc000, 0xfe00);
     m_disassembler.disassemble(m_mmu, 0xff80, 0xffff);
-    //m_disassembler.updateRawView(m_mmu);
-    //memEditor.GotoAddr = m_cpu.getRegisters().getPC();
+    m_disassembler.disassemble(m_gpu.getVRam0(), 0x9800, 0xa000);
+    
     memEditor.GotoAddrAndHighlight(m_cpu.getRegisters().getPC(), m_cpu.getRegisters().getPC() +1);
 }
 
 void Speljongen::reset()
 {  
-    m_cpu.clearState();
+    m_cpu.reset();
     m_gpu.reset();
     m_mmu.reset();
     m_display.clear();
@@ -507,7 +507,7 @@ void Speljongen::updateDebug()
     ss << " : 0x" << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(reg.getSP());
     ss << "\nPC: 0x" << std::setfill('0') << std::setw(4) << reg.getPC();
     ss << " : 0x" << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(reg.getPC());
-    ss << "\n" << (int)m_cpu.getCurrentOpcode().getOpcode() << ", " << m_cpu.getCurrentOpcode().getLabel();
+    //ss << "\n" << (int)m_cpu.getCurrentOpcode().getOpcode() << ", " << m_cpu.getCurrentOpcode().getLabel();
 
     ss << "\n\nLCDC: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(MemoryRegisters::LCDC);
     ss << "\nSTAT: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff41);
@@ -571,6 +571,18 @@ void Speljongen::updateVramView()
         }
     }
     //std::cout << std::hex << address << "\n";
+
+    /*std::cout << "\n\n";
+    for (auto i = address; i < address + 0x400; ++i)
+    {
+        if (i % 16 == 0)
+        {
+            std::cout << "\n" << i << " ";
+        }
+
+        std::cout << std::hex << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(i) << " ";
+    }*/
+
     m_vramViewer.update();
 }
 

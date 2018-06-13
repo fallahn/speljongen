@@ -241,6 +241,13 @@ void Cpu::clearState()
     m_requestedInterrupt = Interrupt::Count;
 }
 
+void Cpu::reset()
+{
+    clearState();
+    m_state = State::OPCODE;
+    m_haltBugMode = false;
+}
+
 //private
 void Cpu::handleInterrupt()
 {

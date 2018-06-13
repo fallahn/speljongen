@@ -12,7 +12,7 @@ Gpu::Gpu(std::vector<std::uint8_t>& storage, Display& display, InterruptManager&
     m_dma               (storage, sm),
     m_oamRam            (storage, 0xfe00, 0x00a0),
     m_colour            (false),
-    m_videoRam0         (storage, 0x8000, 0x2000, false),
+    m_videoRam0         (storage, 0x8000, 0x2000/*, false*/),
     m_videoRam1         (storage, 0x8000, 0x2000, false),
     m_lcdc              (storage),
     m_bgPalette         (storage, 0xff68),
@@ -71,6 +71,7 @@ void Gpu::setByte(std::uint16_t address, std::uint8_t value)
         {
             if (!m_dma.isOamBlocked())
             {
+                std::cout << "flaps\n";
                 m_oamRam.setByte(address, value);
             }
             return;
@@ -275,6 +276,8 @@ void Gpu::enableColour(bool enable)
 {
     m_transferPhase.enableColour(enable);
     m_colour = enable;
+    m_videoRam0.clear();
+    m_videoRam1.clear();
 }
 
 //private
