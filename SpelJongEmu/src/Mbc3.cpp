@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-Mbc3::Mbc3(std::vector<std::uint8_t>& storage, const std::vector<char>& cart, std::int32_t romBanks, std::int32_t ramBanks)
+Mbc3::Mbc3(std::vector<std::uint8_t>& storage, const std::vector<char>& cart, std::int32_t ramBanks)
     : AddressSpace      (storage),
     m_ram               (0x2000 * std::max(1, ramBanks)),
     m_ramBanks          (ramBanks),
@@ -117,7 +117,7 @@ void Mbc3::selectRomBank(std::int32_t bank)
 
 std::uint8_t Mbc3::getRomByte(std::int32_t romBank, std::uint16_t address) const
 {
-    auto offset = romBank * 0x4000 + address;
+    std::uint16_t offset = romBank * 0x4000 + address;
     assert(offset < m_cartridgeData.size());
     return m_cartridgeData[offset];
 }

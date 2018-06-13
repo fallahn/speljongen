@@ -154,7 +154,7 @@ void Cartridge::load(const std::string& path)
     }
     else if (m_info >= ROM_MBC3 && m_info <= ROM_MBC3_RAM_BATTERY)
     {
-        m_mbc = std::make_unique<Mbc3>(getStorage(), buf, m_romBanks, m_ramBanks);
+        m_mbc = std::make_unique<Mbc3>(getStorage(), buf, m_ramBanks);
         m_infoStr += "Type: MBC3\n";
     }
     else
