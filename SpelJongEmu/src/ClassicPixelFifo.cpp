@@ -48,7 +48,6 @@ void ClassicPixelFifo::enqueue8Pixels(const std::array<std::uint8_t, 8u>& pixelL
         m_pixels.push(p);
         m_palettes.push(m_memoryRegisters.getByte(MemoryRegisters::BGP));
         m_pixelType.push(0);
-        //if (p != 0) std::cout << "Enqueued pixel: " << (int)p << "\n";
     }
 }
 
@@ -56,8 +55,6 @@ void ClassicPixelFifo::setOverlay(const std::array<std::uint8_t, 8u>& pixelLine,
 {
     bool priority = attribs.isPriority();
     std::uint8_t overlayPalette = m_memoryRegisters.getByte(attribs.getClassicPalette());
-
-    //std::cout << std::hex << (int)overlayPalette << "\n";
 
     for (auto j = offset; j < pixelLine.size(); ++j)
     {

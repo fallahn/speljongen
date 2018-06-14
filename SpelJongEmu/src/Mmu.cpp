@@ -72,12 +72,6 @@ void Mmu::setByte(std::uint16_t address, std::uint8_t value)
     {
         std::cout << getByte(MemoryRegisters::SB);
     }
-
-    if (address == 0xfe00)
-    {
-        //int buns = 0;
-        std::cout << "buns\n";
-    }
 }
 
 std::uint8_t Mmu::getByte(std::uint16_t address) const

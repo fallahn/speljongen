@@ -53,6 +53,11 @@ public:
         assert(accepts(address));
         setStorageValue(address, value);
         setStorageValue(address + m_echoOffset, value);
+
+        if (address >= 0xce20 && address < 0xce44)
+        {
+            std::cout << std::hex << address << ", " << (int)value <<"\n";
+        }
     }
 
     std::uint8_t getByte(std::uint16_t address) const override

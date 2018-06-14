@@ -173,6 +173,7 @@ void Speljongen::reset()
 
     activeCycles = gameboyCycles;
     frameSkip = 1.f;
+    m_cpu.getRegisters().setPC(0x100);
 
     updateDebug();
 }

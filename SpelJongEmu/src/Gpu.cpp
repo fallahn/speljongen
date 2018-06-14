@@ -71,7 +71,6 @@ void Gpu::setByte(std::uint16_t address, std::uint8_t value)
         {
             if (!m_dma.isOamBlocked())
             {
-                std::cout << "flaps\n";
                 m_oamRam.setByte(address, value);
             }
             return;
