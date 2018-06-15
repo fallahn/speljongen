@@ -4,7 +4,8 @@
 #include "GpuRegister.hpp"
 
 OamSearchPhase::OamSearchPhase(Ram& oamRam, Lcdc& lcdc, MemoryRegisters& registers)
-    : m_oamRam          (oamRam),
+    : m_state           (State::ReadingY),
+    m_oamRam            (oamRam),
     m_lcdc              (lcdc),
     m_registers         (registers),
     m_index             (0),

@@ -33,7 +33,7 @@ template <class T, std::size_t SIZE>
 class IndexedQueue final
 {
 public:
-    IndexedQueue() : m_size(0), m_offset(0) {}
+    IndexedQueue() : m_size(0), m_offset(0), m_array() {}
 
     std::size_t size() const { return m_size; }
 

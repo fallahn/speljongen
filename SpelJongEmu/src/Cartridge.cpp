@@ -90,7 +90,7 @@ void Cartridge::load(const std::string& path)
     case 0x80:
         m_type = Type::Universal;
         m_infoStr += "Compat: Universal\n";
-        m_colour = false;
+        m_colour = true;
         break;
     case 0xc0:
         m_type = Type::Colour;

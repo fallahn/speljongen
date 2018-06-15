@@ -2,6 +2,7 @@
 
 ColourPalette::ColourPalette(std::vector<std::uint8_t>& storage, std::uint16_t offset)
     : AddressSpace      (storage),
+    m_palettes          (),
     m_indexAddress      (offset),
     m_dataAddress       (offset + 1),
     //m_index             (0),

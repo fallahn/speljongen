@@ -39,7 +39,7 @@ void Mbc1::setByte(std::uint16_t address, std::uint8_t value)
         m_writeEnabled = (value & 0b1010) != 0;
         //TODO save RAM when battery implemented
     }
-    else if (address >= 0x8000 && address < 0x4000)
+    else if (address >= 0x2000 && address < 0x4000)
     {
         std::int32_t bank = m_selectedRomBank & 0b01100000;
         bank |= (value & 0b00011111);
