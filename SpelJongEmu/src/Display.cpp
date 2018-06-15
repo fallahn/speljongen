@@ -6,6 +6,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <algorithm>
 
 namespace
 {
@@ -18,6 +19,23 @@ namespace
         //sf::Color(230, 249, 218), sf::Color(153, 200, 134), sf::Color(67, 121, 105), sf::Color(5, 31, 42)
         sf::Color(224, 248, 208), sf::Color(136, 192, 112), sf::Color(48, 104, 80), sf::Color(8, 24, 32)
     };
+
+    //converts from given bit depth to 16 bit colour
+    sf::Uint32 to16Bit(sf::Uint32 colour, sf::Uint32 sourceDepth)
+    {
+        while (sourceDepth < 16)
+        {
+            colour = (colour << sourceDepth) | colour;
+            sourceDepth += sourceDepth;
+        }
+
+        if (16 < sourceDepth)
+        {
+            colour >>= (sourceDepth - 16);
+        }
+        return colour;
+    }
+
 }
 
 Display::Display()
@@ -39,12 +57,30 @@ void Display::putColourPixel(std::uint16_t value)
     sf::Uint32 g((value >> 5) & 0x1f);
     sf::Uint32 b((value >> 10) & 0x1f);
 
+    /*r = to16Bit(r, 5);
+    g = to16Bit(g, 5);
+    b = to16Bit(b, 5);*/
+
+    /*r <<= 3;
+    g <<= 3;
+    b <<= 3;*/
+
+    /*sf::Uint32 R = (r * 26 + g * 4 + b * 2);
+    sf::Uint32 G = (g * 24 + b * 8);
+    sf::Uint32 B = (r * 6 + g * 4 + b * 22);*/
+
+    /*const sf::Uint32 minimum = 960;
+    R = to16Bit(std::min(minimum, R), 10);
+    G = to16Bit(std::min(minimum, G), 10);
+    B = to16Bit(std::min(minimum, B), 10);*/
 
     sf::Uint32 c = (((r * 13 + g * 2 + b) >> 1) << 16)
                     | ((g * 3 + b) << 9)
                     | ((r * 3 + g * 2 + b * 11) >> 1);
 
-    setPixel(sf::Color(/*c | 0xff*/sf::Uint8(r * 8), sf::Uint8(g * 8), sf::Uint8(b * 8)));
+    //sf::Uint32 c = (R << 24) | (G << 16) | (B << 8) | 255;
+
+    setPixel(sf::Color((c << 8)| 0xff/*sf::Uint8(R << 3), sf::Uint8(G << 3), sf::Uint8(B << 3)*/));
 }
 
 void Display::refresh()

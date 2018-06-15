@@ -59,7 +59,7 @@ std::uint8_t ColourPalette::getByte(std::uint16_t address) const
     auto currValue = getStorageValue(m_indexAddress);
     auto colour = m_palettes[currValue / 8][(currValue % 8) / 2];
 
-    if (getStorageValue(address) % 2 == 0)
+    if (currValue % 2 == 0)
     {
         return colour & 0xff;
     }
