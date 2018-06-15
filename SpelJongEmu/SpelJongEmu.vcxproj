@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClCompile Include="src\AluFunctions.cpp" />
     <ClCompile Include="src\Argument.cpp" />
+    <ClCompile Include="src\AudioChannel.cpp" />
     <ClCompile Include="src\Cartridge.cpp" />
     <ClCompile Include="src\ClassicPixelFifo.cpp" />
     <ClCompile Include="src\ColourPalette.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="src\OpCodeBuilder.cpp" />
     <ClCompile Include="src\OpCodesImpl.cpp" />
     <ClCompile Include="src\PixelTransferPhase.cpp" />
+    <ClCompile Include="src\SampleCounter.cpp" />
     <ClCompile Include="src\SpeedMode.cpp" />
     <ClCompile Include="src\Speljongen.cpp" />
     <ClCompile Include="src\Tests.cpp" />
@@ -172,6 +174,7 @@
     <ClInclude Include="src\AddressSpace.hpp" />
     <ClInclude Include="src\AluFunctions.hpp" />
     <ClInclude Include="src\Argument.hpp" />
+    <ClInclude Include="src\AudioChannel.hpp" />
     <ClInclude Include="src\BitUtil.hpp" />
     <ClInclude Include="src\BootRom.hpp" />
     <ClInclude Include="src\Cartridge.hpp" />

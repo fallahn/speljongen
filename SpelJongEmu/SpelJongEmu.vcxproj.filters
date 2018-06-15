@@ -40,6 +40,12 @@
     <Filter Include="Source Files\imgui">
       <UniqueIdentifier>{da5513b4-5481-4b34-a363-ef30e8e421d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\apu">
+      <UniqueIdentifier>{54afb62d-9f94-416b-a9f6-d99450e035d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\apu">
+      <UniqueIdentifier>{7e1b1187-84a8-4be0-a452-721638ca72a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -149,6 +155,12 @@
     </ClCompile>
     <ClCompile Include="src\Mbc3.cpp">
       <Filter>Source Files\mmu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SampleCounter.cpp">
+      <Filter>Source Files\apu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AudioChannel.cpp">
+      <Filter>Source Files\apu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -319,6 +331,9 @@
     </ClInclude>
     <ClInclude Include="src\Mbc3.hpp">
       <Filter>Header Files\mmu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AudioChannel.hpp">
+      <Filter>Header Files\apu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

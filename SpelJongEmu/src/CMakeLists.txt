@@ -3,6 +3,7 @@ set(PROJECT_SRC
   ${PROJECT_SRC}
   ${CMAKE_CURRENT_SOURCE_DIR}/AluFunctions.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Argument.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/AudioChannel.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ClassicPixelFifo.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Cartridge.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ColourPalette.cpp
@@ -26,6 +27,7 @@ set(PROJECT_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/OpCodeBuilder.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/OpCodesImpl.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/PixelTransferPhase.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/SampleCounter.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/SpeedMode.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Speljongen.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Tests.cpp
