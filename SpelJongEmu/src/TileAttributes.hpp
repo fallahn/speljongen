@@ -42,7 +42,7 @@ public:
         return attributes[value];
     }
 
-    TileAttributes(std::uint8_t value = 0) : m_value(value) {}
+    explicit TileAttributes(std::uint8_t value = 0) : m_value(value) {}
 
     bool isPriority() const { return (m_value & (1 << 7)) != 0; }
 

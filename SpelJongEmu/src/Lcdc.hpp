@@ -33,7 +33,7 @@ class Lcdc final : public AddressSpace
 {
 public:
 
-    Lcdc(std::vector<std::uint8_t>& storage) : AddressSpace(storage) { set(0x91); }
+    explicit Lcdc(std::vector<std::uint8_t>& storage) : AddressSpace(storage) { set(0x91); }
 
     std::string getLabel() const override { return "LCDC"; }
 

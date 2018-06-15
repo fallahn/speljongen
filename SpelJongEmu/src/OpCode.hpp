@@ -35,7 +35,7 @@ class OpCode final
 {
 public:
     OpCode();
-    OpCode(const OpCodeBuilder&);
+    explicit OpCode(const OpCodeBuilder&);
     std::size_t getOperandLength() const { return m_length; }
     const std::vector<Op>& getOps() const { return m_ops; }
     const std::string& getLabel() const { return m_label; }

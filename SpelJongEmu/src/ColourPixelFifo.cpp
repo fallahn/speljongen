@@ -4,6 +4,8 @@
 #include "ColourPalette.hpp"
 #include "TileAttributes.hpp"
 
+//#pragma optimize("", off)
+
 ColourPixelFifo::ColourPixelFifo(Lcdc& lcdc, Display& display, ColourPalette& background, ColourPalette& sprites)
     : m_lcdc            (lcdc),
     m_display           (display),

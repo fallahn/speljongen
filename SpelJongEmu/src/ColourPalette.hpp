@@ -48,7 +48,7 @@ public:
     std::string getLabel() const override { return "Colour Palette"; }
 
 private:
-    std::array<Palette, 8u>  m_palettes; //TODO these need to be mapped to storage
+    std::array<Palette, 8u>  m_palettes;
     std::uint16_t m_indexAddress;
     std::uint16_t m_dataAddress;
     bool m_autoIncrement;

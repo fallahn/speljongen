@@ -35,7 +35,7 @@ class AddressSpace
 {
 public:
 
-    AddressSpace(std::vector<std::uint8_t>& storage) :m_storage(storage) {}
+    explicit AddressSpace(std::vector<std::uint8_t>& storage) :m_storage(storage) {}
 
     virtual ~AddressSpace() = default;
 

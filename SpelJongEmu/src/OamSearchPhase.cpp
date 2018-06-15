@@ -8,6 +8,9 @@ OamSearchPhase::OamSearchPhase(Ram& oamRam, Lcdc& lcdc, MemoryRegisters& registe
     m_oamRam            (oamRam),
     m_lcdc              (lcdc),
     m_registers         (registers),
+    m_sprites           (),
+    m_spritePositionX   (0),
+    m_spritePositionY   (0),
     m_index             (0),
     m_spritePosIndex    (0)
 {

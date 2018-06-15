@@ -1,11 +1,12 @@
 #include "ColourPalette.hpp"
 
+//#pragma optimize("", off)
+
 ColourPalette::ColourPalette(std::vector<std::uint8_t>& storage, std::uint16_t offset)
     : AddressSpace      (storage),
     m_palettes          (),
     m_indexAddress      (offset),
     m_dataAddress       (offset + 1),
-    //m_index             (0),
     m_autoIncrement     (false)
 {
     clear();
@@ -43,7 +44,7 @@ void ColourPalette::setByte(std::uint16_t address, std::uint8_t value)
         {
             setStorageValue(m_indexAddress, (currValue + 1) & 0x3f);
         }
-    }
+    }    
 }
 
 std::uint8_t ColourPalette::getByte(std::uint16_t address) const
@@ -55,7 +56,9 @@ std::uint8_t ColourPalette::getByte(std::uint16_t address) const
         return getStorageValue(address) | (m_autoIncrement ? 0x80 : 0) | 0x40;
     }
 
-    auto colour = m_palettes[getStorageValue(address) / 8][(getStorageValue(address) % 8) / 2];
+    auto currValue = getStorageValue(m_indexAddress);
+    auto colour = m_palettes[currValue / 8][(currValue % 8) / 2];
+
     if (getStorageValue(address) % 2 == 0)
     {
         return colour & 0xff;
@@ -73,10 +76,6 @@ void ColourPalette::clear()
 {
     for (auto& palette : m_palettes)
     {
-        /*for (auto& p : palette)
-        {
-            p = 0x7fff;
-        }*/
         palette = { 0x0000, 0x7c00, 0x03e0, 0x7fff };
     }
 }
