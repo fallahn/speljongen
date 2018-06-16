@@ -43,7 +43,7 @@ public:
 
     std::uint8_t getByte(std::uint16_t) const override;
 
-    void load(const std::string&);
+    bool load(const std::string&);
 
     const std::string& getTitle() const { return m_title; }
 

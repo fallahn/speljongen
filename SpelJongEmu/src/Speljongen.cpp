@@ -242,16 +242,18 @@ void Speljongen::load(const std::string& path)
 {
     reset();    
     
-    m_cartridge.load(path);
-    std::cout << "Loaded " << m_cartridge.getTitle() << "!\n";   
-     
-    m_mmu.insertCartridge(m_cartridge); 
-    initMMU(m_cartridge.isColour());
-    m_cpu.getRegisters().setPC(0x100);
+    if (m_cartridge.load(path))
+    {
+        std::cout << "Loaded " << m_cartridge.getTitle() << "!\n";
 
-    m_disassembler.disassemble(m_mmu, 0, 0x7fff);
-    //m_disassembler.updateRawView(m_mmu);
-    memEditor.GotoAddrAndHighlight(0x100, 0x101);
+        m_mmu.insertCartridge(m_cartridge);
+        initMMU(m_cartridge.isColour());
+        m_cpu.getRegisters().setPC(0x100);
+
+        m_disassembler.disassemble(m_mmu, 0, 0x7fff);
+        //m_disassembler.updateRawView(m_mmu);
+        memEditor.GotoAddrAndHighlight(0x100, 0x101);
+    }
 }
 
 void Speljongen::doImgui()
@@ -647,10 +649,9 @@ void Speljongen::browseFile()
 
     //TODO check also inside window
     nfdchar_t *outPath = nullptr;
-    nfdresult_t result = NFD_OpenDialog("gb,gbc", nullptr, &outPath);
+    nfdresult_t result = NFD_OpenDialog("gb,gbc,zip", nullptr, &outPath);
     if (result == NFD_OKAY)
     {
-        reset();
         load(outPath);
         free(outPath);
     }

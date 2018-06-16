@@ -4,6 +4,7 @@
 #include "Mbc5.hpp"
 #include "Rom.hpp"
 #include "BootRom.hpp"
+#include "zip_file.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -49,18 +50,57 @@ std::uint8_t Cartridge::getByte(std::uint16_t address) const
     //TODO could check not booted yet and return BIOS instead
 }
 
-void Cartridge::load(const std::string& path)
+bool Cartridge::load(const std::string& path)
 {
     std::cout << "loading: " << path << "\n";
-    //TODO some file size checking
-    std::ifstream file(path, std::ios::binary);
 
-    file.seekg(0, file.end);
-    size_t length = file.tellg();
-    file.seekg(0, file.beg);
-    std::vector<char> buf(length);
-    file.read(buf.data(), length);
-    file.close();
+    std::vector<char> buf;
+
+    if (path.find(".zip") != std::string::npos)
+    {
+        //we have a zip file
+        std::cout << "opening zip file\n";
+
+        miniz_cpp::zip_file file(path);
+        std::string romName;
+        
+        auto filelist = file.namelist();
+        for (const auto& name : filelist)
+        {
+            if (name.find(".GB") != std::string::npos
+                || name.find(".gb") != std::string::npos
+                || name.find(".GBC") != std::string::npos
+                || name.find(".gbc") != std::string::npos)
+            {
+                romName = name;
+                break;
+            }
+        }
+
+        if (romName.empty())
+        {
+            std::cout << "No ROM file was found in archive\n";
+            return false;
+        }
+
+        auto fileString = file.read(romName);
+        for (auto c : fileString)
+        {
+            buf.push_back(c);
+        }
+    }
+    else
+    {
+        //TODO some file size checking
+        std::ifstream file(path, std::ios::binary);
+
+        file.seekg(0, file.end);
+        size_t length = file.tellg();
+        file.seekg(0, file.beg);
+        buf.resize(length);
+        file.read(buf.data(), length);
+        file.close();
+    }
 
     m_infoStr = "\nCartridge Info:\n";
 
@@ -170,4 +210,6 @@ void Cartridge::load(const std::string& path)
             m_infoStr += "MBC Type: ROM\n";
         }
     }
+
+    return true;
 }

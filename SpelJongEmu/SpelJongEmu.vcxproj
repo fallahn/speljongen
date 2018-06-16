@@ -92,6 +92,7 @@
       <PreprocessorDefinitions>_NO_DEBUG_HEAP=1;_ITERATOR_DEBUG_LEVEL=0;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <EnablePREfast>false</EnablePREfast>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>../extlib/bin/sfml/Debug</AdditionalLibraryDirectories>
