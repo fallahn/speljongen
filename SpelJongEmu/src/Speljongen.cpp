@@ -317,10 +317,14 @@ void Speljongen::doImgui()
     ImGui::PopStyleColor();
     ImGui::SameLine();
     ImGui::BeginChild("Registers", ImVec2(154.f, 280.f), false, ImGuiWindowFlags_HorizontalScrollbar);
+#ifdef USE_THREADING
     m_mutex.lock();
+#endif
     ImGui::Text("%s", m_registerString.c_str());
+#ifdef USE_THREADING
     m_mutex.unlock();
-    ImGui::Text("%s", m_cartridge.getInfo().c_str());
+#endif // USE_THREADING
+    //ImGui::Text("%s", m_cartridge.getInfo().c_str());
     ImGui::EndChild();
 
     ImGui::Checkbox("Z", &flagsZ);
@@ -371,6 +375,7 @@ void Speljongen::doImgui()
     {
         reset();
     }
+    ImGui::Text("%s", m_cartridge.getInfo().c_str());
     ImGui::EndChild();
     ImGui::End();
 
@@ -522,9 +527,13 @@ void Speljongen::updateDebug()
     ss << "\nOBP0: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(MemoryRegisters::OBP0);
     ss << "\nOBP1: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(MemoryRegisters::OBP1);
 
+#ifdef USE_THREADING
     m_mutex.lock();
+#endif
     m_registerString = ss.str();
+#ifdef USE_THREADING
     m_mutex.unlock();
+#endif
 }
 
 void Speljongen::updateVramView()

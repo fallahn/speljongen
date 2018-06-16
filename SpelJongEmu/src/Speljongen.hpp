@@ -133,7 +133,9 @@ private:
     void updateDebug();
     void updateVramView();
 
+#ifdef USE_THREADING
     mutable sf::Mutex m_mutex;
+#endif
     std::string m_registerString;
     std::string m_flagsString;
     std::atomic<float> m_tickTime;

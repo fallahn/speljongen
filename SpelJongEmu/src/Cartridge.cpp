@@ -119,6 +119,8 @@ bool Cartridge::load(const std::string& path)
         m_title = "NO TITLE";
     }
 
+    m_infoStr += m_title + "\n";
+
     auto b = static_cast<std::uint8_t>(buf[0x0143]);
     switch (b) //colour or universal?
     {
@@ -185,17 +187,65 @@ bool Cartridge::load(const std::string& path)
     if (m_info >= ROM_MBC1 && m_info <= ROM_MBC1_RAM_BATTERY)
     {
         m_mbc = std::make_unique<Mbc1>(getStorage(), buf, m_romBanks, m_ramBanks);
-        m_infoStr += "Type: MBC1\n";
+        switch (m_info)
+        {
+        default:
+            m_infoStr += "Type: MBC1\n";
+            break;
+        case ROM_MBC1_RAM:
+            m_infoStr += "Type: MBC1 with RAM\n";
+            break;
+        case ROM_MBC1_RAM_BATTERY:
+            m_infoStr += "Type: MBC1 with RAM and battery\n";
+            break;
+        }
     }
     else if(m_info >= ROM_MBC5 && m_info <= ROM_MBC5_RUMBLE_SRAM_BATTERY)
     {
         m_mbc = std::make_unique<Mbc5>(getStorage(), buf, m_romBanks, m_ramBanks);
-        m_infoStr += "Type: MBC5\n";
+        switch (m_info)
+        {
+        default:
+            m_infoStr += "Type: MBC5\n";
+            break;
+        case ROM_MBC5_RAM:
+            m_infoStr += "Type: MBC5 with RAM\n";
+            break;
+        case ROM_MBC5_RAM_BATTERY:
+            m_infoStr += "Type: MBC5 with RAM and battery\n";
+            break;
+        case ROM_MBC5_RUMBLE:
+            m_infoStr += "Type: MBC5 with rumble\n";
+            break;
+        case ROM_MBC5_RUMBLE_SRAM:
+            m_infoStr += "Type: MBC5 with rumble and SRAM\n";
+            break;
+        case ROM_MBC5_RUMBLE_SRAM_BATTERY:
+            m_infoStr += "Type: MBC5 with rumble, SRAM and battery\n";
+            break;
+        }
     }
     else if (m_info >= ROM_MBC3 && m_info <= ROM_MBC3_RAM_BATTERY)
     {
         m_mbc = std::make_unique<Mbc3>(getStorage(), buf, m_ramBanks);
-        m_infoStr += "Type: MBC3\n";
+        switch (m_info)
+        {
+        default:
+            m_infoStr += "Type: MBC3\n";
+            break;
+        case ROM_MBC3_RAM:
+            m_infoStr += "Type: MBC3 with RAM\n";
+            break;
+        case ROM_MBC3_RAM_BATTERY:
+            m_infoStr += "Type: MBC3 with RAM and battery\n";
+            break;
+        case ROM_MBC3_TIMER_BATTERY:
+            m_infoStr += "Type: MBC3 with RTC and battery\n";
+            break;
+        case ROM_MBC3_TIMER_RAM_BATTERY:
+            m_infoStr += "Type: MBC3 with RTC, RAM and battery\n";
+            break;
+        }
     }
     else
     {
