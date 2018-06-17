@@ -386,7 +386,7 @@ void Speljongen::doImgui()
     ImGui::SameLine();
     ImGui::BeginChild("Controller Info", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, 154.f)/*, true, ImGuiWindowFlags_HorizontalScrollbar*/);
     ImGui::Text("%s", "\n");
-    ImGui::Image(m_controller.getTexture(), sf::Vector2f(160.f, 128.f));
+    ImGui::Image(m_controller.getTexture(), sf::Vector2f(160.f, 128.f), sf::FloatRect(0.f, 128.f, 160.f ,- 128.f));
     ImGui::EndChild();
 
     ImGui::EndChild();
