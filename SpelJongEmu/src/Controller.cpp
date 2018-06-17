@@ -35,6 +35,13 @@ namespace
     Bits are normally high and go low when button is pressed
 
 	*/
+
+    struct Quad final
+    {
+        std::array<sf::Vertex, 4u> vertices = {};
+    };
+    Quad imageQuad;
+    std::array<Quad, 8u> buttonQuads = {};
 }
 
 Controller::Controller(InterruptManager& im, Mmu& mmu)
@@ -44,7 +51,39 @@ Controller::Controller(InterruptManager& im, Mmu& mmu)
 	m_interruptManager	(im),
     m_mmu				(mmu)
 {
+    if (!m_buttonTexture.loadFromFile("assets/controls.png"))
+    {
+        sf::Image img;
+        img.create(160, 128, sf::Color::Magenta);
+        m_buttonTexture.loadFromImage(img);
+    }
 
+    //TODO remove all these numbers with some consts for texture width / height
+    imageQuad.vertices[0] = sf::Vertex(sf::Vector2f(), sf::Vector2f());
+    imageQuad.vertices[1] = sf::Vertex(sf::Vector2f(160.f, 0.f), sf::Vector2f(160.f, 0.f));
+    imageQuad.vertices[2] = sf::Vertex(sf::Vector2f(160.f, 128.f), sf::Vector2f(160.f, 128.f));
+    imageQuad.vertices[3] = sf::Vertex(sf::Vector2f(0.f, 128.f), sf::Vector2f(0.f, 128.f));
+
+
+    auto setQuad = [](Quad& quad, sf::FloatRect rect)
+    {
+        quad.vertices[0] = sf::Vertex(sf::Vector2f(rect.left - 160.f, rect.top), sf::Vector2f(rect.left, rect.top));
+        quad.vertices[1] = sf::Vertex(sf::Vector2f((rect.left + rect.width) - 160.f, rect.top), sf::Vector2f(rect.left + rect.width, rect.top));
+        quad.vertices[2] = sf::Vertex(sf::Vector2f((rect.left + rect.width) - 160.f, (rect.top + rect.height)), sf::Vector2f(rect.left + rect.width, (rect.top + rect.height)));
+        quad.vertices[3] = sf::Vertex(sf::Vector2f((rect.left) - 160.f, (rect.top + rect.height)), sf::Vector2f(rect.left, (rect.top + rect.height)));
+    };
+
+    setQuad(buttonQuads[0], { 215.f, 54.f, 25.f, 27.f });
+    setQuad(buttonQuads[1], { 168.f, 54.f, 25.f, 27.f });
+    setQuad(buttonQuads[2], { 191.f, 29.f, 25.f, 27.f });
+    setQuad(buttonQuads[3], { 191.f, 79.f, 25.f, 27.f });
+    setQuad(buttonQuads[4], { 279.f, 64.f, 35.f, 34.f });
+    setQuad(buttonQuads[5], { 243.f, 83.f, 35.f, 34.f });
+    setQuad(buttonQuads[6], { 243.f, 20.f, 26.f, 25.f });
+    setQuad(buttonQuads[7], { 278.f, 20.f, 26.f, 25.f });
+
+    m_texture.create(160, 128);
+    updateTexture();
 }
 
 //public
@@ -198,7 +237,6 @@ void Controller::tick()
 
 
     auto val = m_mmu.getByte(InputRegister);
-    auto oldVal = val;
     if ((val & (1 << 4)) == 0)
     {
 		//reading direction
@@ -211,9 +249,37 @@ void Controller::tick()
     }
     m_mmu.setByte(InputRegister, val);
 
-    if (/*m_inputMask != m_lastMask*/val != oldVal)
+    if (m_inputMask != m_lastMask)
     {
         m_interruptManager.requestInterrupt(Interrupt::Type::P10_13);
+        updateTexture(); //TODO if this causes emulation slow down (it shouldn't) move to own drawing function
     }
     m_lastMask = m_inputMask;
+}
+
+//private
+void Controller::updateTexture()
+{
+    m_vertices.clear();
+    for (auto& v : imageQuad.vertices)
+    {
+        m_vertices.push_back(v);
+    }
+
+    //add any active button highlights
+    for (auto i = 0; i < 8; ++i)
+    {
+        if ((m_inputMask & (1 << i)) == 0)
+        {
+            const auto& quad = buttonQuads[i];
+            for (auto& v : quad.vertices)
+            {
+                m_vertices.push_back(v);
+            }
+        }
+    }
+
+    m_texture.clear(sf::Color::Red);
+    m_texture.draw(m_vertices.data(), m_vertices.size(), sf::Quads, &m_buttonTexture);
+    m_texture.display();
 }

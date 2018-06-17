@@ -358,6 +358,7 @@ void Speljongen::doImgui()
     memEditor.DrawContents(m_disassembler.getRawView().data(), m_disassembler.getRawView().size(), 0, &m_disassembler.getLabels());
     ImGui::EndChild();
     ImGui::SameLine();
+
     ImGui::BeginChild("Control", ImVec2((ImGui::GetWindowContentRegionWidth() * 0.5f) - 8.f, 194.f), true/*, ImGuiWindowFlags_HorizontalScrollbar*/);
     if (ImGui::Button("Load", ButtonSize) && !m_running)
     {
@@ -378,7 +379,16 @@ void Speljongen::doImgui()
     {
         reset();
     }
+    
+    ImGui::BeginChild("Cart Info", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, 154.f)/*, true, ImGuiWindowFlags_HorizontalScrollbar*/);
     ImGui::Text("%s", m_cartridge.getInfo().c_str());
+    ImGui::EndChild();
+    ImGui::SameLine();
+    ImGui::BeginChild("Controller Info", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, 154.f)/*, true, ImGuiWindowFlags_HorizontalScrollbar*/);
+    ImGui::Text("%s", "\n");
+    ImGui::Image(m_controller.getTexture(), sf::Vector2f(160.f, 128.f));
+    ImGui::EndChild();
+
     ImGui::EndChild();
     ImGui::End();
 

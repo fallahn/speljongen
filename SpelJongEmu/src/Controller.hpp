@@ -24,7 +24,12 @@ SOFTWARE.
 
 #pragma once
 
+#include <SFML/Graphics/RenderTexture.hpp>
+#include <SFML/Graphics/Vertex.hpp>
+#include <SFML/Graphics/Texture.hpp>
+
 #include <cstdint>
+#include <vector>
 
 class InterruptManager;
 class Mmu;
@@ -43,10 +48,17 @@ public:
 
     void tick();
 
+    const sf::Texture& getTexture() const { return m_texture.getTexture(); }
+
 private:
     std::uint8_t m_inputMask;
     std::uint8_t m_controllerMask;
     std::uint8_t m_lastMask;
     InterruptManager & m_interruptManager;
     Mmu& m_mmu;
+
+    sf::RenderTexture m_texture;
+    sf::Texture m_buttonTexture;
+    std::vector<sf::Vertex> m_vertices;
+    void updateTexture();
 };

@@ -102,7 +102,7 @@ bool Cartridge::load(const std::string& path)
         file.close();
     }
 
-    m_infoStr = "\nCartridge Info:\n";
+    m_infoStr = "\nCartridge Info:\nTitle: ";
 
     //grab title
     m_title.clear();
@@ -196,7 +196,7 @@ bool Cartridge::load(const std::string& path)
             m_infoStr += "Type: MBC1 with RAM\n";
             break;
         case ROM_MBC1_RAM_BATTERY:
-            m_infoStr += "Type: MBC1 with RAM and battery\n";
+            m_infoStr += "Type: MBC1 with RAM\nand battery\n";
             break;
         }
     }
@@ -212,16 +212,16 @@ bool Cartridge::load(const std::string& path)
             m_infoStr += "Type: MBC5 with RAM\n";
             break;
         case ROM_MBC5_RAM_BATTERY:
-            m_infoStr += "Type: MBC5 with RAM and battery\n";
+            m_infoStr += "Type: MBC5 with RAM\nand battery\n";
             break;
         case ROM_MBC5_RUMBLE:
             m_infoStr += "Type: MBC5 with rumble\n";
             break;
         case ROM_MBC5_RUMBLE_SRAM:
-            m_infoStr += "Type: MBC5 with rumble and SRAM\n";
+            m_infoStr += "Type: MBC5 with rumble\nand SRAM\n";
             break;
         case ROM_MBC5_RUMBLE_SRAM_BATTERY:
-            m_infoStr += "Type: MBC5 with rumble, SRAM and battery\n";
+            m_infoStr += "Type: MBC5 with rumble,\nSRAM and battery\n";
             break;
         }
     }
@@ -237,13 +237,13 @@ bool Cartridge::load(const std::string& path)
             m_infoStr += "Type: MBC3 with RAM\n";
             break;
         case ROM_MBC3_RAM_BATTERY:
-            m_infoStr += "Type: MBC3 with RAM and battery\n";
+            m_infoStr += "Type: MBC3 with RAM\nand battery\n";
             break;
         case ROM_MBC3_TIMER_BATTERY:
-            m_infoStr += "Type: MBC3 with RTC and battery\n";
+            m_infoStr += "Type: MBC3 with RTC\nand battery\n";
             break;
         case ROM_MBC3_TIMER_RAM_BATTERY:
-            m_infoStr += "Type: MBC3 with RTC, RAM and battery\n";
+            m_infoStr += "Type: MBC3 with RTC,\nRAM and battery\n";
             break;
         }
     }
