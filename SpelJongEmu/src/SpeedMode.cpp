@@ -16,12 +16,15 @@ bool SpeedMode::accepts(std::uint16_t address) const
 
 void SpeedMode::setByte(std::uint16_t address, std::uint8_t value)
 {
+    assert(accepts(address));
     m_prepareSpeedSwitch = ((value & 0x01) != 0);
-    setStorageValue(address, value);
+    std::uint8_t data = (m_currentSpeed ? (1 << 7) : 0) | (m_prepareSpeedSwitch ? (1 << 0) : 0) | 0b01111110;
+    setStorageValue(address, data);
 }
 
 std::uint8_t SpeedMode::getByte(std::uint16_t address) const
 {
+    assert(accepts(address));
     //return (m_currentSpeed ? (1 << 7) : 0) | (m_prepareSpeedSwitch ? (1 << 0) : 0) | 0b01111110;
     return getStorageValue(address);
 }
@@ -32,6 +35,10 @@ bool SpeedMode::onStop()
     {
         m_currentSpeed = !m_currentSpeed;
         m_prepareSpeedSwitch = false;
+
+        std::uint8_t data = (m_currentSpeed ? (1 << 7) : 0) | (m_prepareSpeedSwitch ? (1 << 0) : 0) | 0b01111110;
+        setStorageValue(0xff4d, data);
+
         return true;
     }
     return false;

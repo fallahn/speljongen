@@ -14,6 +14,8 @@
 #include <SFML/System/Sleep.hpp>
 #include <SFML/Window/Event.hpp>
 
+//#pragma optimize("", off)
+
 namespace
 {
     ImVec2 ButtonSize(80.f, 20.f);
@@ -231,6 +233,7 @@ void Speljongen::step()
     while (!tick()) {}
     updateDebug();
     updateVramView();
+    m_display.refresh();
 
     auto pc = m_cpu.getRegisters().getPC();
     memEditor.GotoAddrAndHighlight(pc, pc + 1);

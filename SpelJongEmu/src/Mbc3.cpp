@@ -117,7 +117,7 @@ void Mbc3::selectRomBank(std::int32_t bank)
 
 std::uint8_t Mbc3::getRomByte(std::int32_t romBank, std::uint16_t address) const
 {
-    std::uint16_t offset = romBank * 0x4000 + address;
+    std::size_t offset = romBank * 0x4000 + address;
     assert(offset < m_cartridgeData.size());
     return m_cartridgeData[offset];
 }

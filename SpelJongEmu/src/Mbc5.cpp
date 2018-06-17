@@ -99,7 +99,7 @@ std::uint8_t Mbc5::getByte(std::uint16_t address) const
 //private
 std::uint8_t Mbc5::getRomByte(std::int32_t bank, std::uint16_t address) const
 {
-    std::uint16_t offset = bank * 0x4000 + address;
+    std::size_t offset = bank * 0x4000 + address;
     assert(offset < m_cartridgeData.size());
     return m_cartridgeData[offset];
 }

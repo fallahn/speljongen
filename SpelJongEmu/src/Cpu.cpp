@@ -125,7 +125,7 @@ bool Cpu::tick()
             }
             break;
         case State::EXT_OPCODE: //check valid extended opcode and start collecting operands
-            if (accessedMemory) return true;
+            if (accessedMemory) return false;
             accessedMemory = true;
             m_opcodeTwo = m_addressSpace.getByte(pc);
             if (!m_currentOpcode)
@@ -139,7 +139,7 @@ bool Cpu::tick()
         case State::OPERAND: //collect any operands for current opcode
             while (m_operandIndex < m_currentOpcode.getOperandLength())
             {
-                if (accessedMemory) return true;
+                if (accessedMemory) return false;
 
                 accessedMemory = true;
                 m_opArgs[m_operandIndex++] = m_addressSpace.getByte(pc);
@@ -182,7 +182,7 @@ bool Cpu::tick()
                 bool opAccessesMemory = op.readsMemory || op.writesMemory;
                 if (accessedMemory && opAccessesMemory)
                 {
-                    return true;
+                    return false;
                 }
                 m_opIndex++;
 
@@ -199,7 +199,7 @@ bool Cpu::tick()
 
                 if (op.forceFinishCycle)
                 {
-                    return true;
+                    return false;
                 }
 
                 if (opAccessesMemory)
