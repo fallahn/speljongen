@@ -7,6 +7,7 @@
 namespace
 {
     const std::uint16_t InputRegister = 0xff00;
+    const float Deadzone = 20.f;
 
     enum Control
     {
@@ -23,13 +24,13 @@ namespace
 	/*
 	           Bit4       Bit5
 				|          |
-	Bit0 ------Right-------A-------
+	Bit0 -----Right--------A-------
 	            |          |
 	Bit1 ------Left--------B-------
 	            |          |
 	Bit2 -------Up-------Select----
 	            |          |
-	Bit3 ------Down-------Start----
+	Bit3 ------Down------Start-----
 	
     Bits are normally high and go low when button is pressed
 
@@ -38,6 +39,7 @@ namespace
 
 Controller::Controller(InterruptManager& im, Mmu& mmu)
     : m_inputMask		(0xff),
+    m_controllerMask    (0xff),
 	m_lastMask			(0xff),
 	m_interruptManager	(im),
     m_mmu				(mmu)
@@ -110,11 +112,93 @@ void Controller::handleEvent(const sf::Event& evt)
             break;
         }
     }
+
+    else if (evt.type == sf::Event::JoystickButtonReleased)
+    {
+        switch (evt.joystickButton.button)
+        {
+        default: break;
+        case 0:
+            m_inputMask |= B;
+            break;
+        case 1:
+            m_inputMask |= A;
+            break;
+        case 6:
+            m_inputMask |= Select;
+            break;
+        case 7:
+            m_inputMask |= Start;
+            break;
+        }
+    }
+    else if (evt.type == sf::Event::JoystickButtonPressed)
+    {
+        switch (evt.joystickButton.button)
+        {
+        default: break;
+        case 0:
+            m_inputMask &= ~B;
+            break;
+        case 1:
+            m_inputMask &= ~A;
+            break;
+        case 6:
+            m_inputMask &= ~Select;
+            break;
+        case 7:
+            m_inputMask &= ~Start;
+            break;
+        }
+    }
 }
 
 void Controller::tick()
 {
+    //handle this mask separately so we don't overwrite
+    //keyboard presses with controller non-presses
+    std::uint8_t controllerMask = 0xff;
+    if (sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::PovX) < -Deadzone)
+    {
+        controllerMask &= ~Left;
+    }
+    else if (sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::PovX) > Deadzone)
+    {
+        controllerMask &= ~Right;
+    }
+
+    //hum, on windows the Y axis appears to be inverted
+#ifdef _WIN32
+    if (sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::PovY) < -Deadzone)
+    {
+        controllerMask &= ~Down;
+}
+    else if (sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::PovY) > Deadzone)
+    {
+        controllerMask &= ~Up;
+    }
+#else
+    if (sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::PovY) < -Deadzone)
+    {
+        controllerMask &= ~Up;
+    }
+    else if (sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::PovY) > Deadzone)
+    {
+        controllerMask &= ~Down;
+    }
+#endif
+
+
+    if (controllerMask != m_controllerMask)
+    {
+        m_inputMask = (m_inputMask & 0xf0) | (controllerMask & 0x0f);
+    }
+    m_controllerMask = controllerMask;
+    
+
+
     auto val = m_mmu.getByte(InputRegister);
+    auto oldVal = val;
     if ((val & (1 << 4)) == 0)
     {
 		//reading direction
@@ -127,7 +211,7 @@ void Controller::tick()
     }
     m_mmu.setByte(InputRegister, val);
 
-    if (m_inputMask != m_lastMask)
+    if (/*m_inputMask != m_lastMask*/val != oldVal)
     {
         m_interruptManager.requestInterrupt(Interrupt::Type::P10_13);
     }

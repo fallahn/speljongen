@@ -45,6 +45,7 @@ public:
 
 private:
     std::uint8_t m_inputMask;
+    std::uint8_t m_controllerMask;
     std::uint8_t m_lastMask;
     InterruptManager & m_interruptManager;
     Mmu& m_mmu;
