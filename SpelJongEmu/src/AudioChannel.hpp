@@ -26,6 +26,7 @@ SOFTWARE.
 #pragma once
 
 #include "AddressSpace.hpp"
+#include "Consts.hpp"
 
 class SampleCounter final
 {
@@ -38,15 +39,14 @@ public:
     void setNr4(std::uint8_t);
     std::uint32_t getLength() const;
     bool isEnabled() const;
+    void reset();
 
 private:
-    static constexpr std::uint32_t divisor = 4194304 / 256;
+    static constexpr std::uint32_t divisor = CYCLES_PER_SECOND / 256;
     std::uint32_t m_fullLength;
     std::uint32_t m_length;
     std::size_t m_index;
     bool m_enabled;
-
-    void reset();
 };
 
 class AudioChannel : public AddressSpace
@@ -56,31 +56,42 @@ public:
     
     virtual ~AudioChannel() = default;
 
-    virtual void tick() = 0;
+    virtual std::int32_t tick() = 0;
     virtual void trigger() = 0;
 
     bool isEnabled() const;
 
     bool accepts(std::uint16_t) const override;
 
-    void setByte(std::uint16_t, std::uint8_t) override;
+    virtual void setByte(std::uint16_t, std::uint8_t) override;
 
-    std::uint8_t getByte(std::uint16_t) const override;
+    virtual std::uint8_t getByte(std::uint16_t) const override;
 
     virtual void start() = 0;
 
     void stop();
 
+    void setColour(bool c) { m_colour = c; }
+
 protected:
 
     std::uint16_t getFrequency() const;
     bool updateCounter();
+    std::uint16_t getOffset() const { return m_offset; }
+    SampleCounter& getSampleCounter() { return m_sampleCounter; }
+    void setDacEnabled(bool enabled) { m_dacEnabled = enabled; }
+    bool getDacEnabled() const { return m_dacEnabled; }
+
+    void setEnabled(bool enabled) { m_enabled = enabled; }
+    bool getEnabled() const { return m_enabled; }
+
+    bool isColour() const { return m_colour; }
 
 private:
 
     std::uint16_t m_offset;
     bool m_colour;
-    bool m_enabled;;
+    bool m_enabled;
     bool m_dacEnabled;
     SampleCounter m_sampleCounter;
 };

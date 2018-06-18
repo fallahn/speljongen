@@ -83,7 +83,6 @@ bool SampleCounter::isEnabled() const
     return m_enabled;
 }
 
-//private
 void SampleCounter::reset()
 {
     m_enabled = true;

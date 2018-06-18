@@ -8,6 +8,8 @@ namespace
 {
     const std::uint16_t InputRegister = 0xff00;
     const float Deadzone = 20.f;
+    const float ImageWidth = 160.f;
+    const float ImageHeight = 128.f;
 
     enum Control
     {
@@ -54,23 +56,22 @@ Controller::Controller(InterruptManager& im, Mmu& mmu)
     if (!m_buttonTexture.loadFromFile("assets/controls.png"))
     {
         sf::Image img;
-        img.create(160, 128, sf::Color::Magenta);
+        img.create(static_cast<sf::Uint32>(ImageWidth), static_cast<sf::Uint32>(ImageHeight), sf::Color::Magenta);
         m_buttonTexture.loadFromImage(img);
     }
 
-    //TODO remove all these numbers with some consts for texture width / height
     imageQuad.vertices[0] = sf::Vertex(sf::Vector2f(), sf::Vector2f());
-    imageQuad.vertices[1] = sf::Vertex(sf::Vector2f(160.f, 0.f), sf::Vector2f(160.f, 0.f));
-    imageQuad.vertices[2] = sf::Vertex(sf::Vector2f(160.f, 128.f), sf::Vector2f(160.f, 128.f));
-    imageQuad.vertices[3] = sf::Vertex(sf::Vector2f(0.f, 128.f), sf::Vector2f(0.f, 128.f));
+    imageQuad.vertices[1] = sf::Vertex(sf::Vector2f(ImageWidth, 0.f), sf::Vector2f(ImageWidth, 0.f));
+    imageQuad.vertices[2] = sf::Vertex(sf::Vector2f(ImageWidth, ImageHeight), sf::Vector2f(ImageWidth, ImageHeight));
+    imageQuad.vertices[3] = sf::Vertex(sf::Vector2f(0.f, ImageHeight), sf::Vector2f(0.f, ImageHeight));
 
 
     auto setQuad = [](Quad& quad, sf::FloatRect rect)
     {
-        quad.vertices[0] = sf::Vertex(sf::Vector2f(rect.left - 160.f, rect.top), sf::Vector2f(rect.left, rect.top));
-        quad.vertices[1] = sf::Vertex(sf::Vector2f((rect.left + rect.width) - 160.f, rect.top), sf::Vector2f(rect.left + rect.width, rect.top));
-        quad.vertices[2] = sf::Vertex(sf::Vector2f((rect.left + rect.width) - 160.f, (rect.top + rect.height)), sf::Vector2f(rect.left + rect.width, (rect.top + rect.height)));
-        quad.vertices[3] = sf::Vertex(sf::Vector2f((rect.left) - 160.f, (rect.top + rect.height)), sf::Vector2f(rect.left, (rect.top + rect.height)));
+        quad.vertices[0] = sf::Vertex(sf::Vector2f(rect.left - ImageWidth, rect.top), sf::Vector2f(rect.left, rect.top));
+        quad.vertices[1] = sf::Vertex(sf::Vector2f((rect.left + rect.width) - ImageWidth, rect.top), sf::Vector2f(rect.left + rect.width, rect.top));
+        quad.vertices[2] = sf::Vertex(sf::Vector2f((rect.left + rect.width) - ImageWidth, (rect.top + rect.height)), sf::Vector2f(rect.left + rect.width, (rect.top + rect.height)));
+        quad.vertices[3] = sf::Vertex(sf::Vector2f((rect.left) - ImageWidth, (rect.top + rect.height)), sf::Vector2f(rect.left, (rect.top + rect.height)));
     };
 
     setQuad(buttonQuads[0], { 215.f, 54.f, 25.f, 27.f });
@@ -82,7 +83,7 @@ Controller::Controller(InterruptManager& im, Mmu& mmu)
     setQuad(buttonQuads[6], { 243.f, 20.f, 26.f, 25.f });
     setQuad(buttonQuads[7], { 278.f, 20.f, 26.f, 25.f });
 
-    m_texture.create(160, 128);
+    m_texture.create(static_cast<sf::Uint32>(ImageWidth), static_cast<sf::Uint32>(ImageHeight));
     updateTexture();
 }
 

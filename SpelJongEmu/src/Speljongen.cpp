@@ -3,6 +3,7 @@
 #include "imgui/imgui-SFML.h"
 #include "imgui/imgui_memory_editor.h"
 #include "nfd/nfd.h"
+#include "Consts.hpp"
 
 #include <sstream>
 #include <iomanip>
@@ -23,7 +24,7 @@ namespace
     std::array<bool, 0x10000> breakPoints = {};
 
     //------------------------------
-    const std::int32_t gameboyCycles = 4194304 / 60;
+    const std::int32_t gameboyCycles = CYCLES_PER_SECOND / 60;
     const sf::Time frameTime = sf::milliseconds(1000 / 60);
 
     auto activeCycles = gameboyCycles;

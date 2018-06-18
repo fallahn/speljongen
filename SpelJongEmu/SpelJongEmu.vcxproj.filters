@@ -162,6 +162,18 @@
     <ClCompile Include="src\AudioChannel.cpp">
       <Filter>Source Files\apu</Filter>
     </ClCompile>
+    <ClCompile Include="src\AudioSweep.cpp">
+      <Filter>Source Files\apu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AudioEnvelope.cpp">
+      <Filter>Source Files\apu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AudioChannelOne.cpp">
+      <Filter>Source Files\apu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Apu.cpp">
+      <Filter>Source Files\apu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\InterruptManager.hpp">
@@ -333,6 +345,21 @@
       <Filter>Header Files\mmu</Filter>
     </ClInclude>
     <ClInclude Include="src\AudioChannel.hpp">
+      <Filter>Header Files\apu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AudioSweep.hpp">
+      <Filter>Header Files\apu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Consts.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AudioEnvelope.hpp">
+      <Filter>Header Files\apu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AudioChannelOne.hpp">
+      <Filter>Header Files\apu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Apu.hpp">
       <Filter>Header Files\apu</Filter>
     </ClInclude>
   </ItemGroup>

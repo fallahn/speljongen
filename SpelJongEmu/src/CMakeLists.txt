@@ -2,8 +2,12 @@
 set(PROJECT_SRC 
   ${PROJECT_SRC}
   ${CMAKE_CURRENT_SOURCE_DIR}/AluFunctions.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/Apu.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Argument.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/AudioChannel.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/AudioChannelOne.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/AudioEnvelope.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/AudioSweep.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ClassicPixelFifo.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Cartridge.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ColourPalette.cpp

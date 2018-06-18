@@ -133,8 +133,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\AluFunctions.cpp" />
+    <ClCompile Include="src\Apu.cpp" />
     <ClCompile Include="src\Argument.cpp" />
     <ClCompile Include="src\AudioChannel.cpp" />
+    <ClCompile Include="src\AudioChannelOne.cpp" />
+    <ClCompile Include="src\AudioEnvelope.cpp" />
+    <ClCompile Include="src\AudioSweep.cpp" />
     <ClCompile Include="src\Cartridge.cpp" />
     <ClCompile Include="src\ClassicPixelFifo.cpp" />
     <ClCompile Include="src\ColourPalette.cpp" />
@@ -174,8 +178,12 @@
   <ItemGroup>
     <ClInclude Include="src\AddressSpace.hpp" />
     <ClInclude Include="src\AluFunctions.hpp" />
+    <ClInclude Include="src\Apu.hpp" />
     <ClInclude Include="src\Argument.hpp" />
     <ClInclude Include="src\AudioChannel.hpp" />
+    <ClInclude Include="src\AudioChannelOne.hpp" />
+    <ClInclude Include="src\AudioEnvelope.hpp" />
+    <ClInclude Include="src\AudioSweep.hpp" />
     <ClInclude Include="src\BitUtil.hpp" />
     <ClInclude Include="src\BootRom.hpp" />
     <ClInclude Include="src\Cartridge.hpp" />
@@ -184,6 +192,7 @@
     <ClInclude Include="src\ColourPixelFifo.hpp" />
     <ClInclude Include="src\ColourRam.hpp" />
     <ClInclude Include="src\ColourRegisters.hpp" />
+    <ClInclude Include="src\Consts.hpp" />
     <ClInclude Include="src\Controller.hpp" />
     <ClInclude Include="src\Cpu.hpp" />
     <ClInclude Include="src\Disassembler.hpp" />
