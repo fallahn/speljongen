@@ -138,6 +138,7 @@
     <ClCompile Include="src\AudioChannel.cpp" />
     <ClCompile Include="src\AudioChannelOne.cpp" />
     <ClCompile Include="src\AudioEnvelope.cpp" />
+    <ClCompile Include="src\AudioOutput.cpp" />
     <ClCompile Include="src\AudioSweep.cpp" />
     <ClCompile Include="src\Cartridge.cpp" />
     <ClCompile Include="src\ClassicPixelFifo.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="src\AudioChannel.hpp" />
     <ClInclude Include="src\AudioChannelOne.hpp" />
     <ClInclude Include="src\AudioEnvelope.hpp" />
+    <ClInclude Include="src\AudioOutput.hpp" />
     <ClInclude Include="src\AudioSweep.hpp" />
     <ClInclude Include="src\BitUtil.hpp" />
     <ClInclude Include="src\BootRom.hpp" />

@@ -1,7 +1,6 @@
 /*
 MIT License
 
-Copyright(c) 2017 Tomasz R?kawek(Coffee GB)
 Copyright(c) 2018 Matt Marchant(Speljongen)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,36 +24,27 @@ SOFTWARE.
 
 #pragma once
 
-#include "AudioChannelOne.hpp"
+#include <SFML/Audio/SoundStream.hpp>
 
-#include <array>
+#include <cstdint>
+#include <vector>
 
-class Apu final : public AddressSpace
+class AudioOutput final : public sf::SoundStream
 {
 public:
-    explicit Apu(std::vector<std::uint8_t>&);
+    AudioOutput();
 
-    std::string getLabel() const override { return "APU"; }
-
-    bool accepts(std::uint16_t) const override;
-    void setByte(std::uint16_t, std::uint8_t) override;
-    std::uint8_t getByte(std::uint16_t) const override;
-
-    void tick();
-    void enableChannel(bool, std::int32_t);
-
-    void enableColour(bool);
+    void addSample(std::uint8_t, std::uint8_t);
 
 private:
 
-    bool m_enabled;
-    std::array<bool, 4> m_overrideEnabled = {};
-    std::array<std::int32_t, 4u> m_channels = {};
+    sf::Mutex m_mutex;
 
-    ChannelOne m_channelOne;
+    std::vector<sf::Int16> m_buffer;
+    std::vector<sf::Int16> m_outBuffer;
+    std::size_t m_bufferSize;
 
-    std::array<AddressSpace*, 0xff26 - 0xff10> m_addressMap;
+    bool onGetData(Chunk&) override;
+    void onSeek(sf::Time)override {}
 
-    void start();
-    void stop();
 };

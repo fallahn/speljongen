@@ -42,6 +42,7 @@ Speljongen::Speljongen()
     : m_storage         (0x10000),
     m_running           (false),
     m_mmu               (m_storage),
+    m_apu               (m_storage),
     m_speedMode         (m_storage),
     m_interruptManager  (m_storage),
     m_controller        (m_interruptManager, m_mmu),
@@ -428,6 +429,7 @@ bool Speljongen::tick()
     {
         ret = m_cpu.tick();
     }
+    m_apu.tick();
     auto gpuMode = m_gpu.tick();
     if (gpuMode != Gpu::Mode::None)
     {
@@ -617,7 +619,7 @@ void Speljongen::updateVramView()
 
 void Speljongen::initMMU(bool colour)
 {
-    //TODO disable colour on sound
+    m_apu.enableColour(colour);
     m_interruptManager.enableColour(colour);
     m_gpu.enableColour(colour);
 
@@ -633,6 +635,7 @@ void Speljongen::initMMU(bool colour)
     m_mmu.addAddressSpace(m_timer);   
     m_mmu.addAddressSpace(m_shadowSpace);
     m_mmu.addAddressSpace(m_lowerRamSpace);
+    m_mmu.addAddressSpace(m_apu);
 
     if(colour)
     {

@@ -43,6 +43,7 @@ SOFTWARE.
 #include "ColourRegisters.hpp"
 #include "Hdma.hpp"
 #include "Controller.hpp"
+#include "Apu.hpp"
 
 #include <SFML/System/Thread.hpp>
 
@@ -62,9 +63,6 @@ namespace sf
     class Event;
 }
 
-class Timer;
-class Dma;
-class Gpu;
 class Speljongen final
 {
 public:
@@ -97,6 +95,7 @@ private:
     std::vector<std::uint8_t> m_storage;
     std::atomic<bool> m_running;
     Mmu m_mmu;
+    Apu m_apu;
     SpeedMode m_speedMode;
     InterruptManager m_interruptManager;
     Controller m_controller;
