@@ -53,7 +53,7 @@ private:
 
     ChannelOne m_channelOne;
 
-    std::array<AddressSpace*, 0xff26 - 0xff10> m_addressMap;
+    std::array<AddressSpace*, 0xff27 - 0xff10> m_addressMap;
 
     void start();
     void stop();

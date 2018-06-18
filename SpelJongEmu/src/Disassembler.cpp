@@ -21,6 +21,9 @@ void Disassembler::disassemble(const AddressSpace& addressSpace, std::uint16_t s
     //could probably add a first pass function which marks all the addresses with ops/operands
     //although this won't work for RAM locations...
 
+    //TODO this also needs to check the active ROM and RAM banks so that the correct, currently
+    //mapped data is visible in the debugger
+
     std::uint16_t address = start;
     
     while (addressSpace.accepts(address) && address < 0xff4c && address < end)

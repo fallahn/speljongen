@@ -3,7 +3,7 @@
 namespace
 {
     const std::uint16_t AddressOffset = 0xff10;
-    const std::uint16_t AddressSize = 0xff26 - AddressOffset;
+    //const std::uint16_t AddressSize = 0xff27 - AddressOffset;
 
     const std::array<std::uint8_t, 48u> Masks = 
     {
@@ -24,7 +24,7 @@ Apu::Apu(std::vector<std::uint8_t>& storage)
     m_channelOne(storage)
 {
     //map all the channels to the address space
-    for (auto i = 0u; i < AddressSize; ++i)
+    for (auto i = 0u; i < m_addressMap.size(); ++i)
     {
         auto address = AddressOffset + i;
         if (m_channelOne.accepts(address))
