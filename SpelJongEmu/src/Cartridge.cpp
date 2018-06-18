@@ -10,14 +10,15 @@
 #include <fstream>
 
 Cartridge::Cartridge(std::vector<std::uint8_t>& storage)
-    : AddressSpace  (storage),
-    m_info          (ROM),
-    m_colour        (false),
-    m_title         ("NO TITLE"),
-    m_infoStr       ("\nNo cartridge loaded"),
-    m_romBanks      (0),
-    m_ramBanks      (0),
-    m_type          (Classic)
+    : AddressSpace      (storage),
+    m_info              (ROM),
+    m_colour            (false),
+    m_title             ("NO TITLE"),
+    m_infoStr           ("\nNo cartridge loaded"),
+    m_romBanks          (0),
+    m_ramBanks          (0),
+    m_selectedRomBank   (1),
+    m_type              (Classic)
 {
 
 }
@@ -102,6 +103,7 @@ bool Cartridge::load(const std::string& path)
         file.close();
     }
 
+    m_selectedRomBank = 1;
     m_infoStr = "\nCartridge Info:\nTitle: ";
 
     //grab title
@@ -186,7 +188,7 @@ bool Cartridge::load(const std::string& path)
     m_info = static_cast<Info>(static_cast<std::uint8_t>(buf[0x0147]));
     if (m_info >= ROM_MBC1 && m_info <= ROM_MBC1_RAM_BATTERY)
     {
-        m_mbc = std::make_unique<Mbc1>(getStorage(), buf, m_romBanks, m_ramBanks);
+        m_mbc = std::make_unique<Mbc1>(getStorage(), buf, m_romBanks, m_ramBanks, m_selectedRomBank);
         switch (m_info)
         {
         default:
@@ -202,7 +204,7 @@ bool Cartridge::load(const std::string& path)
     }
     else if(m_info >= ROM_MBC5 && m_info <= ROM_MBC5_RUMBLE_SRAM_BATTERY)
     {
-        m_mbc = std::make_unique<Mbc5>(getStorage(), buf, m_romBanks, m_ramBanks);
+        m_mbc = std::make_unique<Mbc5>(getStorage(), buf, m_romBanks, m_ramBanks, m_selectedRomBank);
         switch (m_info)
         {
         default:
@@ -227,7 +229,7 @@ bool Cartridge::load(const std::string& path)
     }
     else if (m_info >= ROM_MBC3 && m_info <= ROM_MBC3_RAM_BATTERY)
     {
-        m_mbc = std::make_unique<Mbc3>(getStorage(), buf, m_ramBanks);
+        m_mbc = std::make_unique<Mbc3>(getStorage(), buf, m_ramBanks, m_selectedRomBank);
         switch (m_info)
         {
         default:

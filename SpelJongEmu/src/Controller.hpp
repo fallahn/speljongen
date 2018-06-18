@@ -50,6 +50,8 @@ public:
 
     const sf::Texture& getTexture() const { return m_texture.getTexture(); }
 
+    void updateTexture();
+
 private:
     std::uint8_t m_inputMask;
     std::uint8_t m_controllerMask;
@@ -60,5 +62,4 @@ private:
     sf::RenderTexture m_texture;
     sf::Texture m_buttonTexture;
     std::vector<sf::Vertex> m_vertices;
-    void updateTexture();
 };

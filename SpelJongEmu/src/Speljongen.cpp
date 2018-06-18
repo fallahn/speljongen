@@ -224,6 +224,7 @@ void Speljongen::update()
         }
 
         updateDebugger();
+        m_controller.updateTexture();
     }
 }
 #endif
@@ -539,6 +540,8 @@ void Speljongen::updateDebug()
     ss << "\nBGP: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(MemoryRegisters::BGP);
     ss << "\nOBP0: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(MemoryRegisters::OBP0);
     ss << "\nOBP1: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(MemoryRegisters::OBP1);
+
+    ss << "\n\nROM: " << std::dec << m_cartridge.selectedRomBank();
 
 #ifdef USE_THREADING
     m_mutex.lock();

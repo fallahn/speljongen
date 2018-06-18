@@ -252,12 +252,10 @@ void Controller::tick()
     if (m_inputMask != m_lastMask)
     {
         m_interruptManager.requestInterrupt(Interrupt::Type::P10_13);
-        updateTexture(); //TODO if this causes emulation slow down (it shouldn't) move to own drawing function
     }
     m_lastMask = m_inputMask;
 }
 
-//private
 void Controller::updateTexture()
 {
     m_vertices.clear();

@@ -1,6 +1,6 @@
 #include "Mbc1.hpp"
 
-Mbc1::Mbc1(std::vector<std::uint8_t>& storage, const std::vector<char>& buf, std::int32_t romBanks, std::int32_t ramBanks)
+Mbc1::Mbc1(std::vector<std::uint8_t>& storage, const std::vector<char>& buf, std::int32_t romBanks, std::int32_t ramBanks, std::int32_t& selectedRom)
     : AddressSpace      (storage),
     m_ram               (0x2000 * ramBanks),
     m_romBanks          (romBanks),
@@ -10,7 +10,7 @@ Mbc1::Mbc1(std::vector<std::uint8_t>& storage, const std::vector<char>& buf, std
     m_cachedAtZero      (-1),
     m_cachedAtForty     (-1),
     m_selectedRamBank   (0),
-    m_selectedRomBank   (1),
+    m_selectedRomBank   (selectedRom),
     m_memoryModel       (0)
 {
     for (auto c : buf)
@@ -58,6 +58,7 @@ void Mbc1::setByte(std::uint16_t address, std::uint8_t value)
     else if (address >= 0x4000 && address < 0x6000 && m_memoryModel == 1)
     {
         std::int32_t bank = value & 0b11;
+        assert(bank < m_ramBanks);
         m_selectedRamBank = bank;
         m_cachedAtZero = -1;
         m_cachedAtForty = -1;

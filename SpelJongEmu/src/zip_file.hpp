@@ -5104,7 +5104,7 @@ tm safe_localtime(const time_t &t)
 #endif
 }
 
-unsigned long write_callback(void *opaque, unsigned long long file_ofs, const void *pBuf, unsigned long n)
+size_t write_callback(void *opaque, mz_uint64 file_ofs, const void *pBuf, size_t n)
 {
     auto buffer = static_cast<std::vector<char> *>(opaque);
     

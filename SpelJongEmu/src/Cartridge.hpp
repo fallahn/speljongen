@@ -51,6 +51,8 @@ public:
 
     bool isColour() const { return m_colour; }
 
+    std::int32_t selectedRomBank() const { return m_selectedRomBank; }
+
     enum Type
     {
         Universal = 0x80,
@@ -91,6 +93,7 @@ private:
     std::string m_infoStr;
     std::int32_t m_romBanks;
     std::int32_t m_ramBanks;
+    std::int32_t m_selectedRomBank;
     Type m_type;
 
     std::unique_ptr<AddressSpace> m_mbc;

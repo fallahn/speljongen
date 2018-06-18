@@ -23,6 +23,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+/*
+The colour gameboy can map one of 7 banks into the 0xd000 - 0xdfff range.
+The selected bank is stored in the SVBK (switch video bank) register at 0xff70
+*/
+
 #pragma once
 
 #include "AddressSpace.hpp"
@@ -31,7 +36,7 @@ class ColourRam final : public AddressSpace
 {
 public:
     explicit ColourRam(std::vector<std::uint8_t>& storage)
-        : AddressSpace(storage) {}
+        : AddressSpace(storage), m_bankData(7 * 0x1000) {}
 
     std::string getLabel() const override { return "Colour RAM"; }
 
@@ -43,15 +48,39 @@ public:
     void setByte(std::uint16_t address, std::uint8_t value)
     {
         assert(accepts(address));
-        setStorageValue(address, value);
+        if (address == 0xff70)
+        {
+            setStorageValue(address, value);
+        }
+        else
+        {
+            //look up internal bank
+            m_bankData[getBankAddress(address)] = value;
+        }
     }
 
     std::uint8_t getByte(std::uint16_t address) const override
     {
         assert(accepts(address));
-        return getStorageValue(address);
+        if (address == 0xff70)
+        {
+            return getStorageValue(address);
+        }
+
+        return m_bankData[getBankAddress(address)];
     }
 
 private:
+    std::vector<std::uint8_t> m_bankData;
 
+    std::int32_t getBankAddress(std::uint16_t address) const
+    {
+        std::int32_t bankAddress = getStorageValue(0xff70) & 0x7;
+        bankAddress = std::max(1, bankAddress); //if svbk is 0 we still get bank 1
+
+        bankAddress = (bankAddress - 1) * 0x1000;
+        bankAddress += (address - 0xd000);
+
+        return bankAddress;
+    }
 };

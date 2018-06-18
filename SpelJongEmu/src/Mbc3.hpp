@@ -30,7 +30,7 @@ SOFTWARE.
 class Mbc3 final : public AddressSpace
 {
 public:
-    Mbc3(std::vector<std::uint8_t>&, const std::vector<char>&, std::int32_t);
+    Mbc3(std::vector<std::uint8_t>&, const std::vector<char>&, std::int32_t, std::int32_t&);
 
     std::string getLabel() const override { return "MBC 3"; }
 
@@ -45,7 +45,7 @@ private:
     std::vector<std::uint8_t> m_ram;
     std::int32_t m_ramBanks;
 
-    std::int32_t m_selectedRomBank;
+    std::int32_t& m_selectedRomBank;
     std::int32_t m_selectedRamBank;
 
     bool m_ramWriteEnabled;

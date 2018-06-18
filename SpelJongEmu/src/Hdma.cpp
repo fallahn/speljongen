@@ -49,7 +49,7 @@ std::uint8_t Hdma::getByte(std::uint16_t address) const
         return m_inProgress ? 0 : (1 << 7) | m_length;
     }
 
-    return 0xff;
+    return getStorageValue(address);//0xff
 }
 
 void Hdma::tick()

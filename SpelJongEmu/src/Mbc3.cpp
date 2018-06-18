@@ -2,11 +2,11 @@
 
 #include <algorithm>
 
-Mbc3::Mbc3(std::vector<std::uint8_t>& storage, const std::vector<char>& cart, std::int32_t ramBanks)
+Mbc3::Mbc3(std::vector<std::uint8_t>& storage, const std::vector<char>& cart, std::int32_t ramBanks, std::int32_t& selectedRom)
     : AddressSpace      (storage),
     m_ram               (0x2000 * std::max(1, ramBanks)),
     m_ramBanks          (ramBanks),
-    m_selectedRomBank   (1),
+    m_selectedRomBank   (selectedRom),
     m_selectedRamBank   (0),
     m_ramWriteEnabled   (false)
 {
@@ -48,6 +48,7 @@ void Mbc3::setByte(std::uint16_t address, std::uint8_t value)
 
         if (address >= 0x4000 && address < 0x6000)
         {
+            assert(value <= m_ramBanks);
             m_selectedRamBank = value;
             return;
         }

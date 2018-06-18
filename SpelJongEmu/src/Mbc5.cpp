@@ -3,12 +3,12 @@
 #include <algorithm>
 #include <iostream>
 
-Mbc5::Mbc5(std::vector<std::uint8_t>& storage, const std::vector<char>& cartData, std::int32_t romBanks, std::int32_t ramBanks)
+Mbc5::Mbc5(std::vector<std::uint8_t>& storage, const std::vector<char>& cartData, std::int32_t romBanks, std::int32_t ramBanks, std::int32_t& selectedRom)
     : AddressSpace      (storage),
     m_ram               (0x2000 * std::max(1, ramBanks)),
     m_romBanks          (romBanks),
     m_ramBanks          (ramBanks),
-    m_selectedRomBank   (1),
+    m_selectedRomBank   (selectedRom),
     m_selectedRamBank   (0),
     m_ramWriteEnabled   (false)
 {
@@ -43,6 +43,7 @@ void Mbc5::setByte(std::uint16_t address, std::uint8_t value)
     if (address >= 0x2000 && address < 0x3000)
     {
         m_selectedRomBank = (m_selectedRomBank & 0x100) | value;
+        //std::cout << "Lower: " << std::dec << (int)value << "\n";
         //std::cout << "ROM bank set to: " << std::dec <<  m_selectedRomBank << "\n";
         return;
     }
@@ -51,15 +52,17 @@ void Mbc5::setByte(std::uint16_t address, std::uint8_t value)
     {
         std::int32_t val = value;
         m_selectedRomBank = (m_selectedRomBank & 0x0ff) | ((val & 1) << 8);
-        std::cout << "ROM bank set to: " << m_selectedRomBank << "\n";
-        //std::cout << "buns\n";
+        //std::cout << "ROM bank set to: " << m_selectedRomBank << "\n";
+        //std::cout << "Upper: " << std::dec << (int)(value & 1) << "\n";
+
         return;
     }
 
     if (address >= 0x4000 && address < 0x6000)
     {
         auto bank = value & 0x0f;
-        if (bank < m_ramBanks)
+        //if (bank < m_ramBanks)
+        assert(bank < m_ramBanks);
         {
             m_selectedRamBank = bank;
         }
