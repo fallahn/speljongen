@@ -344,6 +344,8 @@ void Speljongen::doImgui()
     ImGui::Checkbox("N", &flagsN);
     ImGui::SameLine();
     ImGui::Text("%s", m_running ? "        Running" : "        Stopped");
+    ImGui::SameLine();
+    m_apu.playing() ? ImGui::Text("%s", "    Audio Playing") : ImGui::Text("%s", "    Audio Stopped");
     ImGui::End();
 
     std::string title = "Gameboy - " + m_cartridge.getTitle();

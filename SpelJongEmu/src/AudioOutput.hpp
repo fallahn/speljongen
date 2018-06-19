@@ -28,34 +28,48 @@ SOFTWARE.
 
 #include <cstdint>
 #include <vector>
+#include <atomic>
 
 class AudioOutput final : public sf::SoundStream
 {
 public:
     AudioOutput();
+    ~AudioOutput();
+    AudioOutput(const AudioOutput&) = delete;
+    AudioOutput(AudioOutput&&) = delete;
+    AudioOutput& operator = (const AudioOutput&) = delete;
+    AudioOutput& operator = (AudioOutput&&) = delete;
 
     void addSample(std::uint8_t, std::uint8_t);
 
     const float* getWaveformL() const { return m_waveformBufferL.data(); }
     const float* getWaveformR() const { return m_waveformBufferR.data(); }
-    std::size_t getWaveformSize() const { return m_bufferSize / 2; }
+    std::size_t getWaveformSize() const { return m_waveformBufferL.size(); }
 
 private:
 
     sf::Mutex m_mutex;
 
+    std::atomic<sf::Int16> m_left;
+    std::atomic<sf::Int16> m_right;
+
     std::vector<sf::Int16> m_buffer;
     std::vector<sf::Int16> m_outBuffer;
-    std::vector<sf::Int16> m_emptyBuffer;
+    //std::vector<sf::Int16> m_emptyBuffer;
     std::size_t m_bufferSize;
-    std::uint32_t m_tick;
+    //std::uint32_t m_tick;
 
     std::vector<float> m_waveformBufferL;
     std::vector<float> m_waveformBufferR;
+    std::size_t m_waveformIndex;
 
     sf::Int16 to16Bit(std::uint8_t, std::vector<float>&);
 
+    std::atomic_bool m_threadRunning;
+    sf::Thread m_thread;
+    void threadFunc();
+
     bool onGetData(Chunk&) override;
-    void onSeek(sf::Time)override {}
+    void onSeek(sf::Time) override {}
 
 };

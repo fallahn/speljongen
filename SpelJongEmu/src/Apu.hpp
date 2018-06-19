@@ -50,6 +50,8 @@ public:
     const float* getWaveformR() const { return m_output.getWaveformR(); }
     std::size_t getWaveformSize() const { return m_output.getWaveformSize(); }
 
+    bool playing() const { return m_output.getStatus() == sf::SoundStream::Playing; }
+
 private:
 
     bool m_enabled;

@@ -147,7 +147,8 @@ void Apu::tick()
     right *= (volumes & 0x7);
     left *= ((volumes >> 4) & 0x7);
 
-    m_output.addSample(static_cast<std::uint8_t>(left), static_cast<std::uint8_t>(right));
+    m_output.addSample(static_cast<std::uint8_t>(/*rand() % 128*/left), static_cast<std::uint8_t>(right));
+    //if(left > 0)std::cout << left << "\n";
 }
 
 void Apu::enableChannel(bool enable, std::int32_t channel)
