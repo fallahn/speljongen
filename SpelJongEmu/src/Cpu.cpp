@@ -33,7 +33,7 @@ Cpu::Cpu(AddressSpace& addressSpace, InterruptManager& interruptManager, SpeedMo
     //compile opcodes
     OpCodes::init();
 
-    m_logFile.open("pc.log", std::ios::out);
+    //m_logFile.open("pc.log", std::ios::out);
 }
 
 //public

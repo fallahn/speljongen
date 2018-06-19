@@ -82,7 +82,7 @@ protected:
     void setDacEnabled(bool enabled) { m_dacEnabled = enabled; }
     bool getDacEnabled() const { return m_dacEnabled; }
 
-    void setEnabled(bool enabled) { m_enabled = enabled; }
+    void setEnabled(bool enabled) { m_enabled = enabled; if (enabled) std::cout << " enabled\n"; }
     bool getEnabled() const { return m_enabled; }
 
     bool isColour() const { return m_colour; }

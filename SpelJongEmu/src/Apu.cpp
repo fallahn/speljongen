@@ -19,9 +19,9 @@ namespace
 }
 
 Apu::Apu(std::vector<std::uint8_t>& storage)
-    : AddressSpace(storage),
-    m_enabled(false),
-    m_channelOne(storage)
+    : AddressSpace  (storage),
+    m_enabled       (false),
+    m_channelOne    (storage)
 {
     //map all the channels to the address space
     for (auto i = 0u; i < m_addressMap.size(); ++i)
@@ -37,6 +37,8 @@ Apu::Apu(std::vector<std::uint8_t>& storage)
             m_addressMap[i] = nullptr;
         }
     }
+
+    m_output.play();
 }
 
 //public
@@ -77,10 +79,14 @@ void Apu::setByte(std::uint16_t address, std::uint8_t value)
     {
         setStorageValue(address, value);
     }
+
+    //std::cout << "write " << std::hex << address << "\n";
 }
 
 std::uint8_t Apu::getByte(std::uint16_t address) const
 {
+    //std::cout << "read " << std::hex << address << "\n";
+
     assert(accepts(address));
     std::uint8_t retVal = 0;
 
@@ -108,17 +114,45 @@ std::uint8_t Apu::getByte(std::uint16_t address) const
 
 void Apu::tick()
 {
-    if (!m_enabled) return;
-
+    if (!m_enabled)
+    {
+        m_output.addSample(127, 127);
+        return;
+    }
+ 
     m_channels[0] = m_channelOne.tick();
     //TODO other channels
 
 
+    auto channelSelection = getStorageValue(0xff25);
+    std::int32_t left = 0;
+    std::int32_t right = 0;
+
+    for (auto i = 0; i < 4; ++i)
+    {
+        if (channelSelection & (1 << i))
+        {
+            right += m_channels[i];
+        }
+
+        if (channelSelection & (1 << (i + 4)))
+        {
+            left += m_channels[i];
+        }
+    }
+    left /= 4;
+    right /= 4;
+
+    auto volumes = getStorageValue(0xff24);
+    right *= (volumes & 0x7);
+    left *= ((volumes >> 4) & 0x7);
+
+    m_output.addSample(static_cast<std::uint8_t>(left), static_cast<std::uint8_t>(right));
 }
 
 void Apu::enableChannel(bool enable, std::int32_t channel)
 {
-
+    m_overrideEnabled[channel] = enable;
 }
 
 void Apu::enableColour(bool enable)
@@ -129,10 +163,29 @@ void Apu::enableColour(bool enable)
 //private
 void Apu::start()
 {
+    for (auto i = 0xff10; i < 0xff26; ++i)
+    {
+        if (i == 0xff11 || i == 0xff16 || i == 0xff1b || i == 0xff20)
+        {
+            //preserve length
+            continue;
+        }
+        setByte(i, 0);
+    }
 
+
+    m_channelOne.start();
+
+
+    if (m_output.getStatus() != sf::SoundStream::Playing)
+    {
+        m_output.play();
+        //m_output.setLoop(true);
+    }
 }
 
 void Apu::stop()
 {
-
+    m_output.stop();
+    m_channelOne.stop();
 }

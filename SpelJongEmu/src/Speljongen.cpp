@@ -326,11 +326,13 @@ void Speljongen::doImgui()
 #ifdef USE_THREADING
     m_mutex.lock();
 #endif
-    ImGui::Text("%s", m_registerString.c_str());
+    ImGui::Text("%s\n ", m_registerString.c_str());
 #ifdef USE_THREADING
     m_mutex.unlock();
 #endif // USE_THREADING
-    //ImGui::Text("%s", m_cartridge.getInfo().c_str());
+    //ImGui::Separator();
+    ImGui::PlotLines("L", m_apu.getWaveformL(), (int)m_apu.getWaveformSize(), 0, nullptr, -1.f, 1.f);
+    ImGui::PlotLines("R", m_apu.getWaveformR(), (int)m_apu.getWaveformSize(), 0, nullptr, -1.f, 1.f);
     ImGui::EndChild();
 
     ImGui::Checkbox("Z", &flagsZ);
@@ -655,7 +657,29 @@ void Speljongen::initMMU(bool colour)
     m_mmu.setByte(MemoryRegisters::TIMA, 0);
     m_mmu.setByte(MemoryRegisters::TMA, 0);
     m_mmu.setByte(MemoryRegisters::TAC, 0);
-    //TODO audio registers
+    
+    m_mmu.setByte(MemoryRegisters::NR10, 0x80);
+    m_mmu.setByte(MemoryRegisters::NR11, 0xbf);
+    m_mmu.setByte(MemoryRegisters::NR12, 0xf3);
+    m_mmu.setByte(MemoryRegisters::NR14, 0xbf); //skip 13 to maintain levels
+
+    m_mmu.setByte(MemoryRegisters::NR21, 0x3f);
+    m_mmu.setByte(MemoryRegisters::NR22, 0x00);
+    m_mmu.setByte(MemoryRegisters::NR24, 0x24);
+
+    m_mmu.setByte(MemoryRegisters::NR30, 0x7f);
+    m_mmu.setByte(MemoryRegisters::NR31, 0xff);
+    m_mmu.setByte(MemoryRegisters::NR32, 0x9f);
+    m_mmu.setByte(MemoryRegisters::NR34, 0xbf);
+
+    m_mmu.setByte(MemoryRegisters::NR41, 0xff);
+    m_mmu.setByte(MemoryRegisters::NR42, 0x00);
+    m_mmu.setByte(MemoryRegisters::NR43, 0x00);
+    m_mmu.setByte(MemoryRegisters::NR44, 0xbf);
+
+    m_mmu.setByte(MemoryRegisters::NR50, 0x77);
+    m_mmu.setByte(MemoryRegisters::NR51, 0xf3);
+
     m_mmu.setByte(MemoryRegisters::LCDC, 0x91);
     m_mmu.setByte(MemoryRegisters::SCY, 0);
     m_mmu.setByte(MemoryRegisters::SCX, 0);

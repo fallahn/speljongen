@@ -65,6 +65,7 @@ bool AudioChannel::updateCounter()
 
     if (m_enabled && m_sampleCounter.getLength() == 0)
     {
+        std::cout << "mcbunt\n";
         m_enabled = false;
     }
 

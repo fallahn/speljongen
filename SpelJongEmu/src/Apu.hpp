@@ -26,6 +26,7 @@ SOFTWARE.
 #pragma once
 
 #include "AudioChannelOne.hpp"
+#include "AudioOutput.hpp"
 
 #include <array>
 
@@ -45,6 +46,10 @@ public:
 
     void enableColour(bool);
 
+    const float* getWaveformL() const { return m_output.getWaveformL(); }
+    const float* getWaveformR() const { return m_output.getWaveformR(); }
+    std::size_t getWaveformSize() const { return m_output.getWaveformSize(); }
+
 private:
 
     bool m_enabled;
@@ -54,6 +59,8 @@ private:
     ChannelOne m_channelOne;
 
     std::array<AddressSpace*, 0xff27 - 0xff10> m_addressMap;
+
+    AudioOutput m_output;
 
     void start();
     void stop();

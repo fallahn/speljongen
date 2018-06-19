@@ -36,13 +36,24 @@ public:
 
     void addSample(std::uint8_t, std::uint8_t);
 
+    const float* getWaveformL() const { return m_waveformBufferL.data(); }
+    const float* getWaveformR() const { return m_waveformBufferR.data(); }
+    std::size_t getWaveformSize() const { return m_bufferSize / 2; }
+
 private:
 
     sf::Mutex m_mutex;
 
     std::vector<sf::Int16> m_buffer;
     std::vector<sf::Int16> m_outBuffer;
+    std::vector<sf::Int16> m_emptyBuffer;
     std::size_t m_bufferSize;
+    std::uint32_t m_tick;
+
+    std::vector<float> m_waveformBufferL;
+    std::vector<float> m_waveformBufferR;
+
+    sf::Int16 to16Bit(std::uint8_t, std::vector<float>&);
 
     bool onGetData(Chunk&) override;
     void onSeek(sf::Time)override {}

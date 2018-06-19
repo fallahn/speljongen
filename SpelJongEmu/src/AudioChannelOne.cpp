@@ -79,8 +79,11 @@ void ChannelOne::trigger()
 
 std::int32_t ChannelOne::tick()
 {
+    m_volumeEnvelope.tick();
+
     bool b = true;
     b = updateCounter() && b;
+    //if (b) std::cout << "counter true\n";
     b = updateSweep() && b;
     b = getDacEnabled() && b;
     if (!b)
