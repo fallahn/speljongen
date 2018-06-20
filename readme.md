@@ -16,6 +16,7 @@ to link to AppKit and CoreServices for the same reason. The CMake file also supp
 creating app bundles on macOS, which requires a valid icon set and XCode 9 command line
 tools installed.
 
+Since sound emulation was added Speljongen now *also* depends on SDL2...
 
 Speljongen is buggy and incomplete - few games work (I don't have any commercial ROMs
 to test, so I'm relying on PD ROMs) and the UI is missing features. Ideally I'd like

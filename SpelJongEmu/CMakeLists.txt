@@ -39,7 +39,10 @@ endif()
 
 # Only works with SFML version 2.4 and above
 SET(SFML_MIN_VERSION 2.4)
-find_package(SFML ${SFML_MIN_VERSION} REQUIRED graphics window audio system network)
+find_package(SFML ${SFML_MIN_VERSION} REQUIRED graphics window system network)
+
+# We're using SDL2 for audio, because hum...
+find_package(SDL2 REQUIRED)
 
 #required by ImGui
 find_package(OpenGL REQUIRED)
@@ -52,6 +55,7 @@ endif()
 # Additional include directories
 include_directories(
   ${SFML_INCLUDE_DIR} 
+  ${SDL2_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/include)
 
 if(X11_FOUND)
@@ -117,6 +121,7 @@ endif(APPLE)
 target_link_libraries(${PROJECT_NAME}
   ${SFML_LIBRARIES}
   ${SFML_DEPENDENCIES}
+  ${SDL2_LIBRARY}
   ${OPENGL_LIBRARIES})
 
 if(X11_FOUND)

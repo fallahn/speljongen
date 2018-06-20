@@ -38,7 +38,7 @@ Apu::Apu(std::vector<std::uint8_t>& storage)
         }
     }
 
-    m_output.play();
+    //m_output.play();
 }
 
 //public
@@ -178,15 +178,15 @@ void Apu::start()
     m_channelOne.start();
 
 
-    if (m_output.getStatus() != sf::SoundStream::Playing)
-    {
-        m_output.play();
-        //m_output.setLoop(true);
-    }
+    //if (m_output.getStatus() != sf::SoundStream::Playing)
+    //{
+    //    m_output.play();
+    //    //m_output.setLoop(true);
+    //}
 }
 
 void Apu::stop()
 {
-    m_output.stop();
+    //m_output.stop();
     m_channelOne.stop();
 }

@@ -24,13 +24,16 @@ SOFTWARE.
 
 #pragma once
 
-#include <SFML/Audio/SoundStream.hpp>
+//#include <SFML/Audio/SoundStream.hpp>
+
+#include <SFML/System/Thread.hpp>
+#include <SFML/System/Mutex.hpp>
 
 #include <cstdint>
 #include <vector>
 #include <atomic>
 
-class AudioOutput final : public sf::SoundStream
+class AudioOutput final //: public sf::SoundStream
 {
 public:
     AudioOutput();
@@ -54,10 +57,8 @@ private:
     std::atomic<sf::Int16> m_right;
 
     std::vector<sf::Int16> m_buffer;
-    std::vector<sf::Int16> m_outBuffer;
-    //std::vector<sf::Int16> m_emptyBuffer;
+    //std::vector<sf::Int16> m_outBuffer;
     std::size_t m_bufferSize;
-    //std::uint32_t m_tick;
 
     std::vector<float> m_waveformBufferL;
     std::vector<float> m_waveformBufferR;
@@ -69,7 +70,9 @@ private:
     sf::Thread m_thread;
     void threadFunc();
 
-    bool onGetData(Chunk&) override;
-    void onSeek(sf::Time) override {}
+    std::uint32_t m_tick;
+
+    //bool onGetData(Chunk&) override;
+    //void onSeek(sf::Time) override {}
 
 };
