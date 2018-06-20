@@ -5,6 +5,7 @@ set(PROJECT_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/Apu.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Argument.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/AudioChannel.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/AudioChannelFour.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/AudioChannelOne.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/AudioChannelThree.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/AudioChannelTwo.cpp

@@ -143,6 +143,7 @@
     <ClCompile Include="src\AudioOutput.cpp" />
     <ClCompile Include="src\AudioSweep.cpp" />
     <ClCompile Include="src\Cartridge.cpp" />
+    <ClCompile Include="src\AudioChannelFour.cpp" />
     <ClCompile Include="src\ClassicPixelFifo.cpp" />
     <ClCompile Include="src\ColourPalette.cpp" />
     <ClCompile Include="src\ColourPixelFifo.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="src\Apu.hpp" />
     <ClInclude Include="src\Argument.hpp" />
     <ClInclude Include="src\AudioChannel.hpp" />
+    <ClInclude Include="src\AudioChannelFour.hpp" />
     <ClInclude Include="src\AudioChannelOne.hpp" />
     <ClInclude Include="src\AudioChannelThree.hpp" />
     <ClInclude Include="src\AudioChannelTwo.hpp" />

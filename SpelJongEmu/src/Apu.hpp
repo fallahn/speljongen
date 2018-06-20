@@ -59,7 +59,7 @@ private:
     std::array<bool, 4> m_overrideEnabled = {};
     std::array<std::int32_t, 4u> m_channelOutputs = {};
 
-    std::array<std::unique_ptr<AudioChannel>, 3u> m_channelGenerators;
+    std::array<std::unique_ptr<AudioChannel>, 4u> m_channelGenerators;
 
     std::array<AddressSpace*, 0xff27 - 0xff10> m_addressMap;
 
