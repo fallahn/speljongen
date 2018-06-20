@@ -126,7 +126,7 @@ void Apu::tick()
 {
     if (!m_enabled)
     {
-        m_output.addSample(127, 127);
+        //m_output.addSample(0,0);
         return;
     }
  
@@ -134,7 +134,6 @@ void Apu::tick()
     {
         m_channelOutputs[i] = m_channelGenerators[i]->tick();
     }
-
 
     auto channelSelection = getStorageValue(0xff25);
     std::int32_t left = 0;
@@ -192,6 +191,8 @@ void Apu::start()
     {
         c->start();
     }
+
+    m_output.start();
 }
 
 void Apu::stop()
@@ -200,4 +201,5 @@ void Apu::stop()
     {
         c->stop();
     }
+    m_output.stop();
 }

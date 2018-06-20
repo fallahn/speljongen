@@ -12,7 +12,7 @@ void ChannelFour::setByte(std::uint16_t address, std::uint8_t value)
     assert(accepts(address));
     AudioChannel::setByte(address, value);
 
-    auto reg = address = getOffset();
+    auto reg = address - getOffset();
     switch (reg)
     {
     default: break;

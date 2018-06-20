@@ -24,16 +24,11 @@ SOFTWARE.
 
 #pragma once
 
-//#include <SFML/Audio/SoundStream.hpp>
-
-#include <SFML/System/Thread.hpp>
-#include <SFML/System/Mutex.hpp>
 
 #include <cstdint>
 #include <vector>
-#include <atomic>
 
-class AudioOutput final //: public sf::SoundStream
+class AudioOutput final
 {
 public:
     AudioOutput();
@@ -47,32 +42,28 @@ public:
 
     const float* getWaveformL() const { return m_waveformBufferL.data(); }
     const float* getWaveformR() const { return m_waveformBufferR.data(); }
-    std::size_t getWaveformSize() const { return m_waveformBufferL.size(); }
+    std::size_t getWaveformSize() const;
+
+    void start();
+    void stop();
+
+    bool running() const { return m_running; }
 
 private:
 
-    sf::Mutex m_mutex;
+    std::int16_t m_left;
+    std::int16_t m_right;
 
-    std::atomic<sf::Int16> m_left;
-    std::atomic<sf::Int16> m_right;
-
-    std::vector<sf::Int16> m_buffer;
-    //std::vector<sf::Int16> m_outBuffer;
+    std::vector<std::uint16_t> m_buffer;
     std::size_t m_bufferSize;
 
     std::vector<float> m_waveformBufferL;
     std::vector<float> m_waveformBufferR;
     std::size_t m_waveformIndex;
 
-    sf::Int16 to16Bit(std::uint8_t, std::vector<float>&);
-
-    std::atomic_bool m_threadRunning;
-    sf::Thread m_thread;
-    void threadFunc();
+    std::int16_t to16Bit(std::uint8_t, std::vector<float>&);
 
     std::uint32_t m_tick;
 
-    //bool onGetData(Chunk&) override;
-    //void onSeek(sf::Time) override {}
-
+    bool m_running;
 };
