@@ -5,7 +5,7 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Sleep.hpp>
 
-#include <sdl2/SDL.h>
+#include <SDL.h>
 
 #include <limits>
 #include <iostream>
