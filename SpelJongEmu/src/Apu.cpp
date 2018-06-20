@@ -1,6 +1,7 @@
 #include "Apu.hpp"
 #include "AudioChannelOne.hpp"
 #include "AudioChannelTwo.hpp"
+#include "AudioChannelThree.hpp"
 
 namespace
 {
@@ -26,6 +27,7 @@ Apu::Apu(std::vector<std::uint8_t>& storage)
 {
     m_channelGenerators[0] = std::make_unique<ChannelOne>(storage);
     m_channelGenerators[1] = std::make_unique<ChannelTwo>(storage);
+    m_channelGenerators[2] = std::make_unique<ChannelThree>(storage);
 
 
     //map all the channels to the address space

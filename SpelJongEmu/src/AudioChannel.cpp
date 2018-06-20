@@ -40,7 +40,7 @@ void AudioChannel::setByte(std::uint16_t address, std::uint8_t value)
 
 std::uint8_t AudioChannel::getByte(std::uint16_t address) const
 {
-    assert(accepts(address));
+    //assert(accepts(address)); //derived classes provide this
     return getStorageValue(address);
 }
 

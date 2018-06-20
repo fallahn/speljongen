@@ -137,6 +137,7 @@
     <ClCompile Include="src\Argument.cpp" />
     <ClCompile Include="src\AudioChannel.cpp" />
     <ClCompile Include="src\AudioChannelOne.cpp" />
+    <ClCompile Include="src\AudioChannelThree.cpp" />
     <ClCompile Include="src\AudioChannelTwo.cpp" />
     <ClCompile Include="src\AudioEnvelope.cpp" />
     <ClCompile Include="src\AudioOutput.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="src\Argument.hpp" />
     <ClInclude Include="src\AudioChannel.hpp" />
     <ClInclude Include="src\AudioChannelOne.hpp" />
+    <ClInclude Include="src\AudioChannelThree.hpp" />
     <ClInclude Include="src\AudioChannelTwo.hpp" />
     <ClInclude Include="src\AudioEnvelope.hpp" />
     <ClInclude Include="src\AudioOutput.hpp" />

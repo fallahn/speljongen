@@ -23,22 +23,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-/*
-First audio channel of the gameboy. Produces a square wave
-with volume envelope and frequency sweep filters
-*/
-
 #pragma once
 
-#include "AudioChannel.hpp"
-#include "AudioEnvelope.hpp"
-#include "AudioSweep.hpp"
+/*
+Gameboy audio generator channel three, which
+plays back 4 bit wave audio from 16 bytes memory
+starting at 0xff30 (32 samples in total)
+*/
 
-class ChannelOne final : public AudioChannel
+#include "AudioChannel.hpp"
+
+class ChannelThree final : public AudioChannel
 {
 public:
-    explicit ChannelOne(std::vector<std::uint8_t>&);
+    explicit ChannelThree(std::vector<std::uint8_t>&);
 
+    bool accepts(std::uint16_t) const override;
     void setByte(std::uint16_t, std::uint8_t) override;
     std::uint8_t getByte(std::uint16_t) const override;
 
@@ -47,15 +47,17 @@ public:
     std::int32_t tick() override;
 
 private:
+
     std::int32_t m_frequencyDivider;
     std::int32_t m_lastOutput;
     std::int32_t m_index;
 
-    AudioSweep m_frequencySweep;
-    VolumeEnvelope m_volumeEnvelope;
+    std::int32_t m_ticksSinceLastRead;
+    std::uint16_t m_lastReadAddress;
+    std::uint8_t m_buffer;
+    bool m_triggered;
 
-    std::int32_t getDuty() const;
+    std::uint8_t getVolume() const;
+    std::uint8_t getWaveEntry();
     void resetFreqDivider();
-    bool updateSweep();
-
 };

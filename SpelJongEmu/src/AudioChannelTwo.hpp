@@ -25,6 +25,11 @@ SOFTWARE.
 
 #pragma once
 
+/*
+Gameboy audio generator channel two. As channel one, but without
+the frequency sweep filter
+*/
+
 #include "AudioChannel.hpp"
 #include "AudioEnvelope.hpp"
 

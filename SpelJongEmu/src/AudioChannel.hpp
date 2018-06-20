@@ -61,7 +61,7 @@ public:
 
     bool isEnabled() const;
 
-    bool accepts(std::uint16_t) const override;
+    virtual bool accepts(std::uint16_t) const override;
 
     virtual void setByte(std::uint16_t, std::uint8_t) override;
 
