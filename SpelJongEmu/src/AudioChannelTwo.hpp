@@ -26,45 +26,28 @@ SOFTWARE.
 #pragma once
 
 #include "AudioChannel.hpp"
-#include "AudioOutput.hpp"
+#include "AudioEnvelope.hpp"
 
-#include <array>
-#include <memory>
-
-class Apu final : public AddressSpace
+class ChannelTwo final : public AudioChannel
 {
 public:
-    explicit Apu(std::vector<std::uint8_t>&);
+    explicit ChannelTwo(std::vector<std::uint8_t>&);
 
-    std::string getLabel() const override { return "APU"; }
-
-    bool accepts(std::uint16_t) const override;
     void setByte(std::uint16_t, std::uint8_t) override;
     std::uint8_t getByte(std::uint16_t) const override;
 
-    void tick();
-    void enableChannel(bool, std::int32_t);
-
-    void enableColour(bool);
-
-    const float* getWaveformL() const { return m_output.getWaveformL(); }
-    const float* getWaveformR() const { return m_output.getWaveformR(); }
-    std::size_t getWaveformSize() const { return m_output.getWaveformSize(); }
-
-    bool playing() const { return /*m_output.getStatus() == sf::SoundStream::Playing;*/true; }
+    void start() override;
+    void trigger() override;
+    std::int32_t tick() override;
 
 private:
 
-    bool m_enabled;
-    std::array<bool, 4> m_overrideEnabled = {};
-    std::array<std::int32_t, 4u> m_channelOutputs = {};
+    std::int32_t m_frequencyDivider;
+    std::int32_t m_lastOutput;
+    std::int32_t m_index;
 
-    std::array<std::unique_ptr<AudioChannel>, 2u> m_channelGenerators;
+    VolumeEnvelope m_volumeEnvelope;
 
-    std::array<AddressSpace*, 0xff27 - 0xff10> m_addressMap;
-
-    AudioOutput m_output;
-
-    void start();
-    void stop();
+    std::int32_t getDuty() const;
+    void resetFreqDivider();
 };

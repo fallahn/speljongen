@@ -1,4 +1,6 @@
 #include "Apu.hpp"
+#include "AudioChannelOne.hpp"
+#include "AudioChannelTwo.hpp"
 
 namespace
 {
@@ -20,21 +22,25 @@ namespace
 
 Apu::Apu(std::vector<std::uint8_t>& storage)
     : AddressSpace  (storage),
-    m_enabled       (false),
-    m_channelOne    (storage)
+    m_enabled       (false)
 {
+    m_channelGenerators[0] = std::make_unique<ChannelOne>(storage);
+    m_channelGenerators[1] = std::make_unique<ChannelTwo>(storage);
+
+
     //map all the channels to the address space
     for (auto i = 0u; i < m_addressMap.size(); ++i)
     {
         auto address = AddressOffset + i;
-        if (m_channelOne.accepts(address))
+        m_addressMap[i] = nullptr;
+
+        for (auto& c : m_channelGenerators)
         {
-            m_addressMap[i] = &m_channelOne;
-        }
-        //TODO other channels
-        else
-        {
-            m_addressMap[i] = nullptr;
+            if (c->accepts(address))
+            {
+                m_addressMap[i] = c.get();
+                break;
+            }
         }
     }
 
@@ -93,8 +99,10 @@ std::uint8_t Apu::getByte(std::uint16_t address) const
     auto relAddress = address - AddressOffset;
     if (address == 0xff26)
     {
-        retVal |= m_channelOne.isEnabled() ? (1 << 0) : 0;
-        //TODO other channels
+        for (auto i = 0; i < m_channelGenerators.size(); ++i)
+        {
+            retVal |= m_channelGenerators[i]->isEnabled() ? (1 << i) : 0;
+        }
 
         retVal |= m_enabled ? (1 << 7) : 0;
     }
@@ -120,8 +128,10 @@ void Apu::tick()
         return;
     }
  
-    m_channels[0] = m_channelOne.tick();
-    //TODO other channels
+    for (auto i = 0; i < m_channelGenerators.size(); ++i)
+    {
+        m_channelOutputs[i] = m_channelGenerators[i]->tick();
+    }
 
 
     auto channelSelection = getStorageValue(0xff25);
@@ -132,12 +142,12 @@ void Apu::tick()
     {
         if (channelSelection & (1 << i))
         {
-            right += m_channels[i];
+            right += m_channelOutputs[i];
         }
 
         if (channelSelection & (1 << (i + 4)))
         {
-            left += m_channels[i];
+            left += m_channelOutputs[i];
         }
     }
     left /= 4;
@@ -148,7 +158,6 @@ void Apu::tick()
     left *= ((volumes >> 4) & 0x7);
 
     m_output.addSample(static_cast<std::uint8_t>(/*rand() % 128*/left), static_cast<std::uint8_t>(right));
-    //if(left > 0)std::cout << left << "\n";
 }
 
 void Apu::enableChannel(bool enable, std::int32_t channel)
@@ -158,7 +167,10 @@ void Apu::enableChannel(bool enable, std::int32_t channel)
 
 void Apu::enableColour(bool enable)
 {
-    m_channelOne.setColour(enable);
+    for (auto& c : m_channelGenerators)
+    {
+        c->setColour(enable);
+    }
 }
 
 //private
@@ -174,19 +186,16 @@ void Apu::start()
         setByte(i, 0);
     }
 
-
-    m_channelOne.start();
-
-
-    //if (m_output.getStatus() != sf::SoundStream::Playing)
-    //{
-    //    m_output.play();
-    //    //m_output.setLoop(true);
-    //}
+    for (auto& c : m_channelGenerators)
+    {
+        c->start();
+    }
 }
 
 void Apu::stop()
 {
-    //m_output.stop();
-    m_channelOne.stop();
+    for (auto& c : m_channelGenerators)
+    {
+        c->stop();
+    }
 }

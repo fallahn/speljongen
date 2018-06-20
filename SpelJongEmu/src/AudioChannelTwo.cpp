@@ -1,7 +1,7 @@
-#include "AudioChannelOne.hpp"
+#include "AudioChannelTwo.hpp"
 
-ChannelOne::ChannelOne(std::vector<std::uint8_t>& storage)
-    : AudioChannel(storage, 0xff10, 64),
+ChannelTwo::ChannelTwo(std::vector<std::uint8_t>& storage)
+    : AudioChannel(storage, 0xff15, 64),
     m_frequencyDivider  (0),
     m_lastOutput        (0),
     m_index             (0)
@@ -10,19 +10,16 @@ ChannelOne::ChannelOne(std::vector<std::uint8_t>& storage)
 }
 
 //public
-void ChannelOne::setByte(std::uint16_t address, std::uint8_t value)
+void ChannelTwo::setByte(std::uint16_t address, std::uint8_t value)
 {
     assert(accepts(address));
-    
+
     AudioChannel::setByte(address, value);
     auto reg = address - getOffset();
 
     switch (reg)
     {
-    default: break;
-    case 0:
-        m_frequencySweep.setNr10(value);
-        break;
+    default:break;
     case 1:
         getSampleCounter().setLength(64 - (value & 0x3f));
         break;
@@ -31,60 +28,41 @@ void ChannelOne::setByte(std::uint16_t address, std::uint8_t value)
         setDacEnabled((value & 0xf8) != 0);
         setEnabled(getEnabled() & getDacEnabled());
         break;
-    case 3:
-        m_frequencySweep.setNr13(value);
-        break;
-    case 4:
-        m_frequencySweep.setNr14(value);
-        break;
     }
 }
 
-std::uint8_t ChannelOne::getByte(std::uint16_t address) const
+std::uint8_t ChannelTwo::getByte(std::uint16_t address) const
 {
     assert(accepts(address));
-    auto reg = address - getOffset();
-    if (reg == 3)
-    {
-        return m_frequencySweep.getNr13();
-    }
-
-    if (reg == 4)
-    {
-        return (AudioChannel::getByte(address) & 0xf8) | (m_frequencySweep.getNr14() & 0x7);
-    }
-
     return AudioChannel::getByte(address);
 }
 
-void ChannelOne::start()
+void ChannelTwo::start()
 {
     m_index = 0;
     if (isColour())
     {
         getSampleCounter().reset();
     }
-
     getSampleCounter().start();
-    m_frequencySweep.start();
     m_volumeEnvelope.start();
 }
 
-void ChannelOne::trigger()
+void ChannelTwo::trigger()
 {
     m_index = 0;
     m_frequencyDivider = 1;
     m_volumeEnvelope.trigger();
 }
 
-std::int32_t ChannelOne::tick()
+std::int32_t ChannelTwo::tick()
 {
     m_volumeEnvelope.tick();
 
     bool b = true;
     b = updateCounter() && b;
-    b = updateSweep() && b;
     b = getDacEnabled() && b;
+
     if (!b)
     {
         return 0;
@@ -100,8 +78,7 @@ std::int32_t ChannelOne::tick()
     return m_lastOutput * m_volumeEnvelope.getVolume();
 }
 
-//private
-std::int32_t ChannelOne::getDuty() const
+std::int32_t ChannelTwo::getDuty() const
 {
     auto val = AudioChannel::getByte(getOffset() + 1) >> 6;
     switch (val)
@@ -118,17 +95,7 @@ std::int32_t ChannelOne::getDuty() const
     }
 }
 
-void ChannelOne::resetFreqDivider()
+void ChannelTwo::resetFreqDivider()
 {
     m_frequencyDivider = getFrequency() * 4;
-}
-
-bool ChannelOne::updateSweep()
-{
-    m_frequencySweep.tick();
-    if (getEnabled() && !m_frequencySweep.enabled())
-    {
-        setEnabled(false);
-    }
-    return getEnabled();
 }

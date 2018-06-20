@@ -177,6 +177,9 @@
     <ClCompile Include="src\AudioOutput.cpp">
       <Filter>Source Files\apu</Filter>
     </ClCompile>
+    <ClCompile Include="src\AudioChannelTwo.cpp">
+      <Filter>Source Files\apu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\InterruptManager.hpp">
@@ -366,6 +369,9 @@
       <Filter>Header Files\apu</Filter>
     </ClInclude>
     <ClInclude Include="src\AudioOutput.hpp">
+      <Filter>Header Files\apu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AudioChannelTwo.hpp">
       <Filter>Header Files\apu</Filter>
     </ClInclude>
   </ItemGroup>

@@ -88,7 +88,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../extlib/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../extlib/include;../extlib/include/sdl2</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_NO_DEBUG_HEAP=1;_ITERATOR_DEBUG_LEVEL=0;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <EnablePREfast>false</EnablePREfast>
@@ -121,7 +121,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../extlib/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../extlib/include;../extlib/include/sdl2</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -137,6 +137,7 @@
     <ClCompile Include="src\Argument.cpp" />
     <ClCompile Include="src\AudioChannel.cpp" />
     <ClCompile Include="src\AudioChannelOne.cpp" />
+    <ClCompile Include="src\AudioChannelTwo.cpp" />
     <ClCompile Include="src\AudioEnvelope.cpp" />
     <ClCompile Include="src\AudioOutput.cpp" />
     <ClCompile Include="src\AudioSweep.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="src\Argument.hpp" />
     <ClInclude Include="src\AudioChannel.hpp" />
     <ClInclude Include="src\AudioChannelOne.hpp" />
+    <ClInclude Include="src\AudioChannelTwo.hpp" />
     <ClInclude Include="src\AudioEnvelope.hpp" />
     <ClInclude Include="src\AudioOutput.hpp" />
     <ClInclude Include="src\AudioSweep.hpp" />
