@@ -35,6 +35,7 @@ set(PROJECT_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/OpCodeBuilder.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/OpCodesImpl.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/PixelTransferPhase.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/Sampler.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/SampleCounter.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/SpeedMode.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Speljongen.cpp

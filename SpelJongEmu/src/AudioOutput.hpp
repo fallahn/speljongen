@@ -24,6 +24,7 @@ SOFTWARE.
 
 #pragma once
 
+#include "Sampler.hpp"
 
 #include <cstdint>
 #include <vector>
@@ -61,9 +62,12 @@ private:
     std::vector<float> m_waveformBufferR;
     std::size_t m_waveformIndex;
 
-    std::int16_t to16Bit(std::uint8_t, std::vector<float>&);
-
     std::uint32_t m_tick;
+
+    Sampler m_samplerL;
+    Sampler m_samplerR;
+
+    std::int16_t to16Bit(std::uint8_t, std::vector<float>&);
 
     bool m_running;
 };

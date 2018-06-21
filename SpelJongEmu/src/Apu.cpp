@@ -67,16 +67,20 @@ void Apu::setByte(std::uint16_t address, std::uint8_t value)
                 m_enabled = false;
                 stop();
             }
-            else
-            {
-                if (!m_enabled)
-                {
-                    m_enabled = true;
-                    start();
-                }
-            }
+            //TODO clear all
+            //sound register values
         }
+        else
+        {
+            if (!m_enabled)
+            {
+                m_enabled = true;
+                start();
+            }
+        }     
     }
+
+    //if (m_enabled) return;
 
     auto relAddress = address - AddressOffset;
     if (m_addressMap[relAddress])

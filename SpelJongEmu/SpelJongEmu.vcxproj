@@ -173,6 +173,7 @@
     <ClCompile Include="src\OpCodesImpl.cpp" />
     <ClCompile Include="src\PixelTransferPhase.cpp" />
     <ClCompile Include="src\SampleCounter.cpp" />
+    <ClCompile Include="src\Sampler.cpp" />
     <ClCompile Include="src\SpeedMode.cpp" />
     <ClCompile Include="src\Speljongen.cpp" />
     <ClCompile Include="src\Tests.cpp" />
@@ -238,7 +239,9 @@
     <ClInclude Include="src\RamSpace.hpp" />
     <ClInclude Include="src\Register.hpp" />
     <ClInclude Include="src\CpuRegisters.hpp" />
+    <ClInclude Include="src\RingBuffer.hpp" />
     <ClInclude Include="src\Rom.hpp" />
+    <ClInclude Include="src\Sampler.hpp" />
     <ClInclude Include="src\ShadowAddressSpace.hpp" />
     <ClInclude Include="src\SpeedMode.hpp" />
     <ClInclude Include="src\Speljongen.hpp" />
