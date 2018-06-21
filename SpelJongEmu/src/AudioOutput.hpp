@@ -52,9 +52,6 @@ public:
 
 private:
 
-    std::int16_t m_left;
-    std::int16_t m_right;
-
     std::vector<std::uint16_t> m_buffer;
     std::size_t m_bufferSize;
 
@@ -66,8 +63,6 @@ private:
 
     Sampler m_samplerL;
     Sampler m_samplerR;
-
-    std::int16_t to16Bit(std::uint8_t, std::vector<float>&);
 
     bool m_running;
 };
