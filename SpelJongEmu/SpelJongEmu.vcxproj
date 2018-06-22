@@ -161,6 +161,7 @@
     <ClCompile Include="src\InterruptManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Mbc1.cpp" />
+    <ClCompile Include="src\Mbc2.cpp" />
     <ClCompile Include="src\Mbc3.cpp" />
     <ClCompile Include="src\Mbc5.cpp" />
     <ClCompile Include="src\MemoryRegisters.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="src\AudioEnvelope.hpp" />
     <ClInclude Include="src\AudioOutput.hpp" />
     <ClInclude Include="src\AudioSweep.hpp" />
+    <ClInclude Include="src\BatterySaves.hpp" />
     <ClInclude Include="src\BitUtil.hpp" />
     <ClInclude Include="src\BootRom.hpp" />
     <ClInclude Include="src\Cartridge.hpp" />
@@ -224,6 +226,7 @@
     <ClInclude Include="src\InterruptManager.hpp" />
     <ClInclude Include="src\Lcdc.hpp" />
     <ClInclude Include="src\Mbc1.hpp" />
+    <ClInclude Include="src\MBC2.hpp" />
     <ClInclude Include="src\Mbc3.hpp" />
     <ClInclude Include="src\Mbc5.hpp" />
     <ClInclude Include="src\MemoryRegisters.hpp" />

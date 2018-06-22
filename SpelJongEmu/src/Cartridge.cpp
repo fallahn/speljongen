@@ -1,5 +1,6 @@
 #include "Cartridge.hpp"
 #include "Mbc1.hpp"
+#include "MBC2.hpp"
 #include "Mbc3.hpp"
 #include "Mbc5.hpp"
 #include "Rom.hpp"
@@ -199,6 +200,19 @@ bool Cartridge::load(const std::string& path)
             break;
         case ROM_MBC1_RAM_BATTERY:
             m_infoStr += "Type: MBC1 with RAM\nand battery\n";
+            break;
+        }
+    }
+    else if (m_info >= ROM_MBC2 && m_info <= ROM_MBC2_BATTERY)
+    {
+        m_mbc = std::make_unique<Mbc2>(getStorage(), buf, m_romBanks, m_selectedRomBank);
+        switch (m_info)
+        {
+        default:
+            m_infoStr += "Type: MBC2\n";
+            break;
+        case ROM_MBC2_BATTERY:
+            m_infoStr += "Type: MBC2 with battery\n";
             break;
         }
     }

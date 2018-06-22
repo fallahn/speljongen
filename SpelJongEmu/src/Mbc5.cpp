@@ -43,8 +43,6 @@ void Mbc5::setByte(std::uint16_t address, std::uint8_t value)
     if (address >= 0x2000 && address < 0x3000)
     {
         m_selectedRomBank = (m_selectedRomBank & 0x100) | value;
-        //std::cout << "Lower: " << std::dec << (int)value << "\n";
-        //std::cout << "ROM bank set to: " << std::dec <<  m_selectedRomBank << "\n";
         return;
     }
 
@@ -52,9 +50,7 @@ void Mbc5::setByte(std::uint16_t address, std::uint8_t value)
     {
         std::int32_t val = value;
         m_selectedRomBank = (m_selectedRomBank & 0x0ff) | ((val & 1) << 8);
-        //std::cout << "ROM bank set to: " << m_selectedRomBank << "\n";
-        //std::cout << "Upper: " << std::dec << (int)(value & 1) << "\n";
-
+        
         return;
     }
 

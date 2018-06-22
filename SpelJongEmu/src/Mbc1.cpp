@@ -15,7 +15,7 @@ Mbc1::Mbc1(std::vector<std::uint8_t>& storage, const std::vector<char>& buf, std
 {
     for (auto c : buf)
     {
-        m_cartidgeData.push_back(c);
+        m_cartridgeData.push_back(c);
     }
 
     for (auto& c : m_ram)
@@ -109,8 +109,8 @@ std::uint8_t Mbc1::getByte(std::uint16_t address) const
 std::uint8_t Mbc1::getRomByte(std::int32_t bank, std::uint16_t address) const
 {
     std::size_t offset = bank * 0x4000 + address;
-    assert(offset < m_cartidgeData.size());
-    return m_cartidgeData[offset];
+    assert(offset < m_cartridgeData.size());
+    return m_cartridgeData[offset];
 }
 
 std::int32_t Mbc1::getRomBankForZero() const

@@ -68,12 +68,10 @@ void Mmu::setByte(std::uint16_t address, std::uint8_t value)
     }
 
     //temp
-    if (address == MemoryRegisters::SC && value == 0x81)
+    /*if (address == MemoryRegisters::SC && value == 0x81)
     {
         std::cout << getByte(MemoryRegisters::SB);
-    }
-
-    //if (address == 0xff6b) std::cout << "MMU sprite colour\n";
+    }*/
 }
 
 std::uint8_t Mmu::getByte(std::uint16_t address) const

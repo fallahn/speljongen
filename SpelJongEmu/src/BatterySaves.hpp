@@ -1,7 +1,6 @@
 /*
 MIT License
 
-Copyright(c) 2017 Tomasz R?kawek(Coffee GB)
 Copyright(c) 2018 Matt Marchant(Speljongen)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,39 +24,40 @@ SOFTWARE.
 
 #pragma once
 
-#include "AddressSpace.hpp"
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <cstdint>
+#include <string>
 
-class Mbc1 final : public AddressSpace
+namespace Battery
 {
-public: 
-    Mbc1(std::vector<std::uint8_t>&, const std::vector<char>&, std::int32_t, std::int32_t, std::int32_t&);
+    static void save(const std::vector<std::uint8_t>& data, const std::string& fileName)
+    {
+        std::ofstream file(fileName + ".sav", std::ios::out | std::ios::binary);
+        if (file.good())
+        {
+            for (auto b : data) file << b;
+        }
+        else
+        {
+            std::cout << "Failed opening " << fileName << " for writing\n";
+        }
+        file.close();
+    }
 
-    std::string getLabel() const override { return "MBC 1"; }
+    static void load(std::vector<std::uint8_t>& data, const std::string& fileName)
+    {
+        std::ifstream file(fileName + ".sav", std::ios::in | std::ios::binary);
+        if (file.good())
+        {
+            file.seekg(0, file.end);
+            size_t length = static_cast<std::size_t>(file.tellg());
+            file.seekg(0, file.beg);
 
-    bool accepts(std::uint16_t) const override;
+            data.resize(length);
 
-    void setByte(std::uint16_t, std::uint8_t) override;
-
-    std::uint8_t getByte(std::uint16_t) const override;
-
-private:
-
-    std::vector<std::uint8_t> m_cartridgeData;
-    std::vector<std::uint8_t> m_ram;
-    std::int32_t m_romBanks;
-    std::int32_t m_ramBanks;
-    bool m_multicart;
-    bool m_writeEnabled;
-
-    mutable std::int32_t m_cachedAtZero;
-    mutable std::int32_t m_cachedAtForty;
-
-    std::int32_t m_selectedRamBank;
-    std::int32_t& m_selectedRomBank;
-    std::int32_t m_memoryModel;
-
-    std::uint8_t getRomByte(std::int32_t bank, std::uint16_t address) const;
-    std::int32_t getRomBankForZero() const;
-    std::int32_t getRomBankForForty() const;
-    std::uint16_t getRamAddress(std::uint16_t) const;
-};
+            file.read(reinterpret_cast<char*>(data.data()), length);
+        }
+    }
+}

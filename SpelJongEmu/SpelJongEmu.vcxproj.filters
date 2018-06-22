@@ -189,6 +189,9 @@
     <ClCompile Include="src\Sampler.cpp">
       <Filter>Source Files\apu</Filter>
     </ClCompile>
+    <ClCompile Include="src\Mbc2.cpp">
+      <Filter>Source Files\mmu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\InterruptManager.hpp">
@@ -394,6 +397,12 @@
     </ClInclude>
     <ClInclude Include="src\Sampler.hpp">
       <Filter>Header Files\apu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BatterySaves.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MBC2.hpp">
+      <Filter>Header Files\mmu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

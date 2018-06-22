@@ -13,10 +13,8 @@
 
 namespace
 {
-    const std::uint32_t SampleRate = 48000;
-    const std::size_t BufferSize = 1024;
-    const std::array<std::int16_t, 2000> buns = {};
-    
+    const std::uint32_t SampleRate = 22050;
+    const std::size_t BufferSize = 512;   
 
     const std::uint32_t TickCount = (CYCLES_PER_SECOND / SampleRate);
     const std::uint32_t TickMod = (CYCLES_PER_SECOND % SampleRate);
@@ -121,9 +119,7 @@ void AudioOutput::addSample(std::uint8_t left, std::uint8_t right)
         //limit the amount which is buffered and drop a frame of audio if needs be
         if (buffered > (BufferSize * 30))
         {
-            //TODO make this a moving average
             skip = 2; //nth frame is added
-            //std::cout << "skip on\n";
         }
         else
         {

@@ -1,8 +1,9 @@
 #### Speljongen - Gameboy emulator
 
-Started as a port of [Coffee GB](https://github.com/trekawek/coffee-gb/tree/master) from java to C++ for poops and giggles,
-while the CPU/GPU emulation remains mostly unchanged the memory emulation has been implemented slightly differently. The interface,
-rendering and OS input handling has been all replaced with [SFML](https://sfml-dev.org) and ImGui and implemented from scratch.
+This project started as a port of [Coffee GB](https://github.com/trekawek/coffee-gb/tree/master) 
+from java to C++ for poops and giggles, and while the CPU/PPU emulation remains mostly unchanged the 
+memory map emulation has been implemented slightly differently. The interface, rendering and OS input
+handling has been all replaced with [SFML](https://sfml-dev.org) and ImGui and implemented from scratch.
 
 
 ##### Building
@@ -13,15 +14,21 @@ users.
 Speljongen depends on SFML and OpenGL libraries, and on linux you will need to install
 pkgmanager and gtk+3 for the native file dialogue windows. On macOS the project needs
 to link to AppKit and CoreServices for the same reason. The CMake file also supports
-creating app bundles on macOS, which requires a valid icon set and XCode 9 command line
-tools installed.
+creating app bundles on macOS, which requires a valid icon set (not included) and XCode
+9 command line tools installed.
 
 Since sound emulation was added Speljongen now *also* depends on SDL2...
 
-Speljongen is buggy and incomplete - few games work (I don't have any commercial ROMs
+Speljongen OKish compatibility - few games work (I don't have any commercial ROMs
 to test, so I'm relying on PD ROMs) and the UI is missing features. Ideally I'd like
 to implement a better disassembler and debugger as and when enthusiasm allows...
 
+
+##### Controls
+By default WASD is mapped to the gameboy d-pad, M and N are mapped to A and B, and
+right shift and return are mapped to Select and Start. Controllers are also
+supported, and those which have an xbox style layout are mapped correspondingly
+eg: d-pad to d-pad, select to Select etc.
 
 MIT License
 
