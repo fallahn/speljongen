@@ -116,7 +116,7 @@ void Controller::handleEvent(const sf::Event& evt)
             case sf::Keyboard::RShift:
                 m_inputMask |= Select;
                 break;
-            case sf::Keyboard::Enter:
+            case sf::Keyboard::Return:
                 m_inputMask |= Start;
                 break;
         }
@@ -147,7 +147,7 @@ void Controller::handleEvent(const sf::Event& evt)
         case sf::Keyboard::RShift:
             m_inputMask &= ~Select;
             break;
-        case sf::Keyboard::Enter:
+        case sf::Keyboard::Return:
             m_inputMask &= ~Start;
             break;
         }
