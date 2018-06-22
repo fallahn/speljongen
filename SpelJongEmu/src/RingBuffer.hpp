@@ -34,7 +34,7 @@ class RingBuffer final
 {
 public:
 
-    T read()
+    T pop()
     {
         assert(!m_data.empty());
         auto ret = m_data[m_out];
@@ -42,7 +42,7 @@ public:
         return ret;
     }
 
-    void write(const T& v)
+    void push(const T& v)
     {
         assert(!m_data.empty());
         m_data[m_in] = v;

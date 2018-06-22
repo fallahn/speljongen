@@ -8,8 +8,8 @@ class Sampler final
 {
 public:
     Sampler(double, double, std::size_t = 0);
-    double read() { return m_buffer.read(); }
-    void write(double);
+    double pop() { return m_buffer.pop(); }
+    void push(double);
     bool pending() const { return m_buffer.pending(); }
     void reset(double, double, std::size_t);
 

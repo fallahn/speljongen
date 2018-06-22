@@ -5,7 +5,7 @@ Sampler::Sampler(double inFreq, double outFreq, std::size_t buffSize)
     reset(inFreq, outFreq, buffSize);
 }
 
-void Sampler::write(double sample)
+void Sampler::push(double sample)
 {
     m_history[0] = m_history[1];
     m_history[1] = m_history[2];
@@ -19,7 +19,7 @@ void Sampler::write(double sample)
         auto c = m_history[2] - m_history[0];
         auto d = m_history[1];
 
-        m_buffer.write(a * m_fraction * m_fraction * m_fraction + b * m_fraction * m_fraction + c * m_fraction + d);
+        m_buffer.push(a * m_fraction * m_fraction * m_fraction + b * m_fraction * m_fraction + c * m_fraction + d);
         m_fraction += m_ratio;
     }
     m_fraction -= 1.0;
