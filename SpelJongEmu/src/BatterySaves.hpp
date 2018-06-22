@@ -29,11 +29,15 @@ SOFTWARE.
 #include <vector>
 #include <cstdint>
 #include <string>
+#include <algorithm>
 
 namespace Battery
 {
-    static void save(const std::vector<std::uint8_t>& data, const std::string& fileName)
+    static std::string fileName;
+
+    static void save(const std::vector<std::uint8_t>& data)
     {
+        //assert(!fileName.empty());
         std::ofstream file(fileName + ".sav", std::ios::out | std::ios::binary);
         if (file.good())
         {
@@ -46,8 +50,9 @@ namespace Battery
         file.close();
     }
 
-    static void load(std::vector<std::uint8_t>& data, const std::string& fileName)
+    static void load(std::vector<std::uint8_t>& data)
     {
+        //assert(!fileName.empty());
         std::ifstream file(fileName + ".sav", std::ios::in | std::ios::binary);
         if (file.good())
         {
@@ -55,7 +60,7 @@ namespace Battery
             size_t length = static_cast<std::size_t>(file.tellg());
             file.seekg(0, file.beg);
 
-            data.resize(length);
+            assert(data.size() >= length); //should be multiples of 0x2000 depending on how many ram banks there are
 
             file.read(reinterpret_cast<char*>(data.data()), length);
         }

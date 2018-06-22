@@ -4,8 +4,8 @@
 #include "Mbc3.hpp"
 #include "Mbc5.hpp"
 #include "Rom.hpp"
-#include "BootRom.hpp"
 #include "zip_file.hpp"
+#include "BatterySaves.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -48,8 +48,6 @@ std::uint8_t Cartridge::getByte(std::uint16_t address) const
     assert(accepts(address));
     if (address == 0xff50) return getStorageValue(address);
     else return m_mbc->getByte(address);
-
-    //TODO could check not booted yet and return BIOS instead
 }
 
 bool Cartridge::load(const std::string& path)
@@ -103,6 +101,18 @@ bool Cartridge::load(const std::string& path)
         file.read(buf.data(), length);
         file.close();
     }
+
+    auto pos = path.find_last_of('/');
+    if (pos == std::string::npos)
+    {
+        pos = path.find_last_of('\\');
+    }
+    if (pos == std::string::npos)
+    {
+        pos = 0;
+    }
+    Battery::fileName = path.substr(pos + 1);
+    Battery::fileName = Battery::fileName.substr(0, Battery::fileName.find_last_of('.'));
 
     m_selectedRomBank = 1;
     m_infoStr = "\nCartridge Info:\nTitle: ";

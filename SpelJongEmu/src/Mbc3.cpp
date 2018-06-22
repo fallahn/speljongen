@@ -1,4 +1,5 @@
 #include "Mbc3.hpp"
+#include "BatterySaves.hpp"
 
 #include <algorithm>
 
@@ -19,6 +20,8 @@ Mbc3::Mbc3(std::vector<std::uint8_t>& storage, const std::vector<char>& cart, st
     {
         c = 0xff;
     }
+
+    Battery::load(m_ram);
 }
 
 //public
@@ -35,7 +38,7 @@ void Mbc3::setByte(std::uint16_t address, std::uint8_t value)
         m_ramWriteEnabled = (value & 0b1010) != 0;
         if (!m_ramWriteEnabled)
         {
-            //TODO save to file (ie battery backup emulation)
+            Battery::save(m_ram);
             return;
         }
 

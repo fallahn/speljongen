@@ -1,4 +1,5 @@
 #include "Mbc5.hpp"
+#include "BatterySaves.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -21,6 +22,8 @@ Mbc5::Mbc5(std::vector<std::uint8_t>& storage, const std::vector<char>& cartData
     {
         c = 0xff;
     }
+
+    Battery::load(m_ram);
 }
 
 //public
@@ -35,7 +38,10 @@ void Mbc5::setByte(std::uint16_t address, std::uint8_t value)
     if (address < 0x2000)
     {
         m_ramWriteEnabled = (value & 0b1010) != 0;
-        //TODO save ram when battery implemented
+        if (!m_ramWriteEnabled)
+        {
+            Battery::save(m_ram);
+        }
 
         return;
     }

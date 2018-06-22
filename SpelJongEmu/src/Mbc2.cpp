@@ -15,6 +15,8 @@ Mbc2::Mbc2(std::vector<std::uint8_t>& storage, const std::vector<char>& cart, st
     {
         c = 0xff;
     }
+
+    Battery::load(m_ram);
 }
 
 //public
@@ -34,7 +36,7 @@ void Mbc2::setByte(std::uint16_t address, std::uint8_t value)
             m_ramWriteEnabled = (value & 0xa) != 0;
             if (!m_ramWriteEnabled)
             {
-                //TODO save to battery/file
+                Battery::save(m_ram);
             }
         }
     }

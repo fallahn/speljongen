@@ -1,8 +1,9 @@
 #include "Mbc1.hpp"
+#include "BatterySaves.hpp"
 
 Mbc1::Mbc1(std::vector<std::uint8_t>& storage, const std::vector<char>& buf, std::int32_t romBanks, std::int32_t ramBanks, std::int32_t& selectedRom)
     : AddressSpace      (storage),
-    m_ram               (0x2000 * ramBanks),
+    m_ram               (0x2000 * std::max(1, ramBanks)),
     m_romBanks          (romBanks),
     m_ramBanks          (ramBanks),
     m_multicart         (false),
@@ -22,6 +23,11 @@ Mbc1::Mbc1(std::vector<std::uint8_t>& storage, const std::vector<char>& buf, std
     {
         c = 0xff;
     }
+
+    if (m_ramBanks > 0)
+    {
+        Battery::load(m_ram);
+    }
 }
 
 //public
@@ -37,7 +43,10 @@ void Mbc1::setByte(std::uint16_t address, std::uint8_t value)
     if (address < 0x2000)
     {
         m_writeEnabled = (value & 0b1010) != 0;
-        //TODO save RAM when battery implemented
+        if (!m_writeEnabled)
+        {
+            Battery::save(m_ram);
+        }
     }
     else if (address >= 0x2000 && address < 0x4000)
     {
