@@ -52,7 +52,7 @@ public:
 
 private:
 
-    std::vector<std::uint16_t> m_buffer;
+    std::vector<std::int16_t> m_buffer;
     std::size_t m_bufferSize;
 
     std::vector<float> m_waveformBufferL;

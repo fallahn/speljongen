@@ -74,10 +74,12 @@ AudioOutput::~AudioOutput()
 void AudioOutput::addSample(std::uint8_t left, std::uint8_t right)
 {
     double f = std::min(1.0, static_cast<double>(left) / 255.0);
+    f *= 2.0 - 1.0;
     m_waveformBufferL[m_waveformIndex] = static_cast<float>(f) * (255.f / 16.f);
     m_samplerL.write(f);
 
     f = std::min(1.0, static_cast<double>(right) / 255.0);
+    f *= 2.0 - 1.0;
     m_waveformBufferR[m_waveformIndex] = static_cast<float>(f) * (255.f / 16.f);
     m_samplerR.write(f);
     m_waveformIndex = (m_waveformIndex + 1) % WaveformSize;
@@ -85,32 +87,54 @@ void AudioOutput::addSample(std::uint8_t left, std::uint8_t right)
     m_tick++;
 
     static std::uint32_t buffered = 0;
-    while (m_samplerL.pending())
+    static std::uint32_t skip = 0;
+    static std::uint32_t skipCount = 0;
+
+    if (m_samplerL.pending())
     {
-        m_buffer[m_bufferSize] = static_cast<std::uint16_t>(m_samplerL.read() * static_cast<float>(std::numeric_limits<std::uint16_t>::max()));
-        m_buffer[m_bufferSize + 1] = static_cast<std::uint16_t>(m_samplerR.read() * static_cast<float>(std::numeric_limits<std::uint16_t>::max()));
-        m_bufferSize = (m_bufferSize + 2) % BufferSize;
+        std::int16_t left = static_cast<std::int16_t>(m_samplerL.read() * static_cast<double>(std::numeric_limits<std::int16_t>::max()));
+        std::int16_t right = static_cast<std::int16_t>(m_samplerR.read() * static_cast<double>(std::numeric_limits<std::int16_t>::max()));
+
+        if (skip)
+        {
+            skipCount = (skipCount + 1) % skip;
+        }
+
+
+        if (skip == 0 || skipCount == skip)
+        {
+            m_buffer[m_bufferSize] = left;
+            m_buffer[m_bufferSize + 1] = right;
+            m_bufferSize = (m_bufferSize + 2) % BufferSize;
+        }
+        else
+        {
+            buffered--;
+        }
+
+
+        if (m_tick > TickMod && skip == 0)
+        {
+            buffered =  SDL_GetQueuedAudioSize(audioDevice);
+            m_tick %= TickMod;
+        }
+        //limit the amount which is buffered and drop a frame of audio if needs be
+        if (buffered > (BufferSize * 30))
+        {
+            //TODO make this a moving average
+            skip = 2; //nth frame is added
+            //std::cout << "skip on\n";
+        }
+        else
+        {
+            skip = 0;
+            skipCount = 0;
+        }
+
 
         if (m_bufferSize == 0 && audioDevice)
         {
-            if (m_tick > TickMod)
-            {
-                buffered =  SDL_GetQueuedAudioSize(audioDevice);
-                //std::cout << buffered << "\n";
-                m_tick %= TickMod;
-            }
-            //limit the amount which is buffered and drop a frame of audio if needs be
-            if (buffered > (BufferSize * 30))
-            {
-                buffered -= BufferSize;
-                //how about rather than dropping a frame we introduce a frame skip which slows down the elss far behind we are?
-                //skip every other frame in the extreme, else every 3 / 5 /9 etc
-                //must keep track of how many were skipped so we can remove them from buffered count
-            }
-            else
-            {
-                SDL_QueueAudio(audioDevice, m_buffer.data(), static_cast<Uint32>(BufferSize) * sizeof(std::int16_t));
-            }
+            SDL_QueueAudio(audioDevice, m_buffer.data(), static_cast<Uint32>(BufferSize) * sizeof(std::int16_t));
         }
     }
 }
