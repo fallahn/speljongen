@@ -88,50 +88,16 @@ void AudioOutput::addSample(std::uint8_t left, std::uint8_t right)
     m_samplerR.push(f);
     m_waveformIndex = (m_waveformIndex + 1) % WaveformSize;
 
-    //m_tick++;
-
-    //static std::uint32_t buffered = 0;
-    //static std::uint32_t skip = 0;
-    //static std::uint32_t skipCount = 0;
 
     if (m_samplerL.pending())
     {
         std::int16_t left = static_cast<std::int16_t>(m_samplerL.pop() * static_cast<double>(std::numeric_limits<std::int16_t>::max()));
         std::int16_t right = static_cast<std::int16_t>(m_samplerR.pop() * static_cast<double>(std::numeric_limits<std::int16_t>::max()));
 
-        /*if (skip)
-        {
-            skipCount = (skipCount + 1) % skip;
-        }*/
 
-
-        //if (skip == 0 || skipCount == skip)
-        {
-            m_buffer[m_bufferSize] = left;
-            m_buffer[m_bufferSize + 1] = right;
-            m_bufferSize = (m_bufferSize + 2) % BufferSize;
-        }
-        //else
-        //{
-        //    buffered--;
-        //}
-
-
-        /*if (m_tick > TickMod && skip == 0)
-        {
-            buffered =  SDL_GetQueuedAudioSize(audioDevice);
-            m_tick %= TickMod;
-        }*/
-        //limit the amount which is buffered and drop a frame of audio if needs be
-        //if (buffered > (BufferSize * 30))
-        //{
-        //    //skip = 5; //nth frame is added
-        //}
-        //else
-        //{
-        //    skip = 0;
-        //    skipCount = 0;
-        //}
+        m_buffer[m_bufferSize] = left;
+        m_buffer[m_bufferSize + 1] = right;
+        m_bufferSize = (m_bufferSize + 2) % BufferSize;
 
 
         if (m_bufferSize == 0 && audioDevice)

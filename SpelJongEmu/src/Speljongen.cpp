@@ -14,6 +14,7 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Sleep.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Window/VideoMode.hpp>
 
 //#pragma optimize("", off)
 
@@ -61,7 +62,8 @@ Speljongen::Speljongen()
     m_requestRefresh    (false),
     m_lcdDisabled       (false),
     m_vramViewer        (m_mmu),
-    m_tickTime          (0.f)
+    m_tickTime          (0.f),
+    m_fullscreen        (false)
 #ifdef RUN_TESTS
     ,m_fifoTest         (m_display)
 #endif
@@ -71,6 +73,8 @@ Speljongen::Speljongen()
     m_disassembler.disassemble(m_mmu);
     memEditor.BreakPoints = breakPoints.data();
     tickClock.restart();
+
+    m_fullscreenSprite.setTexture(m_display.getTexture());
 
 #ifdef RUN_TESTS   
     /*m_fifoTest.testEnqueue();
@@ -101,7 +105,7 @@ void Speljongen::handleEvent(const sf::Event& evt)
         switch (evt.key.code)
         {
         case sf::Keyboard::F9:
-            if (!m_running)
+            if (!m_running && ! m_fullscreen)
             {
                 start();
             }
@@ -119,7 +123,7 @@ void Speljongen::handleEvent(const sf::Event& evt)
         {
         default: break;
         case sf::Keyboard::F3:
-            if (!m_running)
+            if (!m_running && !m_fullscreen)
             {
                 step();
             }
@@ -128,7 +132,8 @@ void Speljongen::handleEvent(const sf::Event& evt)
     }
     else if (evt.type == sf::Event::MouseButtonReleased)
     {
-        if (evt.mouseButton.button == sf::Mouse::Right)
+        if (evt.mouseButton.button == sf::Mouse::Right
+            && !m_fullscreen)
         {
             browseFile();
         }
@@ -227,6 +232,15 @@ void Speljongen::update()
 
         updateDebugger();
         m_controller.updateTexture();
+
+        if (m_fullscreen)
+        {
+            auto mode = sf::VideoMode::getDesktopMode();
+            float scale = static_cast<float>(mode.height) / 144.f;
+            m_fullscreenSprite.setScale(scale, scale);
+            float offset = (static_cast<float>(mode.width) - (160.f * scale)) / 2.f;
+            m_fullscreenSprite.setPosition(offset, 0.f);
+        }
     }
 }
 #endif
@@ -360,7 +374,7 @@ void Speljongen::doImgui()
 
     ImGui::SetNextWindowSize({ 780.f, 230.f });
     ImGui::SetNextWindowPos({ 10.f, 360.f });
-    ImGui::Begin("DASM - F3 Step, F9 Run/Stop, Right click to load ROM", nullptr, ImGuiWindowFlags_NoCollapse);
+    ImGui::Begin("DASM - F3 Step, F9 Run/Stop, Right click to load ROM, F to toggle Full Screen", nullptr, ImGuiWindowFlags_NoCollapse);
     ImGui::BeginChild("Output", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, 194.f), true, ImGuiWindowFlags_HorizontalScrollbar);
     memEditor.DrawContents(m_disassembler.getRawView().data(), m_disassembler.getRawView().size(), 0, &m_disassembler.getLabels());
     ImGui::EndChild();
@@ -402,16 +416,9 @@ void Speljongen::doImgui()
     //ImGui::ShowDemoWindow();
 }
 
-void Speljongen::lockDisplay()
+void Speljongen::toggleFullscreen()
 {
-    m_display.lockDisplay();
-    m_vramViewer.lockDisplay();
-}
-
-void Speljongen::freeDisplay()
-{
-    m_display.freeDisplay();
-    m_vramViewer.freeDisplay();
+    m_fullscreen = !m_fullscreen;
 }
 
 //private
@@ -710,4 +717,9 @@ void Speljongen::browseFile()
         load(outPath);
         free(outPath);
     }
+}
+
+void Speljongen::draw(sf::RenderTarget& rt, sf::RenderStates states) const
+{
+    rt.draw(m_fullscreenSprite);
 }

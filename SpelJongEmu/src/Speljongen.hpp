@@ -46,6 +46,8 @@ SOFTWARE.
 #include "Apu.hpp"
 
 #include <SFML/System/Thread.hpp>
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 #include <atomic>
 
@@ -56,14 +58,14 @@ SOFTWARE.
 #include "Lcdc.hpp"
 #endif
 
-//#define USE_THREADING //launches emulation in own thread if defined
+//#define USE_THREADING //launches emulation in own thread if defined. It's not very good.
 
 namespace sf
 {
     class Event;
 }
 
-class Speljongen final
+class Speljongen final : public sf::Drawable
 {
 public:
     Speljongen();
@@ -88,8 +90,8 @@ public:
     void load(const std::string&);
 
     void doImgui();
-    void lockDisplay();
-    void freeDisplay();
+
+    void toggleFullscreen();
 
 private:
     std::vector<std::uint8_t> m_storage;
@@ -142,6 +144,10 @@ private:
     void initMMU(bool colour = false);
 
     void browseFile();
+
+    bool m_fullscreen;
+    sf::Sprite m_fullscreenSprite;
+    void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
 #ifdef RUN_TESTS
     void testTiming();

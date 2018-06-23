@@ -15,6 +15,8 @@ int main()
     XInitThreads();
 #endif    
 
+    bool fullScreen = false;
+
     sf::RenderWindow window;
     window.create({ 800, 600 }, "Speljongen", sf::Style::Close | sf::Style::Titlebar);
     window.setVerticalSyncEnabled(true);
@@ -42,6 +44,19 @@ int main()
                 case sf::Keyboard::Escape:
                     window.close();
                     break;
+                case sf::Keyboard::F:
+                    fullScreen = !fullScreen;
+                    gameboy.toggleFullscreen();
+                    if (fullScreen)
+                    {
+                        auto mode = sf::VideoMode::getDesktopMode();
+                        window.create(mode, "Speljongen", sf::Style::Fullscreen);
+                    }
+                    else
+                    {
+                        window.create({ 800, 600 }, "Speljongen", sf::Style::Close | sf::Style::Titlebar);
+                    }
+                    break;
                 default: break;
                 }
             }
@@ -53,15 +68,22 @@ int main()
 #else
         gameboy.updateDebugger();
 #endif
-        ImGui::SFML::Update(window, imguiClock.restart());
+        
+        if (fullScreen)
+        {
+            window.clear();
+            window.draw(gameboy);
+            window.display();
+        }
+        else
+        {
+            ImGui::SFML::Update(window, imguiClock.restart());
+            gameboy.doImgui();
 
-        gameboy.doImgui();
-
-        window.clear(sf::Color(100, 149, 237));
-        //gameboy.lockDisplay(); //hm. kills perf
-        ImGui::SFML::Render(window);
-        //gameboy.freeDisplay();
-        window.display();
+            window.clear(sf::Color(100, 149, 237));
+            ImGui::SFML::Render(window);
+            window.display();
+        }
     }
 
     ImGui::SFML::Shutdown();
