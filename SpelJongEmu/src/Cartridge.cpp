@@ -1,6 +1,6 @@
 #include "Cartridge.hpp"
 #include "Mbc1.hpp"
-#include "MBC2.hpp"
+#include "Mbc2.hpp"
 #include "Mbc3.hpp"
 #include "Mbc5.hpp"
 #include "Rom.hpp"

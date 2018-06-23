@@ -1,4 +1,4 @@
-#include "MBC2.hpp"
+#include "Mbc2.hpp"
 #include "BatterySaves.hpp"
 
 Mbc2::Mbc2(std::vector<std::uint8_t>& storage, const std::vector<char>& cart, std::int32_t romCount, std::int32_t& selectedRom)
