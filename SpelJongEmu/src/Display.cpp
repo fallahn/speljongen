@@ -57,6 +57,12 @@ void Display::putColourPixel(std::uint16_t value)
     sf::Uint32 g((value >> 5) & 0x1f);
     sf::Uint32 b((value >> 10) & 0x1f);
 
+    //this is an attempt to fix the colours
+    //as direct RGB conversion often appears
+    //too dark compared to a real gbc. For a 
+    //copmparison look at the GBC colour modes
+    //found in the BGB emulator.
+
     /*r = to16Bit(r, 5);
     g = to16Bit(g, 5);
     b = to16Bit(b, 5);*/

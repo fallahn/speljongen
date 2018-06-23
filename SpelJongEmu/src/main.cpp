@@ -56,6 +56,7 @@ int main()
                     {
                         window.create({ 800, 600 }, "Speljongen", sf::Style::Close | sf::Style::Titlebar);
                     }
+                    window.setVerticalSyncEnabled(true);
                     break;
                 default: break;
                 }

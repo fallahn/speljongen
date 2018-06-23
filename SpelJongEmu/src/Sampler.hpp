@@ -1,5 +1,10 @@
 #pragma once
 
+/*
+Interpolated rampling of audio output.
+See https://stackoverflow.com/q/1125666/6740859
+*/
+
 #include "RingBuffer.hpp"
 
 #include <array>
@@ -9,7 +14,7 @@ class Sampler final
 public:
     Sampler(double, double, std::size_t = 0);
     double pop() { return m_buffer.pop(); }
-    void push(double);
+    void push(double); //values should be normalised.
     bool pending() const { return m_buffer.pending(); }
     void reset(double, double, std::size_t);
 

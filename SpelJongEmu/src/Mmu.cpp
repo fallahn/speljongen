@@ -67,7 +67,7 @@ void Mmu::setByte(std::uint16_t address, std::uint8_t value)
         setStorageValue(address, value);
     }
 
-    //temp
+    //temp - used with test roms to print output to console
     /*if (address == MemoryRegisters::SC && value == 0x81)
     {
         std::cout << getByte(MemoryRegisters::SB);
@@ -111,19 +111,9 @@ void Mmu::addAddressSpace(AddressSpace& space)
 void Mmu::initBios()
 {
     std::uint16_t address = 0;
-    //for (auto b : BootRom::CLASSIC)
-    //{
-    //    setByte(address++, b);
-    //}
-
-    //address = 0x104;
-    //for (auto b : logo)
-    //{
-    //    setByte(address++, b);
-    //}
 
     //fake bios which checks if cart loaded
-    //and halts if not
+    //and halts if not (see anon namespace)
     for (auto b : fakeBios)
     {
         setByte(address++, b);

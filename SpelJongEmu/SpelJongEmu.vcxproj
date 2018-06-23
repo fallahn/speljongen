@@ -196,7 +196,6 @@
     <ClInclude Include="src\AudioSweep.hpp" />
     <ClInclude Include="src\BatterySaves.hpp" />
     <ClInclude Include="src\BitUtil.hpp" />
-    <ClInclude Include="src\BootRom.hpp" />
     <ClInclude Include="src\Cartridge.hpp" />
     <ClInclude Include="src\ClassicPixelFifo.hpp" />
     <ClInclude Include="src\ColourPalette.hpp" />
@@ -226,7 +225,7 @@
     <ClInclude Include="src\InterruptManager.hpp" />
     <ClInclude Include="src\Lcdc.hpp" />
     <ClInclude Include="src\Mbc1.hpp" />
-    <ClInclude Include="src\MBC2.hpp" />
+    <ClInclude Include="src\Mbc2.hpp" />
     <ClInclude Include="src\Mbc3.hpp" />
     <ClInclude Include="src\Mbc5.hpp" />
     <ClInclude Include="src\MemoryRegisters.hpp" />

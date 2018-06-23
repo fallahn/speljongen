@@ -1,7 +1,8 @@
 #include "AudioChannelFour.hpp"
 
 ChannelFour::ChannelFour(std::vector<std::uint8_t>& storage)
-    : AudioChannel(storage, 0xff1f, 64)
+    : AudioChannel(storage, 0xff1f, 64),
+    m_lastResult(0)
 {
 
 }

@@ -8,7 +8,14 @@ namespace
 }
 
 ChannelThree::ChannelThree(std::vector<std::uint8_t>& storage)
-    : AudioChannel(storage, 0xff1a, 256)
+    : AudioChannel      (storage, 0xff1a, 256),
+    m_frequencyDivider  (0),
+    m_lastOutput        (0),
+    m_index             (0),
+    m_ticksSinceLastRead(0),
+    m_lastReadAddress   (0),
+    m_buffer            (0),
+    m_triggered         (false)
 {
 
 }

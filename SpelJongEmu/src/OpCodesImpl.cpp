@@ -31,7 +31,7 @@ namespace
     {
         std::stringstream stream;
         stream << "0x"
-            << std::setfill('0') << std::setw(/*sizeof(std::uint16_t) **/ 2)
+            << std::setfill('0') << std::setw(2)
             << std::hex << (int)i;
         return stream.str();
     }

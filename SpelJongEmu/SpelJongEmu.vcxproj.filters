@@ -206,9 +206,6 @@
     <ClInclude Include="src\AddressSpace.hpp">
       <Filter>Header Files\mmu</Filter>
     </ClInclude>
-    <ClInclude Include="src\BootRom.hpp">
-      <Filter>Header Files\mmu</Filter>
-    </ClInclude>
     <ClInclude Include="src\Dma.hpp">
       <Filter>Header Files\mmu</Filter>
     </ClInclude>
@@ -401,7 +398,7 @@
     <ClInclude Include="src\BatterySaves.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\MBC2.hpp">
+    <ClInclude Include="src\Mbc2.hpp">
       <Filter>Header Files\mmu</Filter>
     </ClInclude>
   </ItemGroup>

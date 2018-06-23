@@ -132,7 +132,6 @@ void PixelTransferPhase::enableColour(bool enable)
     m_colour = enable;
     m_fetcher = std::make_unique<Fetcher>(m_vram0, m_vram1, m_oam, m_lcdc, m_registers);
     m_fetcher->enableColour(enable, m_fifo.get());
-    //m_fetcher->disableFetching();
 }
 
 //private

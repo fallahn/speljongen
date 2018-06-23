@@ -543,7 +543,6 @@ void Speljongen::updateDebug()
     ss << " : 0x" << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(reg.getSP());
     ss << "\nPC: 0x" << std::setfill('0') << std::setw(4) << reg.getPC();
     ss << " : 0x" << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(reg.getPC());
-    //ss << "\n" << (int)m_cpu.getCurrentOpcode().getOpcode() << ", " << m_cpu.getCurrentOpcode().getLabel();
 
     ss << "\n\nLCDC: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(MemoryRegisters::LCDC);
     ss << "\nSTAT: " << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(0xff41);
@@ -612,18 +611,7 @@ void Speljongen::updateVramView()
             }
         }
     }
-    //std::cout << std::hex << address << "\n";
 
-    /*std::cout << "\n\n";
-    for (auto i = address; i < address + 0x400; ++i)
-    {
-        if (i % 16 == 0)
-        {
-            std::cout << "\n" << i << " ";
-        }
-
-        std::cout << std::hex << std::setfill('0') << std::setw(2) << (int)m_mmu.getByte(i) << " ";
-    }*/
 
     m_vramViewer.update();
 }
@@ -709,7 +697,6 @@ void Speljongen::browseFile()
 {
     stop();
 
-    //TODO check also inside window
     nfdchar_t *outPath = nullptr;
     nfdresult_t result = NFD_OpenDialog("gb,gbc,zip", nullptr, &outPath);
     if (result == NFD_OKAY)

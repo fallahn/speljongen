@@ -45,7 +45,7 @@ public:
         return address == 0xff70 || (address >= 0xd000 && address < 0xe000);
     }
 
-    void setByte(std::uint16_t address, std::uint8_t value)
+    void setByte(std::uint16_t address, std::uint8_t value) override
     {
         assert(accepts(address));
         if (address == 0xff70)

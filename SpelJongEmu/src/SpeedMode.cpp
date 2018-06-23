@@ -25,7 +25,6 @@ void SpeedMode::setByte(std::uint16_t address, std::uint8_t value)
 std::uint8_t SpeedMode::getByte(std::uint16_t address) const
 {
     assert(accepts(address));
-    //return (m_currentSpeed ? (1 << 7) : 0) | (m_prepareSpeedSwitch ? (1 << 0) : 0) | 0b01111110;
     return getStorageValue(address);
 }
 

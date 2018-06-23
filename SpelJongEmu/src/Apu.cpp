@@ -81,6 +81,7 @@ void Apu::setByte(std::uint16_t address, std::uint8_t value)
     }
 
     //if (m_enabled) return;
+    //TODO these registers should be unwritable while sound is enabled
 
     auto relAddress = address - AddressOffset;
     if (m_addressMap[relAddress])
@@ -91,14 +92,10 @@ void Apu::setByte(std::uint16_t address, std::uint8_t value)
     {
         setStorageValue(address, value);
     }
-
-    //std::cout << "write " << std::hex << address << "\n";
 }
 
 std::uint8_t Apu::getByte(std::uint16_t address) const
 {
-    //std::cout << "read " << std::hex << address << "\n";
-
     assert(accepts(address));
     std::uint8_t retVal = 0;
 
@@ -130,7 +127,6 @@ void Apu::tick()
 {
     if (!m_enabled)
     {
-        //m_output.addSample(0,0);
         return;
     }
  
@@ -162,7 +158,7 @@ void Apu::tick()
     right *= (volumes & 0x7);
     left *= ((volumes >> 4) & 0x7);
 
-    m_output.addSample(static_cast<std::uint8_t>(/*rand() % 128*/left), static_cast<std::uint8_t>(right));
+    m_output.addSample(static_cast<std::uint8_t>(left), static_cast<std::uint8_t>(right));
 }
 
 void Apu::enableChannel(bool enable, std::int32_t channel)

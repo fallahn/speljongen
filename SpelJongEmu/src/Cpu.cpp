@@ -32,8 +32,6 @@ Cpu::Cpu(AddressSpace& addressSpace, InterruptManager& interruptManager, SpeedMo
 {
     //compile opcodes
     OpCodes::init();
-
-    //m_logFile.open("pc.log", std::ios::out);
 }
 
 //public
@@ -57,7 +55,6 @@ bool Cpu::tick()
 
     if(m_state & HAS_INTERRUPT_REQUEST)
     {
-        //std::cout << "Interrupt!\n";
         handleInterrupt();
         return true;
     }
@@ -72,7 +69,6 @@ bool Cpu::tick()
         return true;
     }
 
-    //static int thingCounter = 0;
     //execute execute
     bool accessedMemory = false;
     while (1)
@@ -87,14 +83,6 @@ bool Cpu::tick()
         case State::OPCODE: //check current opcode, jump to extend opcodes or switch to collecting operands
             clearState();
             m_opcodeOne = m_addressSpace.getByte(pc);
-            //thingCounter++;
-            //m_logFile << std::hex << /*std::setfill('0') << std::setw(2) <<*/ pc << " " << (int)m_addressSpace.getByte(m_registers.getSP()) << "\n";
-            
-            /*if (pc == 0x52f7)
-            {
-                int buns = 0;
-            }
-            lastState = m_registers;*/
 
             accessedMemory = true;
             if (m_opcodeOne == 0xcb) //jumps to extended ops

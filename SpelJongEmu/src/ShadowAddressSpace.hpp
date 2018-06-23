@@ -58,7 +58,6 @@ public:
     std::uint8_t getByte(std::uint16_t address) const override
     {
         assert(accepts(address));
-        //return getStorage()[mapAddress(address)];
         return getStorageValue(address);
     }
 

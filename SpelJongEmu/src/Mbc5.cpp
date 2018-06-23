@@ -63,11 +63,10 @@ void Mbc5::setByte(std::uint16_t address, std::uint8_t value)
     if (address >= 0x4000 && address < 0x6000)
     {
         auto bank = value & 0x0f;
-        //if (bank < m_ramBanks)
+
         assert(bank < m_ramBanks);
-        {
-            m_selectedRamBank = bank;
-        }
+        m_selectedRamBank = bank;
+
         return;
     }
 

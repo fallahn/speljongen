@@ -98,7 +98,5 @@ private:
     std::uint32_t m_clockCycle;
     bool m_haltBugMode;
 
-    std::ofstream m_logFile;
-
     void handleInterrupt();
 };

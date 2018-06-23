@@ -91,5 +91,4 @@ private:
     std::uint16_t m_end = 0;
     std::vector<std::uint8_t> m_ownStorage;
     bool m_useInternal;
-    //bool wasWritten = false;
 };

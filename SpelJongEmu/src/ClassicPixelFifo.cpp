@@ -60,7 +60,7 @@ void ClassicPixelFifo::setOverlay(const std::array<std::uint8_t, 8u>& pixelLine,
     {
         auto p = pixelLine[j];
         auto i = j - offset;
-        if (/*m_pixelType[i] == 1*/p == 0) //colour 0 is transparent
+        if (p == 0) //colour 0 is transparent
         {
             continue;
         }
@@ -90,6 +90,5 @@ void ClassicPixelFifo::clear()
 //private
 std::uint8_t ClassicPixelFifo::getColour(std::uint8_t palette, std::uint8_t index) const
 {
-    //std::cout << std::hex << (int)palette << "\n";
     return (palette >> (index * 2)) & 0b11;
 }

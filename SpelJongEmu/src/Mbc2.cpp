@@ -4,7 +4,8 @@
 Mbc2::Mbc2(std::vector<std::uint8_t>& storage, const std::vector<char>& cart, std::int32_t romCount, std::int32_t& selectedRom)
     : AddressSpace      (storage),
     m_romBanks          (romCount),
-    m_selectedRomBank   (selectedRom)
+    m_selectedRomBank   (selectedRom),
+    m_ramWriteEnabled   (false)
 {
     for (auto c : cart)
     {
