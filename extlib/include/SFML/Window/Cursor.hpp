@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // SFML - Simple and Fast Multimedia Library
-// Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
+// Copyright (C) 2007-2019 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the use of this software.
@@ -53,21 +53,24 @@ public:
     /// Refer to the following table to determine which cursor
     /// is available on which platform.
     ///
-    ///  Type                               | Linux | Mac OS X | Windows
-    /// ------------------------------------|:-----:|:--------:|:--------:
-    ///  sf::Cursor::Arrow                  |  yes  |    yes   |   yes
-    ///  sf::Cursor::ArrowWait              |  no   |    no    |   yes
-    ///  sf::Cursor::Wait                   |  yes  |    no    |   yes
-    ///  sf::Cursor::Text                   |  yes  |    yes   |   yes
-    ///  sf::Cursor::Hand                   |  yes  |    yes   |   yes
-    ///  sf::Cursor::SizeHorizontal         |  yes  |    yes   |   yes
-    ///  sf::Cursor::SizeVertical           |  yes  |    yes   |   yes
-    ///  sf::Cursor::SizeTopLeftBottomRight |  no   |    no    |   yes
-    ///  sf::Cursor::SizeBottomLeftTopRight |  no   |    no    |   yes
-    ///  sf::Cursor::SizeAll                |  yes  |    no    |   yes
-    ///  sf::Cursor::Cross                  |  yes  |    yes   |   yes
-    ///  sf::Cursor::Help                   |  yes  |    no    |   yes
-    ///  sf::Cursor::NotAllowed             |  yes  |    yes   |   yes
+    ///  Type                               | Linux | Mac OS X | Windows  |
+    /// ------------------------------------|:-----:|:--------:|:--------:|
+    ///  sf::Cursor::Arrow                  |  yes  |    yes   |   yes    |
+    ///  sf::Cursor::ArrowWait              |  no   |    no    |   yes    |
+    ///  sf::Cursor::Wait                   |  yes  |    no    |   yes    |
+    ///  sf::Cursor::Text                   |  yes  |    yes   |   yes    |
+    ///  sf::Cursor::Hand                   |  yes  |    yes   |   yes    |
+    ///  sf::Cursor::SizeHorizontal         |  yes  |    yes   |   yes    |
+    ///  sf::Cursor::SizeVertical           |  yes  |    yes   |   yes    |
+    ///  sf::Cursor::SizeTopLeftBottomRight |  no   |    yes*  |   yes    |
+    ///  sf::Cursor::SizeBottomLeftTopRight |  no   |    yes*  |   yes    |
+    ///  sf::Cursor::SizeAll                |  yes  |    no    |   yes    |
+    ///  sf::Cursor::Cross                  |  yes  |    yes   |   yes    |
+    ///  sf::Cursor::Help                   |  yes  |    yes*  |   yes    |
+    ///  sf::Cursor::NotAllowed             |  yes  |    yes   |   yes    |
+    ///
+    ///  * These cursor types are undocumented so may not
+    ///    be available on all versions, but have been tested on 10.13
     ///
     ////////////////////////////////////////////////////////////
     enum Type
@@ -158,7 +161,7 @@ public:
 
 private:
 
-    friend class Window;
+    friend class WindowBase;
 
     ////////////////////////////////////////////////////////////
     /// \brief Get access to the underlying implementation
