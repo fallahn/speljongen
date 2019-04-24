@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{CDF80FCC-CA93-4312-A40E-30D0AB6B503E}</ProjectGuid>
+    <RootNamespace>spelosgc</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>osgc</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\SpelJongEmu\src;../extlib/include;../extlib/include/sdl2</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>../extlib/bin/xygine/Release;../extlib/bin/sfml/Release;..\extlib\bin\sdl2\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xyginext.lib;sfml-window.lib;sfml-graphics.lib;sfml-system.lib;opengl32.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\SpelJongEmu\src;../extlib/include;../extlib/include/sdl2</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XY_DEBUG;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalLibraryDirectories>..\extlib\bin\sdl2\x64;../extlib/bin/xygine/Debug;../extlib/bin/sfml/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xyginext-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;SDL2.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="src\MenuState.hpp" />
+    <ClInclude Include="src\PluginExport.hpp" />
+    <ClInclude Include="src\StateIDs.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\SpelJongEmu\src\AluFunctions.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Apu.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Argument.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\AudioChannel.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\AudioChannelFour.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\AudioChannelOne.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\AudioChannelThree.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\AudioChannelTwo.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\AudioEnvelope.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\AudioOutput.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\AudioSweep.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Cartridge.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\ClassicPixelFifo.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\ColourPalette.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\ColourPixelFifo.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Controller.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Cpu.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Disassembler.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Display.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Fetcher.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Gpu.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\GpuRegisters.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Hdma.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\imgui\imgui-SFML.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\imgui\imgui.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\InterruptManager.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\main.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Mbc1.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Mbc2.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Mbc3.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Mbc5.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\MemoryRegisters.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Mmu.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\nfd\nfd_common.c" />
+    <ClCompile Include="..\SpelJongEmu\src\nfd\nfd_win.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\OamSearchPhase.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\OpCode.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\OpCodeBuilder.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\OpCodesImpl.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\PixelTransferPhase.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\SampleCounter.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Sampler.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\SpeedMode.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Speljongen.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Tests.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\Timer.cpp" />
+    <ClCompile Include="..\SpelJongEmu\src\VramViewer.cpp" />
+    <ClCompile Include="src\EntryPoint.cpp" />
+    <ClCompile Include="src\MenuState.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2000
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Speljongen", "SpelJongEmu\SpelJongEmu.vcxproj", "{319AA04C-371B-4F9A-BC53-B0B6FF07D18B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "spel-osgc", "spel-osgc\spel-osgc.vcxproj", "{CDF80FCC-CA93-4312-A40E-30D0AB6B503E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{319AA04C-371B-4F9A-BC53-B0B6FF07D18B}.Release|x64.Build.0 = Release|x64
 		{319AA04C-371B-4F9A-BC53-B0B6FF07D18B}.Release|x86.ActiveCfg = Release|Win32
 		{319AA04C-371B-4F9A-BC53-B0B6FF07D18B}.Release|x86.Build.0 = Release|Win32
+		{CDF80FCC-CA93-4312-A40E-30D0AB6B503E}.Debug|x64.ActiveCfg = Debug|x64
+		{CDF80FCC-CA93-4312-A40E-30D0AB6B503E}.Debug|x64.Build.0 = Debug|x64
+		{CDF80FCC-CA93-4312-A40E-30D0AB6B503E}.Debug|x86.ActiveCfg = Debug|Win32
+		{CDF80FCC-CA93-4312-A40E-30D0AB6B503E}.Debug|x86.Build.0 = Debug|Win32
+		{CDF80FCC-CA93-4312-A40E-30D0AB6B503E}.Release|x64.ActiveCfg = Release|x64
+		{CDF80FCC-CA93-4312-A40E-30D0AB6B503E}.Release|x64.Build.0 = Release|x64
+		{CDF80FCC-CA93-4312-A40E-30D0AB6B503E}.Release|x86.ActiveCfg = Release|Win32
+		{CDF80FCC-CA93-4312-A40E-30D0AB6B503E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

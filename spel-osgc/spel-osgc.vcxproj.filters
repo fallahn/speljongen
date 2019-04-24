@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\speljongen">
+      <UniqueIdentifier>{b1abc8a3-7977-433d-bb9b-afc8b98d93b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\speljongen\imgui">
+      <UniqueIdentifier>{25bfc0aa-af41-4b9a-8063-3bf644d52994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\speljongen\nfd">
+      <UniqueIdentifier>{3a41961e-2337-4d54-9ed3-e644d1b7fe75}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\MenuState.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PluginExport.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\StateIDs.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\EntryPoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\AluFunctions.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Apu.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Argument.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\AudioChannel.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\AudioChannelFour.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\AudioChannelOne.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\AudioChannelThree.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\AudioChannelTwo.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\AudioEnvelope.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\AudioOutput.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\AudioSweep.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Cartridge.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\ClassicPixelFifo.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\ColourPalette.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\ColourPixelFifo.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Controller.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Cpu.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Disassembler.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Display.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Fetcher.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Gpu.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\GpuRegisters.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Hdma.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\InterruptManager.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\main.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Mbc1.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Mbc2.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Mbc3.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Mbc5.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\MemoryRegisters.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Mmu.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\OamSearchPhase.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\OpCode.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\OpCodeBuilder.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\OpCodesImpl.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\PixelTransferPhase.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\SampleCounter.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Sampler.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\SpeedMode.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Speljongen.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Tests.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\Timer.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\VramViewer.cpp">
+      <Filter>Source Files\speljongen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\imgui\imgui_demo.cpp">
+      <Filter>Source Files\speljongen\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\imgui\imgui_draw.cpp">
+      <Filter>Source Files\speljongen\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\imgui\imgui-SFML.cpp">
+      <Filter>Source Files\speljongen\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\nfd\nfd_common.c">
+      <Filter>Source Files\speljongen\nfd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\nfd\nfd_win.cpp">
+      <Filter>Source Files\speljongen\nfd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpelJongEmu\src\imgui\imgui.cpp">
+      <Filter>Source Files\speljongen\imgui</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
